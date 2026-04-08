@@ -1,0 +1,6 @@
+{
+  "name": "statusbar_sample",
+  "deps": {
+    "username/vscode": "0.1.0"
+  }
+}

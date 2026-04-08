@@ -1,0 +1,9 @@
+import {
+  "username/vscode/window",
+  "username/vscode/workspace",
+  "username/vscode",
+}
+
+options(
+  link: { "js": { "exports": [ "activate" ], "format": "cjs" } },
+)

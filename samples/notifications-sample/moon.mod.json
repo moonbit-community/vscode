@@ -1,0 +1,7 @@
+{
+  "name": "notifications_sample",
+  "deps": {
+    "username/vscode": "0.1.0",
+    "moonbitlang/async": "0.17.0"
+  }
+}

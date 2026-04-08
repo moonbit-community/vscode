@@ -7,10 +7,13 @@ This directory tracks MoonBit rewrites of official VS Code extension samples usi
 The queue is intentionally ordered from simple to complex so binding gaps show up gradually.
 
 1. Command-only samples
-   - `helloworld-minimal-sample` (ported)
-   - `helloworld-sample`
-   - `configuration-sample`
-   - `basic-multi-root-sample`
+  - `helloworld-minimal-sample` (ported)
+  - `helloworld-sample` (ported)
+  - `notifications-sample` (ported)
+  - `progress-sample` (ported)
+  - `statusbar-sample` (ported)
+  - `configuration-sample`
+  - `basic-multi-root-sample` (ported)
 2. Single-provider editor samples
    - `completions-sample`
    - `codelens-sample`

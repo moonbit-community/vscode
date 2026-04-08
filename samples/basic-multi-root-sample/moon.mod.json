@@ -1,0 +1,6 @@
+{
+  "name": "basic_multi_root_sample",
+  "deps": {
+    "username/vscode": "0.1.0"
+  }
+}

@@ -1,0 +1,23 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "basic_multi_root_sample"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn activate(@vscode.ExtensionContext) -> Unit
+
+// Errors
+
+// Types and methods
+pub struct EditorInfo {
+  text : String?
+  tooltip : String?
+  color : String?
+}
+
+// Type aliases
+
+// Traits
+

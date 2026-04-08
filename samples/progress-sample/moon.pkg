@@ -1,0 +1,10 @@
+import {
+  "moonbitlang/async",
+  "username/vscode/commands",
+  "username/vscode/window",
+  "username/vscode",
+}
+
+options(
+  link: { "js": { "exports": [ "activate" ], "format": "cjs" } },
+)

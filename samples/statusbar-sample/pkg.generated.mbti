@@ -1,0 +1,25 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "statusbar_sample"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn activate(@vscode.ExtensionContext) -> Unit
+
+pub async fn show_selection_count() -> Unit
+
+// Errors
+
+// Types and methods
+pub struct SelectionStatusBar {
+  item : @vscode.StatusBarItem
+}
+pub fn SelectionStatusBar::new() -> Self
+pub fn SelectionStatusBar::update(Self) -> Unit
+
+// Type aliases
+
+// Traits
+

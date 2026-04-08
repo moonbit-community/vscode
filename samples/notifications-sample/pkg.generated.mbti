@@ -1,0 +1,22 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "notifications_sample"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn activate(@vscode.ExtensionContext) -> Unit
+
+// Errors
+
+// Types and methods
+pub struct ProgressStep {
+  increment : Int?
+  message : String?
+}
+
+// Type aliases
+
+// Traits
+

@@ -1,0 +1,44 @@
+{
+  "name": "basic-multi-root-sample",
+  "displayName": "Basic Multi Root Sample",
+  "description": "Samples for VSCode's multi root API",
+  "version": "0.0.1",
+  "publisher": "vscode-samples",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/vscode-extension-samples"
+  },
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "../../_build/js/release/build/basic_multi_root_sample/basic_multi_root_sample.js",
+  "scripts": {
+    "vscode:prepublish": "npm run build:moonbit",
+    "build:moonbit": "moon build --target js --release",
+    "check:moonbit": "moon check --target js"
+  },
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Basic Multi Root Sample",
+      "properties": {
+        "multiRootSample.statusColor": {
+          "type": [
+            "string"
+          ],
+          "default": "#FFFFFF",
+          "description": "Color to use for the status bar item. Can be set per workspace folder.",
+          "scope": "resource"
+        }
+      }
+    }
+  }
+}

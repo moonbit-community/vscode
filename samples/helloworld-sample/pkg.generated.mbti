@@ -1,0 +1,18 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "helloworld_sample"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn activate(@vscode.ExtensionContext) -> Unit
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+
