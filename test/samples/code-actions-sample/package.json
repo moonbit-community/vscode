@@ -1,0 +1,27 @@
+{
+  "name": "code-actions-sample",
+  "private": true,
+  "displayName": "Code Actions Provider Sample",
+  "version": "0.0.2",
+  "publisher": "vscode-samples",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/vscode-extension-samples"
+  },
+  "bugs": {
+    "url": "https://github.com/Microsoft/vscode-extension-samples/issues"
+  },
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
+  "main": "./_build/js/release/build/vscode-sample-code-actions-sample.js",
+  "scripts": {
+    "build:moonbit": "moon build --target js --release"
+  }
+}

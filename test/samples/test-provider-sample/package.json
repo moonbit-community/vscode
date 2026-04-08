@@ -1,0 +1,23 @@
+{
+  "name": "test-provider-sample",
+  "displayName": "test-provider-sample",
+  "description": "Sample showing how to use the test APIs",
+  "version": "0.0.1",
+  "publisher": "vscode-samples",
+  "private": true,
+  "license": "MIT",
+  "repository": "https://github.com/Microsoft/vscode-extension-samples",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:*.md"
+  ],
+  "main": "./_build/js/release/build/vscode-sample-test-provider-sample.js",
+  "scripts": {
+    "build:moonbit": "moon build --target js --release"
+  }
+}

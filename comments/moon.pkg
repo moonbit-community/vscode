@@ -1,0 +1,7 @@
+import {
+  "username/vscode",
+}
+
+options(
+  targets: { "comments.js.mbt": [ "js" ], "ffi.mbt": [ "js" ] },
+)

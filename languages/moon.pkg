@@ -1,0 +1,10 @@
+import {
+  "moonbitlang/async/js_async",
+  "username/vscode",
+  "username/vscode/internal/v",
+  "username/vscode/internal/v/providers",
+}
+
+options(
+  targets: { "ffi.mbt": [ "js" ], "languages.js.mbt": [ "js" ] },
+)

@@ -1,0 +1,199 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/chat"
+
+import {
+  "username/vscode",
+  "username/vscode/lm",
+}
+
+// Values
+pub fn available() -> Bool
+
+pub fn create_chat_participant(String, async (ChatRequest, ChatContext, ChatResponseStream, @vscode.CancellationToken) -> ChatResult?) -> ChatParticipant
+
+pub fn create_chat_participant_with_handler(String, ChatRequestHandler) -> ChatParticipant
+
+pub fn register_chat_context_provider(@vscode.DocumentSelector, String, (@vscode.Uri, @vscode.CancellationToken) -> @vscode.Any?, resolve_chat_context? : (@vscode.Any, @vscode.CancellationToken) -> @vscode.Any?) -> &@vscode.Disposable
+
+pub fn try_create_chat_participant(String, async (ChatRequest, ChatContext, ChatResponseStream, @vscode.CancellationToken) -> ChatResult?) -> ChatParticipant?
+
+pub fn try_create_chat_participant_with_handler(String, ChatRequestHandler) -> ChatParticipant?
+
+// Errors
+
+// Types and methods
+pub type ChatAnchorValue
+pub fn[T] ChatAnchorValue::as_value(Self) -> T
+pub fn[T] ChatAnchorValue::from_value(T) -> Self
+pub fn ChatAnchorValue::location(@vscode.Location) -> Self
+pub fn ChatAnchorValue::uri(@vscode.Uri) -> Self
+
+pub struct ChatContext {
+  history : Array[ChatTurn]
+}
+
+pub(all) struct ChatErrorDetails {
+  mut message : String
+  mut response_is_filtered : Bool?
+}
+pub fn ChatErrorDetails::new(String, response_is_filtered? : Bool) -> Self
+
+pub(all) struct ChatFollowup {
+  mut prompt : String
+  mut label : String?
+  mut participant : String?
+  mut command : String?
+}
+pub fn ChatFollowup::new(String, label? : String, participant? : String, command? : String) -> Self
+
+pub type ChatFollowupProvider
+pub fn ChatFollowupProvider::new(async (ChatResult, ChatContext, @vscode.CancellationToken) -> Array[ChatFollowup]?) -> Self
+
+pub type ChatMarkdownValue
+pub fn[T] ChatMarkdownValue::as_value(Self) -> T
+pub fn[T] ChatMarkdownValue::from_value(T) -> Self
+pub fn ChatMarkdownValue::markdown(@vscode.MarkdownString) -> Self
+pub fn ChatMarkdownValue::text(String) -> Self
+
+pub(all) struct ChatParticipant {
+  id : String
+  mut icon_path : @vscode.IconPath?
+  mut request_handler : ChatRequestHandler
+  mut followup_provider : ChatFollowupProvider?
+  on_did_receive_feedback : @vscode.Event[ChatResultFeedback]
+}
+pub fn ChatParticipant::as_disposable(Self) -> &@vscode.Disposable
+pub fn ChatParticipant::set_request_handler_async(Self, async (ChatRequest, ChatContext, ChatResponseStream, @vscode.CancellationToken) -> ChatResult?) -> Unit
+pub impl @vscode.Disposable for ChatParticipant
+
+pub struct ChatPromptReference {
+  id : String
+  range : (Int, Int)?
+  model_description : String?
+  value : ChatPromptReferenceValue
+}
+
+pub type ChatPromptReferenceValue
+pub fn[T] ChatPromptReferenceValue::as_value(Self) -> T
+pub fn[T] ChatPromptReferenceValue::from_value(T) -> Self
+pub fn ChatPromptReferenceValue::location(@vscode.Location) -> Self
+pub fn ChatPromptReferenceValue::text(String) -> Self
+pub fn ChatPromptReferenceValue::uri(@vscode.Uri) -> Self
+
+pub struct ChatRequest {
+  prompt : String
+  command : String?
+  references : Array[ChatPromptReference]
+  tool_references : Array[@lm.ChatLanguageModelToolReference]
+  tool_invocation_token : @lm.ChatParticipantToolToken
+  model : @lm.LanguageModelChat
+}
+
+pub type ChatRequestHandler
+pub fn ChatRequestHandler::new(async (ChatRequest, ChatContext, ChatResponseStream, @vscode.CancellationToken) -> ChatResult?) -> Self
+
+pub type ChatRequestTurn
+pub fn ChatRequestTurn::command(Self) -> String?
+pub fn ChatRequestTurn::new(String, String, Array[ChatPromptReference], Array[@lm.ChatLanguageModelToolReference], command? : String) -> Self
+pub fn ChatRequestTurn::participant(Self) -> String
+pub fn ChatRequestTurn::prompt(Self) -> String
+pub fn ChatRequestTurn::references(Self) -> Array[ChatPromptReference]
+pub fn ChatRequestTurn::tool_references(Self) -> Array[@lm.ChatLanguageModelToolReference]
+
+pub type ChatResponseAnchorPart
+pub fn ChatResponseAnchorPart::clear_title(Self) -> Unit
+pub fn ChatResponseAnchorPart::new(ChatAnchorValue, title? : String) -> Self
+pub fn ChatResponseAnchorPart::set_title(Self, String) -> Unit
+pub fn ChatResponseAnchorPart::set_value(Self, ChatAnchorValue) -> Unit
+pub fn ChatResponseAnchorPart::title(Self) -> String?
+pub fn ChatResponseAnchorPart::value(Self) -> ChatAnchorValue
+
+pub type ChatResponseCommandButtonPart
+pub fn ChatResponseCommandButtonPart::new(@vscode.Command) -> Self
+pub fn ChatResponseCommandButtonPart::set_value(Self, @vscode.Command) -> Unit
+pub fn ChatResponseCommandButtonPart::value(Self) -> @vscode.Command
+
+pub(all) struct ChatResponseFileTree {
+  mut name : String
+  mut children : Array[ChatResponseFileTree]?
+}
+pub fn ChatResponseFileTree::new(String, children? : Array[Self]) -> Self
+
+pub type ChatResponseFileTreePart
+pub fn ChatResponseFileTreePart::base_uri(Self) -> @vscode.Uri
+pub fn ChatResponseFileTreePart::new(Array[ChatResponseFileTree], @vscode.Uri) -> Self
+pub fn ChatResponseFileTreePart::set_base_uri(Self, @vscode.Uri) -> Unit
+pub fn ChatResponseFileTreePart::set_value(Self, Array[ChatResponseFileTree]) -> Unit
+pub fn ChatResponseFileTreePart::value(Self) -> Array[ChatResponseFileTree]
+
+pub type ChatResponseMarkdownPart
+pub fn ChatResponseMarkdownPart::new(ChatMarkdownValue) -> Self
+pub fn ChatResponseMarkdownPart::set_value(Self, @vscode.MarkdownString) -> Unit
+pub fn ChatResponseMarkdownPart::value(Self) -> @vscode.MarkdownString
+
+pub type ChatResponsePart
+pub fn ChatResponsePart::as_markdown_part(Self) -> ChatResponseMarkdownPart?
+pub fn[T] ChatResponsePart::as_value(Self) -> T
+pub fn ChatResponsePart::from_anchor_part(ChatResponseAnchorPart) -> Self
+pub fn ChatResponsePart::from_command_button_part(ChatResponseCommandButtonPart) -> Self
+pub fn ChatResponsePart::from_file_tree_part(ChatResponseFileTreePart) -> Self
+pub fn ChatResponsePart::from_markdown_part(ChatResponseMarkdownPart) -> Self
+pub fn ChatResponsePart::from_progress_part(ChatResponseProgressPart) -> Self
+pub fn ChatResponsePart::from_reference_part(ChatResponseReferencePart) -> Self
+pub fn[T] ChatResponsePart::from_value(T) -> Self
+
+pub type ChatResponseProgressPart
+pub fn ChatResponseProgressPart::new(String) -> Self
+pub fn ChatResponseProgressPart::set_value(Self, String) -> Unit
+pub fn ChatResponseProgressPart::value(Self) -> String
+
+pub type ChatResponseReferencePart
+pub fn ChatResponseReferencePart::clear_icon_path(Self) -> Unit
+pub fn ChatResponseReferencePart::icon_path(Self) -> @vscode.IconPath?
+pub fn ChatResponseReferencePart::new(ChatAnchorValue, icon_path? : @vscode.IconPath) -> Self
+pub fn ChatResponseReferencePart::set_icon_path(Self, @vscode.IconPath?) -> Unit
+pub fn ChatResponseReferencePart::set_value(Self, ChatAnchorValue) -> Unit
+pub fn ChatResponseReferencePart::value(Self) -> ChatAnchorValue
+
+pub type ChatResponseStream
+pub fn ChatResponseStream::anchor(Self, ChatAnchorValue, title? : String) -> Unit
+pub fn ChatResponseStream::button(Self, @vscode.Command) -> Unit
+pub fn ChatResponseStream::filetree(Self, Array[ChatResponseFileTree], @vscode.Uri) -> Unit
+pub fn ChatResponseStream::markdown(Self, ChatMarkdownValue) -> Unit
+pub fn ChatResponseStream::progress(Self, String) -> Unit
+pub fn ChatResponseStream::push(Self, ChatResponsePart) -> Unit
+pub fn ChatResponseStream::reference(Self, ChatAnchorValue, icon_path? : @vscode.IconPath) -> Unit
+
+pub type ChatResponseTurn
+pub fn ChatResponseTurn::command(Self) -> String?
+pub fn ChatResponseTurn::new(Array[ChatResponsePart], ChatResult, String, command? : String) -> Self
+pub fn ChatResponseTurn::participant(Self) -> String
+pub fn ChatResponseTurn::response(Self) -> Array[ChatResponsePart]
+pub fn ChatResponseTurn::result(Self) -> ChatResult
+
+pub(all) struct ChatResult {
+  mut error_details : ChatErrorDetails?
+  metadata : @vscode.Any?
+}
+pub fn[T] ChatResult::as_value(Self) -> T
+pub fn[T] ChatResult::from_value(T) -> Self
+pub fn ChatResult::new(error_details? : ChatErrorDetails, metadata? : @vscode.Any) -> Self
+
+pub struct ChatResultFeedback {
+  result : ChatResult
+  kind : ChatResultFeedbackKind
+}
+
+pub(all) enum ChatResultFeedbackKind {
+  Unhelpful
+  Helpful
+} derive(Eq)
+
+pub type ChatTurn
+pub fn ChatTurn::as_request_turn(Self) -> ChatRequestTurn?
+pub fn ChatTurn::as_response_turn(Self) -> ChatResponseTurn?
+
+// Type aliases
+
+// Traits
+

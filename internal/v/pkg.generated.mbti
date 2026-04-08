@@ -1,0 +1,20 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/internal/v"
+
+// Values
+pub fn[T] js_to_option(JsValue) -> T?
+
+pub fn[T] option_to_js(T?) -> JsValue
+
+// Errors
+
+// Types and methods
+pub type JsValue
+pub fn[X] JsValue::cast(Self) -> X
+pub fn JsValue::is_null_or_undefined(Self) -> Bool
+pub fn[X] JsValue::make(X) -> Self
+
+// Type aliases
+
+// Traits
+

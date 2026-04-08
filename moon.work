@@ -1,0 +1,4 @@
+members = [
+  ".",
+  "./samples/helloworld-minimal-sample",
+]

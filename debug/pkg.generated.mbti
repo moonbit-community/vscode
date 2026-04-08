@@ -1,0 +1,128 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/debug"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn active_debug_console() -> @vscode.DebugConsole
+
+pub fn active_debug_session() -> @vscode.DebugSession?
+
+pub fn active_stack_item() -> @vscode.DebugStackItem?
+
+pub fn add_breakpoints(Array[@vscode.Breakpoint]) -> Unit
+
+pub fn add_function_breakpoints(Array[@vscode.FunctionBreakpoint]) -> Unit
+
+pub fn add_source_breakpoints(Array[@vscode.SourceBreakpoint]) -> Unit
+
+pub fn as_debug_source_uri(DebugProtocolSource, session? : @vscode.DebugSession) -> @vscode.Uri
+
+pub fn breakpoints() -> Array[@vscode.Breakpoint]
+
+pub fn on_did_change_active_debug_session() -> @vscode.Event[@vscode.DebugSession?]
+
+pub fn on_did_change_active_stack_item() -> @vscode.Event[@vscode.DebugStackItem?]
+
+pub fn on_did_change_breakpoints() -> @vscode.Event[@vscode.BreakpointsChangeEvent]
+
+pub fn on_did_receive_debug_session_custom_event() -> @vscode.Event[@vscode.DebugSessionCustomEvent]
+
+pub fn on_did_start_debug_session() -> @vscode.Event[@vscode.DebugSession]
+
+pub fn on_did_terminate_debug_session() -> @vscode.Event[@vscode.DebugSession]
+
+pub fn register_debug_adapter_descriptor_factory(String, DebugAdapterDescriptorFactory) -> &@vscode.Disposable
+
+pub fn register_debug_adapter_tracker_factory(String, DebugAdapterTrackerFactory) -> &@vscode.Disposable
+
+pub fn register_debug_configuration_provider(String, DebugConfigurationProvider, trigger_kind? : DebugConfigurationProviderTriggerKind) -> &@vscode.Disposable
+
+pub fn remove_breakpoints(Array[@vscode.Breakpoint]) -> Unit
+
+pub fn remove_function_breakpoints(Array[@vscode.FunctionBreakpoint]) -> Unit
+
+pub fn remove_source_breakpoints(Array[@vscode.SourceBreakpoint]) -> Unit
+
+pub async fn start_debugging_configuration(folder? : @vscode.WorkspaceFolder, @vscode.DebugConfiguration, parent_session? : @vscode.DebugSession) -> Bool
+
+pub async fn start_debugging_configuration_with_options(folder? : @vscode.WorkspaceFolder, @vscode.DebugConfiguration, options? : @vscode.DebugSessionOptions) -> Bool
+
+pub async fn start_debugging_name(folder? : @vscode.WorkspaceFolder, String, parent_session? : @vscode.DebugSession) -> Bool
+
+pub async fn start_debugging_name_with_options(folder? : @vscode.WorkspaceFolder, String, options? : @vscode.DebugSessionOptions) -> Bool
+
+pub async fn stop_debugging(session? : @vscode.DebugSession) -> Unit
+
+// Errors
+
+// Types and methods
+pub struct DebugAdapter {
+  on_did_send_message : @vscode.Event[DebugProtocolMessage]
+}
+pub fn DebugAdapter::handle_message(Self, DebugProtocolMessage) -> Unit
+pub fn DebugAdapter::new(@vscode.Event[DebugProtocolMessage], (DebugProtocolMessage) -> Unit, dispose? : () -> Unit) -> Self
+pub impl @vscode.Disposable for DebugAdapter
+
+pub type DebugAdapterDescriptor
+pub fn DebugAdapterDescriptor::from_executable(DebugAdapterExecutable) -> Self
+pub fn DebugAdapterDescriptor::from_inline_implementation(DebugAdapterInlineImplementation) -> Self
+pub fn DebugAdapterDescriptor::from_named_pipe_server(DebugAdapterNamedPipeServer) -> Self
+pub fn DebugAdapterDescriptor::from_server(DebugAdapterServer) -> Self
+
+pub type DebugAdapterDescriptorFactory
+pub fn DebugAdapterDescriptorFactory::new(async (@vscode.DebugSession, DebugAdapterExecutable?) -> DebugAdapterDescriptor?) -> Self
+
+pub type DebugAdapterExecutable
+pub fn DebugAdapterExecutable::args(Self) -> Array[String]
+pub fn DebugAdapterExecutable::command(Self) -> String
+pub fn DebugAdapterExecutable::new(String, args? : Array[String], options? : DebugAdapterExecutableOptions) -> Self
+pub fn DebugAdapterExecutable::options(Self) -> DebugAdapterExecutableOptions?
+
+pub(all) struct DebugAdapterExecutableOptions {
+  mut env : Array[(String, String)]?
+  mut cwd : String?
+}
+pub fn DebugAdapterExecutableOptions::new(env? : Array[(String, String)], cwd? : String) -> Self
+
+pub type DebugAdapterInlineImplementation
+pub fn DebugAdapterInlineImplementation::new(DebugAdapter) -> Self
+
+pub type DebugAdapterNamedPipeServer
+pub fn DebugAdapterNamedPipeServer::new(String) -> Self
+pub fn DebugAdapterNamedPipeServer::path(Self) -> String
+
+pub type DebugAdapterServer
+pub fn DebugAdapterServer::host(Self) -> String?
+pub fn DebugAdapterServer::new(Int, host? : String) -> Self
+pub fn DebugAdapterServer::port(Self) -> Int
+
+pub type DebugAdapterTracker
+pub fn DebugAdapterTracker::new(on_will_start_session? : () -> Unit, on_will_receive_message? : (String) -> Unit, on_did_send_message? : (String) -> Unit, on_will_stop_session? : () -> Unit, on_error? : (String) -> Unit, on_exit? : (Int?, String?) -> Unit) -> Self
+
+pub type DebugAdapterTrackerFactory
+pub fn DebugAdapterTrackerFactory::new(async (@vscode.DebugSession) -> DebugAdapterTracker?) -> Self
+
+pub type DebugConfigurationProvider
+pub fn DebugConfigurationProvider::new(provide_debug_configurations? : async (@vscode.WorkspaceFolder?, @vscode.CancellationToken?) -> Array[@vscode.DebugConfiguration]?, resolve_debug_configuration? : async (@vscode.WorkspaceFolder?, @vscode.DebugConfiguration, @vscode.CancellationToken?) -> @vscode.DebugConfiguration?, resolve_debug_configuration_with_substituted_variables? : async (@vscode.WorkspaceFolder?, @vscode.DebugConfiguration, @vscode.CancellationToken?) -> @vscode.DebugConfiguration?) -> Self
+
+pub(all) enum DebugConfigurationProviderTriggerKind {
+  Initial
+  Dynamic
+} derive(Eq)
+
+pub type DebugProtocolMessage
+pub fn DebugProtocolMessage::as_json(Self) -> @vscode.Any
+pub fn DebugProtocolMessage::from_json(@vscode.Any) -> Self
+
+pub type DebugProtocolSource
+pub fn[T] DebugProtocolSource::as_value(Self) -> T
+pub fn DebugProtocolSource::from_path(String) -> Self
+pub fn[T] DebugProtocolSource::from_value(T) -> Self
+
+// Type aliases
+
+// Traits
+

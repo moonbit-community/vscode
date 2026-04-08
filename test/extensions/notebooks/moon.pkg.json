@@ -1,0 +1,33 @@
+{
+  "import": [
+    {
+      "path": "username/vscode/commands"
+    },
+    {
+      "path": "username/vscode/notebooks"
+    },
+    {
+      "path": "username/vscode/workspace"
+    },
+    {
+      "path": "username/vscode"
+    },
+    {
+      "path": "username/vscode/window"
+    }
+  ],
+  "link": {
+    "js": {
+      "exports": [
+        "activate",
+        "deactivate"
+      ],
+      "format": "cjs"
+    }
+  },
+  "targets": {
+    "extension.mbt": [
+      "js"
+    ]
+  }
+}

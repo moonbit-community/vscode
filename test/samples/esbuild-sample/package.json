@@ -1,0 +1,31 @@
+{
+  "name": "esbuild-sample",
+  "displayName": "esbuild-sample",
+  "description": "",
+  "version": "0.0.1",
+  "publisher": "vscode-samples",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Microsoft/vscode-extension-samples"
+  },
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./_build/js/release/build/vscode-sample-esbuild-sample.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "esbuild-sample.hello-esbuild",
+        "title": "Hello esbuild"
+      }
+    ]
+  },
+  "scripts": {
+    "build:moonbit": "moon build --target js --release"
+  }
+}

@@ -1,0 +1,10 @@
+import {
+  "moonbitlang/async/js_async",
+  "username/vscode",
+  "username/vscode/internal/v",
+  "username/vscode/lm",
+}
+
+options(
+  targets: { "chat.js.mbt": [ "js" ], "ffi.mbt": [ "js" ] },
+)

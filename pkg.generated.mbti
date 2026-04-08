@@ -1,0 +1,3421 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode"
+
+import {
+  "moonbitlang/async/js_async",
+}
+
+// Values
+pub fn activate_async(ExtensionContext, async (ExtensionContext) -> Unit) -> Unit
+
+pub fn version() -> String
+
+// Errors
+
+// Types and methods
+pub struct AccessibilityInformation {
+  label : String
+  role : String?
+}
+pub fn AccessibilityInformation::new(String, role? : String) -> Self
+
+pub type Any
+pub fn Any::empty_object() -> Self
+pub fn[T] Any::from(T) -> Self
+pub fn Any::object_get_bool_or(Self, String, Bool) -> Bool
+pub fn Any::object_get_string(Self, String) -> String?
+pub fn Any::object_with_bool(Self, String, Bool) -> Self
+pub fn Any::object_with_string(Self, String, String) -> Self
+
+pub struct AuthenticationForceNewSessionOptions {
+  detail : String?
+}
+pub fn AuthenticationForceNewSessionOptions::new(detail? : String) -> Self
+
+pub(all) enum AuthenticationForceNewSessionValue {
+  BoolValue(Bool)
+  AuthenticationGetSessionPresentationOptions(AuthenticationGetSessionPresentationOptions)
+  AuthenticationForceNewSessionOptions(AuthenticationForceNewSessionOptions)
+}
+
+pub(all) struct AuthenticationGetSessionOptions {
+  mut clear_session_preference : Bool?
+  mut create_if_none : AuthenticationGetSessionPresentationOptionsCreateIfNone?
+  mut force_new_session : AuthenticationForceNewSessionValue?
+  mut silent : Bool?
+  mut account : AuthenticationSessionAccountInformation?
+}
+pub fn AuthenticationGetSessionOptions::new(clear_session_preference? : Bool, create_if_none? : AuthenticationGetSessionPresentationOptionsCreateIfNone, force_new_session? : AuthenticationForceNewSessionValue, silent? : Bool, account? : AuthenticationSessionAccountInformation) -> Self
+
+pub(all) struct AuthenticationGetSessionPresentationOptions {
+  mut detail : String?
+}
+pub fn AuthenticationGetSessionPresentationOptions::new(detail? : String) -> Self
+
+pub(all) enum AuthenticationGetSessionPresentationOptionsCreateIfNone {
+  BoolValue(Bool)
+  AuthenticationGetSessionPresentationOptions(AuthenticationGetSessionPresentationOptions)
+}
+
+pub struct AuthenticationProviderAuthenticationSessionsChangeEvent {
+  added : Array[AuthenticationSession]
+  removed : Array[AuthenticationSession]
+  changed : Array[AuthenticationSession]
+}
+pub fn AuthenticationProviderAuthenticationSessionsChangeEvent::new(added? : Array[AuthenticationSession], removed? : Array[AuthenticationSession], changed? : Array[AuthenticationSession]) -> Self
+
+pub struct AuthenticationProviderInformation {
+  id : String
+  label : String
+}
+pub fn AuthenticationProviderInformation::new(String, String) -> Self
+
+pub struct AuthenticationProviderOptions {
+  supports_multiple_accounts : Bool?
+}
+pub fn AuthenticationProviderOptions::new(supports_multiple_accounts? : Bool) -> Self
+
+pub(all) struct AuthenticationProviderSessionOptions {
+  mut account : AuthenticationSessionAccountInformation?
+}
+pub fn AuthenticationProviderSessionOptions::new(account? : AuthenticationSessionAccountInformation) -> Self
+
+pub type AuthenticationSession
+pub fn AuthenticationSession::access_token(Self) -> String
+pub fn AuthenticationSession::account(Self) -> AuthenticationSessionAccountInformation
+pub fn AuthenticationSession::id(Self) -> String
+pub fn AuthenticationSession::new(String, String, AuthenticationSessionAccountInformation, Array[String]) -> Self
+pub fn AuthenticationSession::scopes(Self) -> Array[String]
+
+pub type AuthenticationSessionAccountInformation
+pub fn AuthenticationSessionAccountInformation::id(Self) -> String
+pub fn AuthenticationSessionAccountInformation::label(Self) -> String
+pub fn AuthenticationSessionAccountInformation::new(String, String) -> Self
+
+pub struct AuthenticationSessionsChangeEvent {
+  provider : AuthenticationProviderInformation
+}
+pub fn AuthenticationSessionsChangeEvent::new(AuthenticationProviderInformation) -> Self
+
+pub struct AuthenticationWwwAuthenticateRequest {
+  www_authenticate : String
+  fallback_scopes : Array[String]?
+}
+pub fn AuthenticationWwwAuthenticateRequest::new(String, fallback_scopes? : Array[String]) -> Self
+
+pub type Breakpoint
+pub fn Breakpoint::condition(Self) -> String?
+pub fn Breakpoint::enabled(Self) -> Bool
+pub fn Breakpoint::hit_condition(Self) -> String?
+pub fn Breakpoint::id(Self) -> String
+pub fn Breakpoint::log_message(Self) -> String?
+
+pub struct BreakpointsChangeEvent {
+  added : Array[Breakpoint]
+  removed : Array[Breakpoint]
+  changed : Array[Breakpoint]
+}
+pub fn BreakpointsChangeEvent::new(added? : Array[Breakpoint], removed? : Array[Breakpoint], changed? : Array[Breakpoint]) -> Self
+
+pub type CallHierarchyIncomingCall
+pub fn CallHierarchyIncomingCall::from_item(Self) -> CallHierarchyItem
+pub fn CallHierarchyIncomingCall::from_ranges(Self) -> Array[Range]
+pub fn CallHierarchyIncomingCall::new(CallHierarchyItem, Array[Range]) -> Self
+
+pub type CallHierarchyItem
+pub fn CallHierarchyItem::detail(Self) -> String
+pub fn CallHierarchyItem::kind(Self) -> SymbolKind
+pub fn CallHierarchyItem::name(Self) -> String
+pub fn CallHierarchyItem::new(SymbolKind, String, String, Uri, Range, Range) -> Self
+pub fn CallHierarchyItem::range(Self) -> Range
+pub fn CallHierarchyItem::selection_range(Self) -> Range
+pub fn CallHierarchyItem::uri(Self) -> Uri
+
+pub type CallHierarchyOutgoingCall
+pub fn CallHierarchyOutgoingCall::from_ranges(Self) -> Array[Range]
+pub fn CallHierarchyOutgoingCall::new(CallHierarchyItem, Array[Range]) -> Self
+pub fn CallHierarchyOutgoingCall::to_item(Self) -> CallHierarchyItem
+
+pub type CancellationError
+pub fn CancellationError::new() -> Self
+
+pub(all) struct CancellationToken {
+  mut is_cancellation_requested : Bool
+  on_cancellation_requested : Event[Unit]
+}
+
+pub type CancellationTokenSource
+pub fn CancellationTokenSource::cancel(Self) -> Unit
+pub fn CancellationTokenSource::new() -> Self
+pub fn CancellationTokenSource::token(Self) -> CancellationToken
+pub impl Disposable for CancellationTokenSource
+
+pub type Clipboard
+pub async fn Clipboard::read_text(Self) -> String
+pub async fn Clipboard::write_text(Self, String) -> Unit
+
+pub type CodeAction
+pub fn CodeAction::clear_command(Self) -> Unit
+pub fn CodeAction::clear_diagnostics(Self) -> Unit
+pub fn CodeAction::clear_edit(Self) -> Unit
+pub fn CodeAction::clear_is_preferred(Self) -> Unit
+pub fn CodeAction::clear_kind(Self) -> Unit
+pub fn CodeAction::command(Self) -> Command?
+pub fn CodeAction::diagnostics(Self) -> Array[Diagnostic]?
+pub fn CodeAction::edit(Self) -> WorkspaceEdit?
+pub fn CodeAction::is_preferred(Self) -> Bool?
+pub fn CodeAction::kind(Self) -> CodeActionKind?
+pub fn CodeAction::new(String, kind? : CodeActionKind) -> Self
+pub fn CodeAction::set_command(Self, Command) -> Unit
+pub fn CodeAction::set_diagnostics(Self, Array[Diagnostic]) -> Unit
+pub fn CodeAction::set_edit(Self, WorkspaceEdit) -> Unit
+pub fn CodeAction::set_is_preferred(Self, Bool) -> Unit
+pub fn CodeAction::set_kind(Self, CodeActionKind) -> Unit
+pub fn CodeAction::set_title(Self, String) -> Unit
+pub fn CodeAction::title(Self) -> String
+
+pub struct CodeActionContext {
+  diagnostics : Array[Diagnostic]
+  only : CodeActionKind?
+  trigger_kind : CodeActionTriggerKind
+}
+pub fn CodeActionContext::new(CodeActionTriggerKind, Array[Diagnostic], only? : CodeActionKind) -> Self
+
+pub(all) enum CodeActionKind {
+  Empty
+  QuickFix
+  Refactor
+  RefactorExtract
+  RefactorInline
+  RefactorMove
+  RefactorRewrite
+  Source
+  SourceOrganizeImports
+  SourceFixAll
+  Notebook
+  Custom(String)
+} derive(Eq)
+pub fn CodeActionKind::append(Self, String) -> Self
+pub fn CodeActionKind::contains(Self, Self) -> Bool
+pub fn CodeActionKind::intersects(Self, Self) -> Bool
+pub fn CodeActionKind::value(Self) -> String
+
+pub struct CodeActionProviderMetadata {
+  provided_kinds : Array[CodeActionKind]?
+}
+pub fn CodeActionProviderMetadata::new(provided_kinds? : Array[CodeActionKind]) -> Self
+
+pub(all) enum CodeActionTriggerKind {
+  Invoke
+  Automatic
+} derive(Eq)
+
+pub type CodeLens
+pub fn CodeLens::clear_command(Self) -> Unit
+pub fn CodeLens::command(Self) -> Command?
+pub fn CodeLens::is_resolved(Self) -> Bool?
+pub fn CodeLens::new(Range, command? : Command) -> Self
+pub fn CodeLens::range(Self) -> Range
+pub fn CodeLens::set_command(Self, Command) -> Unit
+pub fn CodeLens::set_range(Self, Range) -> Unit
+
+pub type Color
+pub fn Color::alpha(Self) -> Float
+pub fn Color::blue(Self) -> Float
+pub fn Color::green(Self) -> Float
+pub fn Color::new(Float, Float, Float, Float) -> Self
+pub fn Color::red(Self) -> Float
+
+pub type ColorInformation
+pub fn ColorInformation::color(Self) -> Color
+pub fn ColorInformation::new(Range, Color) -> Self
+pub fn ColorInformation::range(Self) -> Range
+pub fn ColorInformation::set_color(Self, Color) -> Unit
+pub fn ColorInformation::set_range(Self, Range) -> Unit
+
+pub type ColorPresentation
+pub fn ColorPresentation::additional_text_edits(Self) -> Array[TextEdit]?
+pub fn ColorPresentation::clear_additional_text_edits(Self) -> Unit
+pub fn ColorPresentation::clear_text_edit(Self) -> Unit
+pub fn ColorPresentation::label(Self) -> String
+pub fn ColorPresentation::new(String) -> Self
+pub fn ColorPresentation::set_additional_text_edits(Self, Array[TextEdit]) -> Unit
+pub fn ColorPresentation::set_label(Self, String) -> Unit
+pub fn ColorPresentation::set_text_edit(Self, TextEdit) -> Unit
+pub fn ColorPresentation::text_edit(Self) -> TextEdit?
+
+pub struct ColorPresentationContext {
+  document : TextDocument
+  range : Range
+}
+pub fn ColorPresentationContext::new(TextDocument, Range) -> Self
+
+pub type ColorTheme
+pub fn ColorTheme::kind(Self) -> ColorThemeKind
+pub fn ColorTheme::new(ColorThemeKind) -> Self
+
+pub(all) enum ColorThemeKind {
+  Light
+  Dark
+  HighContrast
+  HighContrastLight
+} derive(Eq)
+
+pub(all) enum ColorValue {
+  Text(String)
+  Theme(ThemeColor)
+}
+
+pub(all) struct Command {
+  mut title : String
+  mut command : String
+  mut tooltip : String?
+  mut arguments : Array[Any]?
+}
+pub fn Command::new(String, String, tooltip? : String, arguments? : Array[Any]) -> Self
+
+pub(all) enum CommandOrString {
+  Id(String)
+  CommandValue(Command)
+}
+
+pub(all) enum CommandUrisValue {
+  Enabled(Bool)
+  List(Array[String])
+}
+
+pub(all) struct Comment {
+  mut body : MarkdownStringValue
+  mut mode : CommentMode
+  mut author : CommentAuthorInformation
+  mut context_value : String?
+  mut reactions : Array[CommentReaction]?
+  mut label : String?
+  mut timestamp : Date?
+}
+pub fn Comment::new(MarkdownStringValue, CommentMode, CommentAuthorInformation) -> Self
+
+pub(all) struct CommentAuthorInformation {
+  mut name : String
+  mut iconPath : Uri?
+}
+pub fn CommentAuthorInformation::new(String, icon_path? : Uri) -> Self
+
+pub type CommentController
+pub fn CommentController::clear_commenting_range_provider(Self) -> Unit
+pub fn CommentController::clear_options(Self) -> Unit
+pub fn CommentController::clear_reaction_handler(Self) -> Unit
+pub fn CommentController::create_comment_thread(Self, Uri, Range, Array[Comment]) -> CommentThread
+pub fn CommentController::id(Self) -> String
+pub fn CommentController::label(Self) -> String
+pub fn CommentController::options(Self) -> CommentOptions?
+pub fn[T : CommentingRangeProvider] CommentController::set_commenting_range_provider(Self, T) -> Unit
+pub fn CommentController::set_options(Self, CommentOptions) -> Unit
+pub fn CommentController::set_reaction_handler(Self, async (Comment, CommentReaction) -> Unit) -> Unit
+pub impl Disposable for CommentController
+
+pub(all) enum CommentMode {
+  Editing
+  Preview
+} derive(Eq)
+
+pub(all) struct CommentOptions {
+  mut prompt : String?
+  mut placeHolder : String?
+}
+pub fn CommentOptions::new(prompt? : String, place_holder? : String) -> Self
+
+pub struct CommentReaction {
+  label : String
+  iconPath : StringOrUri
+  count : Int
+  authorHasReacted : Bool
+}
+pub fn CommentReaction::new(String, StringOrUri, Int, Bool) -> Self
+
+pub(all) struct CommentReply {
+  mut thread : CommentThread
+  mut text : String
+}
+pub fn CommentReply::new(CommentThread, String) -> Self
+
+pub type CommentThread
+pub fn CommentThread::can_reply(Self) -> CommentThreadCanReply
+pub fn CommentThread::clear_context_value(Self) -> Unit
+pub fn CommentThread::clear_label(Self) -> Unit
+pub fn CommentThread::clear_range(Self) -> Unit
+pub fn CommentThread::collapsible_state(Self) -> CommentThreadCollapsibleState
+pub fn CommentThread::comments(Self) -> Array[Comment]
+pub fn CommentThread::context_value(Self) -> String?
+pub fn CommentThread::is_equal(Self, Self) -> Bool
+pub fn CommentThread::label(Self) -> String?
+pub fn CommentThread::range(Self) -> Range?
+pub fn CommentThread::set_can_reply(Self, CommentThreadCanReply) -> Unit
+pub fn CommentThread::set_collapsible_state(Self, CommentThreadCollapsibleState) -> Unit
+pub fn CommentThread::set_comments(Self, Array[Comment]) -> Unit
+pub fn CommentThread::set_context_value(Self, String) -> Unit
+pub fn CommentThread::set_label(Self, String) -> Unit
+pub fn CommentThread::set_range(Self, Range) -> Unit
+pub fn CommentThread::state(Self) -> CommentThreadState?
+pub fn CommentThread::uri(Self) -> Uri
+pub impl Disposable for CommentThread
+
+pub(all) enum CommentThreadCanReply {
+  BoolValue(Bool)
+  Author(CommentAuthorInformation)
+}
+
+pub(all) enum CommentThreadCollapsibleState {
+  Collapsed
+  Expanded
+} derive(Eq)
+
+pub(all) enum CommentThreadState {
+  Unresolved
+  Resolved
+} derive(Eq)
+
+pub(all) struct CommentingRanges {
+  mut enableFileComments : Bool
+  mut ranges : Array[Range]?
+}
+pub fn CommentingRanges::new(Bool, ranges? : Array[Range]) -> Self
+
+pub struct CompletionContext {
+  trigger_kind : CompletionTriggerKind
+  trigger_character : String?
+}
+pub fn CompletionContext::new(CompletionTriggerKind, trigger_character? : String) -> Self
+
+pub type CompletionItem
+pub fn CompletionItem::clear_command(Self) -> Unit
+pub fn CompletionItem::clear_commit_characters(Self) -> Unit
+pub fn CompletionItem::clear_documentation(Self) -> Unit
+pub fn CompletionItem::clear_insert_text(Self) -> Unit
+pub fn CompletionItem::clear_kind(Self) -> Unit
+pub fn CompletionItem::command(Self) -> Command?
+pub fn CompletionItem::commit_characters(Self) -> Array[String]?
+pub fn CompletionItem::documentation(Self) -> MarkdownStringValue?
+pub fn CompletionItem::from_text(String, kind? : CompletionItemKind) -> Self
+pub fn CompletionItem::insert_text(Self) -> StringOrSnippetString?
+pub fn CompletionItem::kind(Self) -> CompletionItemKind?
+pub fn CompletionItem::label(Self) -> CompletionItemLabelValue?
+pub fn CompletionItem::new(CompletionItemLabelValue, kind? : CompletionItemKind) -> Self
+pub fn CompletionItem::set_command(Self, Command) -> Unit
+pub fn CompletionItem::set_commit_characters(Self, Array[String]) -> Unit
+pub fn CompletionItem::set_documentation(Self, MarkdownStringValue) -> Unit
+pub fn CompletionItem::set_insert_text(Self, StringOrSnippetString) -> Unit
+pub fn CompletionItem::set_kind(Self, CompletionItemKind) -> Unit
+
+pub(all) enum CompletionItemKind {
+  Text
+  Method
+  Function
+  Constructor
+  Field
+  Variable
+  Class
+  Interface
+  Module
+  Property
+  Unit
+  Value
+  Enum
+  Keyword
+  Snippet
+  Color
+  File
+  Reference
+  Folder
+  EnumMember
+  Constant
+  Struct
+  Event
+  Operator
+  TypeParameter
+  User
+  Issue
+} derive(Eq)
+
+pub(all) struct CompletionItemLabel {
+  mut label : String
+  mut detail : String?
+  mut description : String?
+}
+pub fn CompletionItemLabel::new(String, detail? : String, description? : String) -> Self
+
+pub(all) enum CompletionItemLabelValue {
+  Text(String)
+  Label(CompletionItemLabel)
+}
+
+pub(all) enum CompletionItemTag {
+  Deprecated
+} derive(Eq)
+
+pub type CompletionList[T]
+pub fn[T] CompletionList::is_incomplete(Self[T]) -> Bool
+pub fn[T] CompletionList::items(Self[T]) -> Array[T]
+pub fn CompletionList::new(Array[CompletionItem], is_incomplete? : Bool) -> Self[CompletionItem]
+pub fn[T] CompletionList::set_is_incomplete(Self[T], Bool) -> Unit
+
+pub(all) enum CompletionTriggerKind {
+  Invoke
+  TriggerCharacter
+  TriggerForIncompleteCompletions
+} derive(Eq)
+
+pub type ConfigurationChangeEvent
+pub fn ConfigurationChangeEvent::affects_configuration(Self, String, scope? : ConfigurationScope) -> Bool
+
+pub struct ConfigurationInspect[T] {
+  key : String
+  default_value : T?
+  global_value : T?
+  workspace_value : T?
+  workspace_folder_value : T?
+  default_language_value : T?
+  global_language_value : T?
+  workspace_language_value : T?
+  workspace_folder_language_value : T?
+  language_ids : Array[String]?
+}
+pub fn[T] ConfigurationInspect::default_language_value(Self[T]) -> T?
+pub fn[T] ConfigurationInspect::default_value(Self[T]) -> T?
+pub fn[T] ConfigurationInspect::global_language_value(Self[T]) -> T?
+pub fn[T] ConfigurationInspect::global_value(Self[T]) -> T?
+pub fn[T] ConfigurationInspect::key(Self[T]) -> String
+pub fn[T] ConfigurationInspect::language_ids(Self[T]) -> Array[String]?
+pub fn[T] ConfigurationInspect::new(String, default_value? : T, global_value? : T, workspace_value? : T, workspace_folder_value? : T, default_language_value? : T, global_language_value? : T, workspace_language_value? : T, workspace_folder_language_value? : T, language_ids? : Array[String]) -> Self[T]
+pub fn[T] ConfigurationInspect::workspace_folder_language_value(Self[T]) -> T?
+pub fn[T] ConfigurationInspect::workspace_folder_value(Self[T]) -> T?
+pub fn[T] ConfigurationInspect::workspace_language_value(Self[T]) -> T?
+pub fn[T] ConfigurationInspect::workspace_value(Self[T]) -> T?
+
+pub(all) enum ConfigurationScope {
+  Uri(Uri)
+  WorkspaceFolderScope(WorkspaceFolder)
+  TextEditorScope(TextEditor)
+  TextDocumentScope(TextDocument)
+  LanguageId(String)
+  Global
+}
+
+pub(all) enum ConfigurationTarget {
+  Global
+  Workspace
+  WorkspaceFolder
+} derive(Eq)
+
+pub(all) enum ConfigurationTargetValue {
+  Target(ConfigurationTarget)
+  BoolValue(Bool)
+}
+
+pub type CustomDocument
+pub fn CustomDocument::new(Uri, () -> Unit) -> Self
+pub fn CustomDocument::uri(Self) -> Uri
+pub impl Disposable for CustomDocument
+
+pub type CustomDocumentBackup
+pub fn CustomDocumentBackup::delete(Self) -> Unit
+pub fn CustomDocumentBackup::id(Self) -> String
+pub fn CustomDocumentBackup::new(String, () -> Unit) -> Self
+
+pub struct CustomDocumentBackupContext {
+  destination : Uri
+}
+pub fn CustomDocumentBackupContext::new(Uri) -> Self
+
+pub type CustomDocumentChangeEvent[T]
+pub fn[T] CustomDocumentChangeEvent::from_content(CustomDocumentContentChangeEvent[T]) -> Self[T]
+pub fn[T] CustomDocumentChangeEvent::from_edit(CustomDocumentEditEvent[T]) -> Self[T]
+
+pub struct CustomDocumentContentChangeEvent[T] {
+  document : T
+}
+pub fn[T] CustomDocumentContentChangeEvent::document(Self[T]) -> T
+
+pub struct CustomDocumentEditEvent[T] {
+  document : T
+  label : String?
+}
+pub fn[T] CustomDocumentEditEvent::document(Self[T]) -> T
+pub fn[T] CustomDocumentEditEvent::label(Self[T]) -> String?
+pub async fn[T] CustomDocumentEditEvent::redo(Self[T]) -> Unit
+pub async fn[T] CustomDocumentEditEvent::undo(Self[T]) -> Unit
+
+pub struct CustomDocumentOpenContext {
+  backupId : String?
+  untitledDocumentData : Bytes?
+}
+pub fn CustomDocumentOpenContext::new(backup_id? : String, untitled_document_data? : Bytes) -> Self
+
+pub struct CustomEditorProviderOptions {
+  webview_options : WebviewPanelOptions?
+  supports_multiple_editors_per_document : Bool?
+}
+pub fn CustomEditorProviderOptions::new(webview_options? : WebviewPanelOptions, supports_multiple_editors_per_document? : Bool) -> Self
+
+pub type CustomExecution
+pub fn CustomExecution::new(async (TaskDefinition) -> Pseudoterminal) -> Self
+
+pub type DataTransfer
+pub fn DataTransfer::for_each(Self, (DataTransferItem, String, Self) -> Unit) -> Unit
+pub fn DataTransfer::get(Self, String) -> DataTransferItem?
+pub fn DataTransfer::new() -> Self
+pub fn DataTransfer::set(Self, String, DataTransferItem) -> Unit
+
+pub struct DataTransferFile {
+  name : String
+  uri : Uri?
+}
+pub async fn DataTransferFile::data(Self) -> Bytes
+pub fn DataTransferFile::new(String, uri? : Uri) -> Self
+
+pub type DataTransferItem
+pub fn DataTransferItem::as_file(Self) -> DataTransferFile?
+pub async fn DataTransferItem::as_string(Self) -> String
+pub fn DataTransferItem::new(Any) -> Self
+pub fn DataTransferItem::value(Self) -> Any
+
+pub type Date
+pub fn Date::from_millis(Float) -> Self
+pub fn Date::now() -> Self
+pub fn Date::to_millis(Self) -> Float
+
+pub struct DebugConfiguration {
+  mut type_ : String
+  mut name : String
+  mut request : String
+}
+pub fn DebugConfiguration::as_json(Self) -> Any
+pub fn DebugConfiguration::delete_entry(Self, String) -> Unit
+pub fn DebugConfiguration::entries(Self) -> Array[(String, Any)]
+pub fn DebugConfiguration::from_json(Any) -> Self
+pub fn DebugConfiguration::get_entry(Self, String) -> Any?
+pub fn DebugConfiguration::new(String, String, String, entries? : Array[(String, Any)]) -> Self
+pub fn DebugConfiguration::set_entry(Self, String, Any) -> Unit
+
+pub type DebugConsole
+pub fn DebugConsole::append(Self, String) -> Unit
+pub fn DebugConsole::append_line(Self, String) -> Unit
+
+pub(all) enum DebugConsoleMode {
+  Separate
+  MergeWithParent
+} derive(Eq)
+
+pub struct DebugProtocolBreakpoint {
+  json : Any
+}
+pub fn DebugProtocolBreakpoint::as_json(Self) -> Any
+pub fn DebugProtocolBreakpoint::from_json(Any) -> Self
+
+pub type DebugSession
+pub fn DebugSession::configuration(Self) -> DebugConfiguration
+pub async fn DebugSession::custom_request(Self, String, args? : Any) -> Any
+pub async fn DebugSession::get_debug_protocol_breakpoint(Self, Breakpoint) -> DebugProtocolBreakpoint?
+pub fn DebugSession::id(Self) -> String
+pub fn DebugSession::name(Self) -> String
+pub fn DebugSession::parent_session(Self) -> Self?
+pub fn DebugSession::set_name(Self, String) -> Unit
+pub fn DebugSession::type_(Self) -> String
+pub fn DebugSession::workspace_folder(Self) -> WorkspaceFolder?
+
+pub struct DebugSessionCustomEvent {
+  session : DebugSession
+  event : String
+  body : Any
+}
+pub fn DebugSessionCustomEvent::new(DebugSession, String, Any) -> Self
+
+pub(all) struct DebugSessionOptions {
+  mut parent_session : DebugSession?
+  mut lifecycle_managed_by_parent : Bool?
+  mut console_mode : DebugConsoleMode?
+  mut no_debug : Bool?
+  mut compact : Bool?
+  mut suppress_save_before_start : Bool?
+  mut suppress_debug_toolbar : Bool?
+  mut suppress_debug_statusbar : Bool?
+  mut suppress_debug_view : Bool?
+  mut test_run : Any?
+}
+pub fn DebugSessionOptions::new(parent_session? : DebugSession, lifecycle_managed_by_parent? : Bool, console_mode? : DebugConsoleMode, no_debug? : Bool, compact? : Bool, suppress_save_before_start? : Bool, suppress_debug_toolbar? : Bool, suppress_debug_statusbar? : Bool, suppress_debug_view? : Bool, test_run? : Any) -> Self
+
+pub type DebugStackFrame
+pub fn DebugStackFrame::frame_id(Self) -> Int
+pub fn DebugStackFrame::new(DebugSession, Int, Int) -> Self
+pub fn DebugStackFrame::session(Self) -> DebugSession
+pub fn DebugStackFrame::thread_id(Self) -> Int
+
+pub type DebugStackItem
+pub fn DebugStackItem::as_frame(Self) -> DebugStackFrame?
+pub fn DebugStackItem::as_thread(Self) -> DebugThread?
+pub fn DebugStackItem::from_frame(DebugStackFrame) -> Self
+pub fn DebugStackItem::from_thread(DebugThread) -> Self
+
+pub type DebugThread
+pub fn DebugThread::new(DebugSession, Int) -> Self
+pub fn DebugThread::session(Self) -> DebugSession
+pub fn DebugThread::thread_id(Self) -> Int
+
+pub(all) enum Declaration {
+  LocationValue(Location)
+  Locations(Array[Location])
+  LocationLinks(Array[LocationLink])
+}
+
+pub(all) struct DecorationInstanceRenderOptions {
+  before : ThemableDecorationAttachmentRenderOptions?
+  after : ThemableDecorationAttachmentRenderOptions?
+  mut light : ThemableDecorationInstanceRenderOptions?
+  mut dark : ThemableDecorationInstanceRenderOptions?
+}
+pub fn DecorationInstanceRenderOptions::new(before? : ThemableDecorationAttachmentRenderOptions, after? : ThemableDecorationAttachmentRenderOptions, light? : ThemableDecorationInstanceRenderOptions, dark? : ThemableDecorationInstanceRenderOptions) -> Self
+
+pub type DecorationOptions
+pub fn DecorationOptions::new(Range, hover_message? : HoverMessage, render_options? : DecorationInstanceRenderOptions) -> Self
+
+pub(all) enum DecorationRangeBehavior {
+  OpenOpen
+  ClosedClosed
+  OpenClosed
+  ClosedOpen
+} derive(Eq)
+
+pub type DecorationRenderOptions
+pub fn DecorationRenderOptions::new(background_color? : ColorValue, outline? : String, outline_color? : ColorValue, outline_style? : String, outline_width? : String, border? : String, border_color? : ColorValue, border_radius? : String, border_spacing? : String, border_style? : String, border_width? : String, font_style? : String, font_weight? : String, text_decoration? : String, cursor? : String, color? : ColorValue, opacity? : String, letter_spacing? : String, gutter_icon_path? : UriOrString, gutter_icon_size? : String, overview_ruler_color? : ColorValue, before? : ThemableDecorationAttachmentRenderOptions, after? : ThemableDecorationAttachmentRenderOptions, is_whole_line? : Bool, range_behavior? : DecorationRangeBehavior, overview_ruler_lane? : OverviewRulerLane, light? : ThemableDecorationRenderOptions, dark? : ThemableDecorationRenderOptions) -> Self
+
+pub(all) enum Definition {
+  LocationValue(Location)
+  Locations(Array[Location])
+}
+
+pub(all) enum DefinitionLink {
+  LocationLinkValue(LocationLink)
+}
+pub fn DefinitionLink::as_location_link(Self) -> LocationLink
+
+pub type Diagnostic
+pub fn Diagnostic::clear_code(Self) -> Unit
+pub fn Diagnostic::clear_related_information(Self) -> Unit
+pub fn Diagnostic::clear_source(Self) -> Unit
+pub fn Diagnostic::clear_tags(Self) -> Unit
+pub fn Diagnostic::code(Self) -> DiagnosticCode?
+pub fn Diagnostic::message(Self) -> String
+pub fn Diagnostic::new(Range, String, severity? : DiagnosticSeverity) -> Self
+pub fn Diagnostic::range(Self) -> Range
+pub fn Diagnostic::related_information(Self) -> Array[DiagnosticRelatedInformation]?
+pub fn Diagnostic::set_code(Self, DiagnosticCode) -> Unit
+pub fn Diagnostic::set_message(Self, String) -> Unit
+pub fn Diagnostic::set_range(Self, Range) -> Unit
+pub fn Diagnostic::set_related_information(Self, Array[DiagnosticRelatedInformation]) -> Unit
+pub fn Diagnostic::set_severity(Self, DiagnosticSeverity) -> Unit
+pub fn Diagnostic::set_source(Self, String) -> Unit
+pub fn Diagnostic::set_tags(Self, Array[DiagnosticTag]) -> Unit
+pub fn Diagnostic::severity(Self) -> DiagnosticSeverity
+pub fn Diagnostic::source(Self) -> String?
+pub fn Diagnostic::tags(Self) -> Array[DiagnosticTag]?
+
+pub struct DiagnosticChangeEvent {
+  uris : Array[Uri]
+}
+pub fn DiagnosticChangeEvent::new(Array[Uri]) -> Self
+
+pub(all) enum DiagnosticCode {
+  Text(String)
+  Numeric(Int)
+  ValueAndTarget(DiagnosticCodeValue, Uri)
+}
+pub fn DiagnosticCode::as_int(Self) -> Int?
+pub fn DiagnosticCode::as_text(Self) -> String?
+pub fn DiagnosticCode::target(Self) -> Uri?
+
+pub(all) enum DiagnosticCodeValue {
+  Text(String)
+  Numeric(Int)
+}
+pub fn DiagnosticCodeValue::as_int(Self) -> Int?
+pub fn DiagnosticCodeValue::as_text(Self) -> String?
+
+pub type DiagnosticCollection
+pub fn DiagnosticCollection::as_disposable(Self) -> &Disposable
+pub fn DiagnosticCollection::clear(Self) -> Unit
+pub fn DiagnosticCollection::delete(Self, Uri) -> Unit
+pub fn DiagnosticCollection::get(Self, Uri) -> Array[Diagnostic]?
+pub fn DiagnosticCollection::name(Self) -> String
+pub fn DiagnosticCollection::set(Self, Uri, Array[Diagnostic]) -> Unit
+pub impl Disposable for DiagnosticCollection
+
+pub type DiagnosticRelatedInformation
+pub fn DiagnosticRelatedInformation::location(Self) -> Location
+pub fn DiagnosticRelatedInformation::message(Self) -> String
+pub fn DiagnosticRelatedInformation::new(Location, String) -> Self
+pub fn DiagnosticRelatedInformation::set_location(Self, Location) -> Unit
+pub fn DiagnosticRelatedInformation::set_message(Self, String) -> Unit
+
+pub(all) enum DiagnosticSeverity {
+  Error
+  Warning
+  Information
+  Hint
+} derive(Eq)
+
+pub(all) enum DiagnosticTag {
+  Unnecessary
+  Deprecated
+} derive(Eq)
+
+pub struct DialogFilters {
+  pairs : Array[(String, Array[String])]
+}
+pub fn DialogFilters::new(Array[(String, Array[String])]) -> Self
+
+pub struct DirectoryEntry {
+  name : String
+  file_type : FileType
+}
+
+pub type DocumentDropEdit
+pub fn DocumentDropEdit::additional_edit(Self) -> WorkspaceEdit?
+pub fn DocumentDropEdit::insert_text(Self) -> StringOrSnippetString?
+pub fn DocumentDropEdit::kind(Self) -> DocumentDropOrPasteEditKind?
+pub fn DocumentDropEdit::new(StringOrSnippetString, title? : String, kind? : DocumentDropOrPasteEditKind) -> Self
+pub fn DocumentDropEdit::title(Self) -> String?
+pub fn DocumentDropEdit::yield_to(Self) -> Array[DocumentDropOrPasteEditKind]?
+
+pub struct DocumentDropEditProviderMetadata {
+  provided_kinds : Array[DocumentDropOrPasteEditKind]?
+  drop_mime_types : Array[String]
+}
+pub fn DocumentDropEditProviderMetadata::new(Array[String], provided_kinds? : Array[DocumentDropOrPasteEditKind]) -> Self
+
+pub(all) enum DocumentDropOrPasteEditKind {
+  Empty
+  Text
+  TextUpdateImports
+  Custom(String)
+}
+pub fn DocumentDropOrPasteEditKind::append(Self, String) -> Self
+pub fn DocumentDropOrPasteEditKind::contains(Self, Self) -> Bool
+pub fn DocumentDropOrPasteEditKind::intersects(Self, Self) -> Bool
+pub fn DocumentDropOrPasteEditKind::value(Self) -> String
+
+pub struct DocumentFilter {
+  language : String?
+  notebook_type : String?
+  scheme : String?
+  pattern : GlobPattern?
+}
+pub fn DocumentFilter::new(language? : String, notebook_type? : String, scheme? : String, pattern? : GlobPattern) -> Self
+
+pub type DocumentHighlight
+pub fn DocumentHighlight::clear_kind(Self) -> Unit
+pub fn DocumentHighlight::kind(Self) -> DocumentHighlightKind?
+pub fn DocumentHighlight::new(Range, kind? : DocumentHighlightKind) -> Self
+pub fn DocumentHighlight::range(Self) -> Range
+pub fn DocumentHighlight::set_kind(Self, DocumentHighlightKind) -> Unit
+pub fn DocumentHighlight::set_range(Self, Range) -> Unit
+
+pub(all) enum DocumentHighlightKind {
+  Text
+  Read
+  Write
+} derive(Eq)
+
+pub type DocumentLink
+pub fn DocumentLink::clear_target(Self) -> Unit
+pub fn DocumentLink::clear_tooltip(Self) -> Unit
+pub fn DocumentLink::new(Range, target? : Uri) -> Self
+pub fn DocumentLink::range(Self) -> Range
+pub fn DocumentLink::set_range(Self, Range) -> Unit
+pub fn DocumentLink::set_target(Self, Uri) -> Unit
+pub fn DocumentLink::set_tooltip(Self, String) -> Unit
+pub fn DocumentLink::target(Self) -> Uri?
+pub fn DocumentLink::tooltip(Self) -> String?
+
+pub type DocumentPasteEdit
+pub fn DocumentPasteEdit::kind(Self) -> DocumentDropOrPasteEditKind
+pub fn DocumentPasteEdit::new(StringOrSnippetString, String, DocumentDropOrPasteEditKind) -> Self
+pub fn DocumentPasteEdit::set_kind(Self, DocumentDropOrPasteEditKind) -> Unit
+pub fn DocumentPasteEdit::set_title(Self, String) -> Unit
+pub fn DocumentPasteEdit::title(Self) -> String
+
+pub struct DocumentPasteEditContext {
+  trigger_kind : DocumentPasteTriggerKind
+  only : DocumentDropOrPasteEditKind?
+}
+pub fn DocumentPasteEditContext::new(DocumentPasteTriggerKind, only? : DocumentDropOrPasteEditKind) -> Self
+
+pub struct DocumentPasteProviderMetadata {
+  provided_kinds : Array[DocumentDropOrPasteEditKind]
+  copy_mime_types : Array[String]?
+  paste_mime_types : Array[String]?
+}
+pub fn DocumentPasteProviderMetadata::new(Array[DocumentDropOrPasteEditKind], copy_mime_types? : Array[String], paste_mime_types? : Array[String]) -> Self
+
+pub(all) enum DocumentPasteTriggerKind {
+  Automatic
+  PasteAs
+} derive(Eq)
+
+pub(all) enum DocumentSelector {
+  Filter(DocumentFilter)
+  Language(String)
+  Entries(Array[DocumentSelectorEntry])
+}
+pub fn DocumentSelector::from_filters(Array[DocumentFilter]) -> Self
+pub fn DocumentSelector::from_languages(Array[String]) -> Self
+
+pub(all) enum DocumentSelectorEntry {
+  Filter(DocumentFilter)
+  Language(String)
+}
+
+pub type DocumentSymbol
+pub fn DocumentSymbol::new(String, String, SymbolKind, Range, Range) -> Self
+
+pub(all) struct DocumentSymbolProviderMetadata {
+  mut label : String?
+}
+pub fn DocumentSymbolProviderMetadata::new(label? : String) -> Self
+
+pub(all) enum EndOfLine {
+  LF
+  CRLF
+} derive(Eq)
+
+pub type EnvironmentVariableCollection
+pub fn EnvironmentVariableCollection::append(Self, String, String, options? : EnvironmentVariableMutatorOptions) -> Unit
+pub fn EnvironmentVariableCollection::clear(Self) -> Unit
+pub fn EnvironmentVariableCollection::clear_description(Self) -> Unit
+pub fn EnvironmentVariableCollection::delete(Self, String) -> Unit
+pub fn EnvironmentVariableCollection::description(Self) -> MarkdownStringValue?
+pub fn EnvironmentVariableCollection::get(Self, String) -> EnvironmentVariableMutator?
+pub fn EnvironmentVariableCollection::persistent(Self) -> Bool
+pub fn EnvironmentVariableCollection::prepend(Self, String, String, options? : EnvironmentVariableMutatorOptions) -> Unit
+pub fn EnvironmentVariableCollection::replace(Self, String, String, options? : EnvironmentVariableMutatorOptions) -> Unit
+pub fn EnvironmentVariableCollection::set_description_markdown(Self, MarkdownString) -> Unit
+pub fn EnvironmentVariableCollection::set_description_text(Self, String) -> Unit
+pub fn EnvironmentVariableCollection::set_persistent(Self, Bool) -> Unit
+
+pub struct EnvironmentVariableMutator {
+  type_ : EnvironmentVariableMutatorType
+  value_ : String
+  options_ : EnvironmentVariableMutatorOptions
+}
+
+pub(all) struct EnvironmentVariableMutatorOptions {
+  mut apply_at_process_creation : Bool?
+  mut apply_at_shell_integration : Bool?
+}
+pub fn EnvironmentVariableMutatorOptions::new(apply_at_process_creation? : Bool, apply_at_shell_integration? : Bool) -> Self
+
+pub(all) enum EnvironmentVariableMutatorType {
+  Replace
+  Append
+  Prepend
+} derive(Eq)
+
+pub(all) struct EnvironmentVariableScope {
+  mut workspace_folder : WorkspaceFolder?
+}
+pub fn EnvironmentVariableScope::new(workspace_folder? : WorkspaceFolder) -> Self
+
+pub type Event[T]
+pub fn[T] Event::subscribe(Self[T], (T) -> Unit) -> &Disposable
+pub fn[T] Event::subscribe_async(Self[T], async (T) -> Unit) -> &Disposable
+
+pub type EventEmitter[T]
+pub fn[T] EventEmitter::event(Self[T]) -> Event[T]
+pub fn[T] EventEmitter::fire(Self[T], T) -> Unit
+pub fn[T] EventEmitter::new() -> Self[T]
+pub impl[T] Disposable for EventEmitter[T]
+
+pub type Extension[T]
+pub async fn[T] Extension::activate(Self[T]) -> T
+pub fn[T] Extension::exports(Self[T]) -> T
+pub fn[T] Extension::extension_kind(Self[T]) -> ExtensionKind
+pub fn[T] Extension::extension_path(Self[T]) -> String
+pub fn[T] Extension::extension_uri(Self[T]) -> Uri
+pub fn[T] Extension::id(Self[T]) -> String
+pub fn[T] Extension::is_active(Self[T]) -> Bool
+pub fn[T] Extension::package_json(Self[T]) -> Any
+pub fn[T] Extension::set_extension_kind(Self[T], ExtensionKind) -> Unit
+
+pub type ExtensionContext
+pub fn ExtensionContext::as_absolute_path(Self, String) -> String
+pub fn ExtensionContext::environment_variable_collection(Self) -> GlobalEnvironmentVariableCollection
+pub fn ExtensionContext::extension_mode(Self) -> ExtensionMode
+pub fn ExtensionContext::extension_path(Self) -> String
+pub fn ExtensionContext::extension_uri(Self) -> Uri
+pub fn ExtensionContext::global_state(Self) -> Memento
+pub fn ExtensionContext::secrets(Self) -> SecretStorage
+pub fn ExtensionContext::subscriptions(Self) -> Array[&Disposable]
+pub fn ExtensionContext::workspace_state(Self) -> Memento
+
+pub(all) enum ExtensionKind {
+  UI
+  Workspace
+} derive(Eq)
+
+pub(all) enum ExtensionMode {
+  Production
+  Development
+  Test
+} derive(Eq)
+
+pub type ExtensionTerminalOptions
+pub fn ExtensionTerminalOptions::new(String, Pseudoterminal, icon_path? : IconPath, color? : ThemeColor, location? : TerminalLocationValue, is_transient? : Bool, shell_integration_nonce? : String) -> Self
+
+pub struct FileChangeEvent {
+  uri : Uri
+  type_ : FileChangeType
+}
+pub fn FileChangeEvent::new(Uri, FileChangeType) -> Self
+
+pub(all) enum FileChangeType {
+  Created
+  Changed
+  Deleted
+} derive(Eq)
+
+pub struct FileCreateEvent {
+  files : Array[Uri]
+}
+pub fn FileCreateEvent::new(Array[Uri]) -> Self
+
+pub type FileDecoration
+pub fn FileDecoration::badge(Self) -> String?
+pub fn FileDecoration::clear_badge(Self) -> Unit
+pub fn FileDecoration::clear_color(Self) -> Unit
+pub fn FileDecoration::clear_propagate(Self) -> Unit
+pub fn FileDecoration::clear_tooltip(Self) -> Unit
+pub fn FileDecoration::color(Self) -> ThemeColor?
+pub fn FileDecoration::new(badge? : String, tooltip? : String, color? : ThemeColor) -> Self
+pub fn FileDecoration::propagate(Self) -> Bool?
+pub fn FileDecoration::set_badge(Self, String) -> Unit
+pub fn FileDecoration::set_color(Self, ThemeColor) -> Unit
+pub fn FileDecoration::set_propagate(Self, Bool) -> Unit
+pub fn FileDecoration::set_tooltip(Self, String) -> Unit
+pub fn FileDecoration::tooltip(Self) -> String?
+
+pub(all) enum FileDecorationChange {
+  UriValue(Uri)
+  Uris(Array[Uri])
+  All
+}
+pub fn FileDecorationChange::all() -> Self
+pub fn FileDecorationChange::from_uri(Uri) -> Self
+pub fn FileDecorationChange::from_uris(Array[Uri]) -> Self
+
+pub struct FileDeleteEvent {
+  files : Array[Uri]
+}
+pub fn FileDeleteEvent::new(Array[Uri]) -> Self
+
+pub(all) enum FilePermission {
+  Readonly
+} derive(Eq)
+
+pub struct FileRenameEvent {
+  files : Array[FileRenameEventEntry]
+}
+pub fn FileRenameEvent::new(Array[FileRenameEventEntry]) -> Self
+
+pub struct FileRenameEventEntry {
+  oldUri : Uri
+  newUri : Uri
+}
+pub fn FileRenameEventEntry::new(Uri, Uri) -> Self
+
+pub(all) struct FileStat {
+  file_type : FileType
+  mut ctime : Int
+  mut mtime : Int
+  mut size : Int
+  mut permissions : FilePermission?
+}
+pub fn FileStat::new(FileType, Int, Int, Int, permissions? : FilePermission) -> Self
+
+pub type FileSystem
+pub async fn FileSystem::copy(Self, Uri, Uri, overwrite? : Bool) -> Unit
+pub async fn FileSystem::create_directory(Self, Uri) -> Unit
+pub async fn FileSystem::delete(Self, Uri, recursive? : Bool, use_trash? : Bool) -> Unit
+pub fn FileSystem::is_writable_file_system(Self, String) -> Bool?
+pub async fn FileSystem::read_directory(Self, Uri) -> Array[DirectoryEntry]
+pub async fn FileSystem::read_file(Self, Uri) -> Bytes
+pub async fn FileSystem::rename(Self, Uri, Uri, overwrite? : Bool) -> Unit
+pub async fn FileSystem::stat(Self, Uri) -> FileStat
+pub async fn FileSystem::write_file(Self, Uri, Bytes) -> Unit
+
+pub type FileSystemError
+pub fn FileSystemError::code(Self) -> String
+pub fn FileSystemError::file_exists(message_or_uri? : StringOrUri) -> Self
+pub fn FileSystemError::file_is_a_directory(message_or_uri? : StringOrUri) -> Self
+pub fn FileSystemError::file_not_a_directory(message_or_uri? : StringOrUri) -> Self
+pub fn FileSystemError::file_not_found(message_or_uri? : StringOrUri) -> Self
+pub fn FileSystemError::new(message_or_uri? : StringOrUri) -> Self
+pub fn FileSystemError::no_permissions(message_or_uri? : StringOrUri) -> Self
+pub fn FileSystemError::unavailable(message_or_uri? : StringOrUri) -> Self
+
+pub type FileSystemWatcher
+pub fn FileSystemWatcher::ignore_change_events(Self) -> Bool
+pub fn FileSystemWatcher::ignore_create_events(Self) -> Bool
+pub fn FileSystemWatcher::ignore_delete_events(Self) -> Bool
+pub fn FileSystemWatcher::on_did_change(Self) -> Event[Uri]
+pub fn FileSystemWatcher::on_did_create(Self) -> Event[Uri]
+pub fn FileSystemWatcher::on_did_delete(Self) -> Event[Uri]
+pub impl Disposable for FileSystemWatcher
+
+pub(all) enum FileType {
+  Unknown
+  File
+  Directory
+  SymbolicLink
+} derive(Eq)
+
+pub struct FileWillCreateEvent {
+  files : Array[Uri]
+  token : CancellationToken
+}
+pub fn FileWillCreateEvent::wait_until(Self, async () -> WorkspaceEdit) -> Unit
+pub fn FileWillCreateEvent::wait_until_edit(Self, WorkspaceEdit) -> Unit
+
+pub struct FileWillDeleteEvent {
+  files : Array[Uri]
+  token : CancellationToken
+}
+pub fn FileWillDeleteEvent::wait_until(Self, async () -> WorkspaceEdit) -> Unit
+pub fn FileWillDeleteEvent::wait_until_edit(Self, WorkspaceEdit) -> Unit
+
+pub struct FileWillRenameEvent {
+  files : Array[FileRenameEventEntry]
+  token : CancellationToken
+}
+pub fn FileWillRenameEvent::wait_until(Self, async () -> WorkspaceEdit) -> Unit
+pub fn FileWillRenameEvent::wait_until_edit(Self, WorkspaceEdit) -> Unit
+
+pub struct FoldingContext {
+  max_ranges : Int
+}
+pub fn FoldingContext::new(Int) -> Self
+
+pub type FoldingRange
+pub fn FoldingRange::clear_kind(Self) -> Unit
+pub fn FoldingRange::end(Self) -> Int
+pub fn FoldingRange::kind(Self) -> FoldingRangeKind?
+pub fn FoldingRange::new(Int, Int, kind? : FoldingRangeKind) -> Self
+pub fn FoldingRange::set_end(Self, Int) -> Unit
+pub fn FoldingRange::set_kind(Self, FoldingRangeKind) -> Unit
+pub fn FoldingRange::set_start(Self, Int) -> Unit
+pub fn FoldingRange::start(Self) -> Int
+
+pub(all) enum FoldingRangeKind {
+  Comment
+  Imports
+  Region
+} derive(Eq)
+
+pub(all) struct FormattingOptions {
+  mut tab_size : Int
+  mut insert_spaces : Bool
+}
+pub fn FormattingOptions::new(Int, Bool) -> Self
+
+pub type FunctionBreakpoint
+pub fn FunctionBreakpoint::function_name(Self) -> String
+pub fn FunctionBreakpoint::new(String, enabled? : Bool, condition? : String, hit_condition? : String, log_message? : String) -> Self
+
+pub(all) enum GlobPattern {
+  Text(String)
+  Relative(RelativePattern)
+}
+
+pub type GlobalEnvironmentVariableCollection
+pub fn GlobalEnvironmentVariableCollection::append(Self, String, String, options? : EnvironmentVariableMutatorOptions) -> Unit
+pub fn GlobalEnvironmentVariableCollection::clear(Self) -> Unit
+pub fn GlobalEnvironmentVariableCollection::clear_description(Self) -> Unit
+pub fn GlobalEnvironmentVariableCollection::delete(Self, String) -> Unit
+pub fn GlobalEnvironmentVariableCollection::description(Self) -> MarkdownStringValue?
+pub fn GlobalEnvironmentVariableCollection::get(Self, String) -> EnvironmentVariableMutator?
+pub fn GlobalEnvironmentVariableCollection::get_scoped(Self, EnvironmentVariableScope) -> EnvironmentVariableCollection
+pub fn GlobalEnvironmentVariableCollection::persistent(Self) -> Bool
+pub fn GlobalEnvironmentVariableCollection::prepend(Self, String, String, options? : EnvironmentVariableMutatorOptions) -> Unit
+pub fn GlobalEnvironmentVariableCollection::replace(Self, String, String, options? : EnvironmentVariableMutatorOptions) -> Unit
+pub fn GlobalEnvironmentVariableCollection::set_description_markdown(Self, MarkdownString) -> Unit
+pub fn GlobalEnvironmentVariableCollection::set_description_text(Self, String) -> Unit
+pub fn GlobalEnvironmentVariableCollection::set_persistent(Self, Bool) -> Unit
+
+pub type Hover
+pub fn Hover::clear_range(Self) -> Unit
+pub fn Hover::contents(Self) -> Array[HoverContent]
+pub fn Hover::new(Array[HoverContent], range? : Range) -> Self
+pub fn Hover::new_single(HoverContent, range? : Range) -> Self
+pub fn Hover::range(Self) -> Range?
+pub fn Hover::set_contents(Self, Array[HoverContent]) -> Unit
+pub fn Hover::set_range(Self, Range) -> Unit
+
+pub(all) enum HoverContent {
+  Markdown(MarkdownString)
+  Marked(MarkedString)
+}
+
+pub(all) enum HoverMessage {
+  Single(MarkdownStringOrMarkedString)
+  Many(Array[MarkdownStringOrMarkedString])
+}
+
+pub(all) enum IconPath {
+  UriValue(Uri)
+  LightDarkValue(IconPathLightDark)
+  ThemeIconValue(ThemeIcon)
+}
+pub fn IconPath::light_dark(Uri, Uri) -> Self
+
+pub struct IconPathLightDark {
+  light : Uri
+  dark : Uri
+}
+pub fn IconPathLightDark::new(Uri, Uri) -> Self
+
+pub type InlayHint
+pub fn InlayHint::clear_kind(Self) -> Unit
+pub fn InlayHint::kind(Self) -> InlayHintKind?
+pub fn InlayHint::label(Self) -> InlayHintLabelValue?
+pub fn InlayHint::new(Position, InlayHintLabelValue, kind? : InlayHintKind) -> Self
+pub fn InlayHint::position(Self) -> Position
+pub fn InlayHint::set_kind(Self, InlayHintKind) -> Unit
+pub fn InlayHint::set_label(Self, InlayHintLabelValue) -> Unit
+
+pub(all) enum InlayHintKind {
+  Type
+  Parameter
+} derive(Eq)
+
+pub type InlayHintLabelPart
+pub fn InlayHintLabelPart::new(String) -> Self
+pub fn InlayHintLabelPart::value(Self) -> String
+
+pub(all) enum InlayHintLabelValue {
+  Text(String)
+  Parts(Array[InlayHintLabelPart])
+}
+
+pub struct InlineCompletionContext {
+  trigger_kind : InlineCompletionTriggerKind
+  selected_info : SelectedCompletionInfo?
+}
+pub fn InlineCompletionContext::new(InlineCompletionTriggerKind, selected_info? : SelectedCompletionInfo) -> Self
+
+pub type InlineCompletionItem
+pub fn InlineCompletionItem::command(Self) -> Command?
+pub fn InlineCompletionItem::insert_text(Self) -> StringOrSnippetString?
+pub fn InlineCompletionItem::new(StringOrSnippetString, range? : Range, command? : Command) -> Self
+pub fn InlineCompletionItem::range(Self) -> Range?
+
+pub type InlineCompletionList
+pub fn InlineCompletionList::items(Self) -> Array[InlineCompletionItem]
+pub fn InlineCompletionList::new(Array[InlineCompletionItem]) -> Self
+
+pub(all) enum InlineCompletionTriggerKind {
+  Invoke
+  Automatic
+} derive(Eq)
+
+pub(all) enum InlineValue {
+  Text(InlineValueText)
+  VariableLookup(InlineValueVariableLookup)
+  EvaluatableExpression(InlineValueEvaluatableExpression)
+}
+pub fn InlineValue::from_evaluatable_expression(InlineValueEvaluatableExpression) -> Self
+pub fn InlineValue::from_text(InlineValueText) -> Self
+pub fn InlineValue::from_variable_lookup(InlineValueVariableLookup) -> Self
+
+pub struct InlineValueContext {
+  frame_id : Int
+  stopped_location : Range
+}
+pub fn InlineValueContext::new(Int, Range) -> Self
+
+pub type InlineValueEvaluatableExpression
+pub fn InlineValueEvaluatableExpression::expression(Self) -> String?
+pub fn InlineValueEvaluatableExpression::new(Range, expression? : String) -> Self
+pub fn InlineValueEvaluatableExpression::range(Self) -> Range
+
+pub type InlineValueText
+pub fn InlineValueText::new(Range, String) -> Self
+pub fn InlineValueText::range(Self) -> Range
+pub fn InlineValueText::text(Self) -> String
+
+pub type InlineValueVariableLookup
+pub fn InlineValueVariableLookup::case_sensitive_lookup(Self) -> Bool
+pub fn InlineValueVariableLookup::new(Range, variable_name? : String, case_sensitive? : Bool) -> Self
+pub fn InlineValueVariableLookup::range(Self) -> Range
+pub fn InlineValueVariableLookup::variable_name(Self) -> String?
+
+pub type InputBox
+pub fn InputBox::busy(Self) -> Bool
+pub fn InputBox::buttons(Self) -> Array[QuickInputButton]
+pub fn InputBox::clear_placeholder(Self) -> Unit
+pub fn InputBox::clear_step(Self) -> Unit
+pub fn InputBox::clear_title(Self) -> Unit
+pub fn InputBox::clear_total_steps(Self) -> Unit
+pub fn InputBox::clear_validation_message(Self) -> Unit
+pub fn InputBox::clear_value_selection(Self) -> Unit
+pub fn InputBox::enabled(Self) -> Bool
+pub fn InputBox::hide(Self) -> Unit
+pub fn InputBox::ignore_focus_out(Self) -> Bool
+pub fn InputBox::on_did_accept(Self) -> Event[Unit]
+pub fn InputBox::on_did_change_value(Self) -> Event[String]
+pub fn InputBox::on_did_hide(Self) -> Event[Unit]
+pub fn InputBox::on_did_trigger_button(Self) -> Event[QuickInputButton]
+pub fn InputBox::password(Self) -> Bool
+pub fn InputBox::placeholder(Self) -> String?
+pub fn InputBox::prompt(Self) -> String?
+pub fn InputBox::set_busy(Self, Bool) -> Unit
+pub fn InputBox::set_buttons(Self, Array[QuickInputButton]) -> Unit
+pub fn InputBox::set_enabled(Self, Bool) -> Unit
+pub fn InputBox::set_ignore_focus_out(Self, Bool) -> Unit
+pub fn InputBox::set_password(Self, Bool) -> Unit
+pub fn InputBox::set_placeholder(Self, String) -> Unit
+pub fn InputBox::set_prompt(Self, String) -> Unit
+pub fn InputBox::set_step(Self, Int) -> Unit
+pub fn InputBox::set_title(Self, String) -> Unit
+pub fn InputBox::set_total_steps(Self, Int) -> Unit
+pub fn InputBox::set_validation_message(Self, InputBoxValidationResult) -> Unit
+pub fn InputBox::set_value(Self, String) -> Unit
+pub fn InputBox::set_value_selection(Self, Array[Int]) -> Unit
+pub fn InputBox::show(Self) -> Unit
+pub fn InputBox::step(Self) -> Int?
+pub fn InputBox::title(Self) -> String?
+pub fn InputBox::total_steps(Self) -> Int?
+pub fn InputBox::validation_message(Self) -> InputBoxValidationResult?
+pub fn InputBox::value(Self) -> String
+pub fn InputBox::value_selection(Self) -> Array[Int]?
+pub impl Disposable for InputBox
+
+pub(all) struct InputBoxOptions {
+  mut title : String?
+  mut value : String?
+  mut value_selection : Array[Int]?
+  mut prompt : String?
+  mut place_holder : String?
+  mut password : Bool?
+  mut ignore_focus_out : Bool?
+  validate_input : InputBoxValidateInput?
+}
+pub fn InputBoxOptions::new(title? : String, value? : String, value_selection? : Array[Int], prompt? : String, place_holder? : String, password? : Bool, ignore_focus_out? : Bool, validate_input? : (String) -> InputBoxValidationResult?) -> Self
+pub fn InputBoxOptions::new_async(title? : String, value? : String, value_selection? : Array[Int], prompt? : String, place_holder? : String, password? : Bool, ignore_focus_out? : Bool, validate_input? : async (String) -> InputBoxValidationResult?) -> Self
+
+pub(all) enum InputBoxValidateInput {
+  Sync((String) -> InputBoxValidationResult?)
+  Async(async (String) -> InputBoxValidationResult?)
+}
+
+pub struct InputBoxValidationMessage {
+  message : String
+  severity : InputBoxValidationSeverity
+}
+pub fn InputBoxValidationMessage::new(String, InputBoxValidationSeverity) -> Self
+
+pub(all) enum InputBoxValidationResult {
+  Text(String)
+  Message(InputBoxValidationMessage)
+}
+
+pub(all) enum InputBoxValidationSeverity {
+  Info
+  Warning
+  Error
+} derive(Eq)
+
+pub type JsError
+pub fn JsError::new(String) -> Self
+
+pub(all) enum LanguageSelector {
+  DocumentSelector(DocumentSelector)
+}
+pub fn LanguageSelector::as_document_selector(Self) -> DocumentSelector
+
+pub type LanguageStatusItem
+pub fn LanguageStatusItem::accessibility_information(Self) -> AccessibilityInformation?
+pub fn LanguageStatusItem::clear_accessibility_information(Self) -> Unit
+pub fn LanguageStatusItem::selector(Self) -> DocumentSelector
+pub fn LanguageStatusItem::set_accessibility_information(Self, AccessibilityInformation) -> Unit
+pub fn LanguageStatusItem::set_selector(Self, DocumentSelector) -> Unit
+pub fn LanguageStatusItem::set_severity(Self, LanguageStatusSeverity) -> Unit
+pub fn LanguageStatusItem::set_text(Self, String) -> Unit
+pub fn LanguageStatusItem::severity(Self) -> LanguageStatusSeverity
+pub fn LanguageStatusItem::text(Self) -> String
+pub impl Disposable for LanguageStatusItem
+
+pub(all) enum LanguageStatusSeverity {
+  Information
+  Warning
+  Error
+} derive(Eq)
+
+pub type LinkedEditingRanges
+pub fn LinkedEditingRanges::new(Array[Range], word_pattern? : RegExp) -> Self
+pub fn LinkedEditingRanges::ranges(Self) -> Array[Range]
+pub fn LinkedEditingRanges::word_pattern(Self) -> RegExp?
+
+pub type Location
+pub fn Location::from_position(Uri, Position) -> Self
+pub fn Location::new(Uri, Range) -> Self
+pub fn Location::range(Self) -> Range
+pub fn Location::set_range(Self, Range) -> Unit
+pub fn Location::set_uri(Self, Uri) -> Unit
+pub fn Location::uri(Self) -> Uri
+
+pub(all) struct LocationLink {
+  mut targetUri : Uri
+  mut targetRange : Range
+  mut targetSelectionRange : Range?
+  mut originSelectionRange : Range?
+}
+pub fn LocationLink::new(Uri, Range, target_selection_range? : Range, origin_selection_range? : Range) -> Self
+
+pub(all) enum LogLevel {
+  Off
+  Trace
+  Debug
+  Info
+  Warning
+  Error
+} derive(Eq)
+
+pub type LogOutputChannel
+pub fn LogOutputChannel::debug(Self, String) -> Unit
+pub fn LogOutputChannel::error(Self, String) -> Unit
+pub fn LogOutputChannel::info(Self, String) -> Unit
+pub fn LogOutputChannel::log_level(Self) -> LogLevel
+pub fn LogOutputChannel::on_did_change_log_level(Self) -> Event[LogLevel]
+pub fn LogOutputChannel::trace(Self, String) -> Unit
+pub fn LogOutputChannel::warn(Self, String) -> Unit
+pub impl Disposable for LogOutputChannel
+
+pub type MarkdownString
+pub fn MarkdownString::append_codeblock(Self, String, language? : String) -> Self
+pub fn MarkdownString::append_markdown(Self, String) -> Self
+pub fn MarkdownString::append_text(Self, String) -> Self
+pub fn MarkdownString::base_uri(Self) -> Uri?
+pub fn MarkdownString::clear_base_uri(Self) -> Unit
+pub fn MarkdownString::clear_enabled_commands(Self) -> Unit
+pub fn MarkdownString::clear_is_trusted(Self) -> Unit
+pub fn MarkdownString::clear_support_html(Self) -> Unit
+pub fn MarkdownString::clear_support_theme_icons(Self) -> Unit
+pub fn MarkdownString::enabled_commands(Self) -> Array[String]?
+pub fn MarkdownString::is_trusted(Self) -> MarkdownStringTrustedValue?
+pub fn MarkdownString::new(value? : String, support_theme_icons? : Bool) -> Self
+pub fn MarkdownString::set_base_uri(Self, Uri) -> Unit
+pub fn MarkdownString::set_enabled_commands(Self, Array[String]) -> Unit
+pub fn MarkdownString::set_is_trusted(Self, MarkdownStringTrustedValue) -> Unit
+pub fn MarkdownString::set_support_html(Self, Bool) -> Unit
+pub fn MarkdownString::set_support_theme_icons(Self, Bool) -> Unit
+pub fn MarkdownString::set_value(Self, String) -> Unit
+pub fn MarkdownString::support_html(Self) -> Bool?
+pub fn MarkdownString::support_theme_icons(Self) -> Bool?
+pub fn MarkdownString::value(Self) -> String
+
+pub(all) enum MarkdownStringOrMarkedString {
+  Markdown(MarkdownString)
+  Marked(MarkedString)
+}
+
+pub(all) enum MarkdownStringTrustedValue {
+  BoolValue(Bool)
+  EnabledCommands(Array[String])
+}
+
+pub(all) enum MarkdownStringValue {
+  Text(String)
+  Markdown(MarkdownString)
+}
+
+pub struct MarkedString {
+  language : String
+  value : String
+}
+pub fn MarkedString::new(String, String) -> Self
+
+pub type Memento
+pub fn[T] Memento::get(Self, String) -> T?
+pub fn[T] Memento::get_or(Self, String, T) -> T
+pub async fn[T] Memento::update(Self, String, T) -> Unit
+
+pub(all) struct MessageItem {
+  mut title : String
+  mut isCloseAffordance : Bool?
+}
+pub fn MessageItem::new(String, is_close_affordance? : Bool) -> Self
+
+pub(all) struct MessageOptions {
+  mut modal : Bool?
+  mut detail : String?
+}
+pub fn MessageOptions::new(modal? : Bool, detail? : String) -> Self
+
+pub type NotebookCell
+pub fn NotebookCell::document(Self) -> TextDocument
+pub fn NotebookCell::execution_summary(Self) -> NotebookCellExecutionSummary?
+pub fn NotebookCell::index(Self) -> Int
+pub fn NotebookCell::kind(Self) -> NotebookCellKind
+pub fn NotebookCell::metadata(Self) -> Any
+pub fn NotebookCell::notebook(Self) -> NotebookDocument
+pub fn NotebookCell::outputs(Self) -> Array[NotebookCellOutput]
+
+pub type NotebookCellData
+pub fn NotebookCellData::clear_execution_summary(Self) -> Unit
+pub fn NotebookCellData::clear_metadata(Self) -> Unit
+pub fn NotebookCellData::clear_outputs(Self) -> Unit
+pub fn NotebookCellData::execution_summary(Self) -> NotebookCellExecutionSummary?
+pub fn NotebookCellData::kind(Self) -> NotebookCellKind
+pub fn NotebookCellData::language_id(Self) -> String
+pub fn NotebookCellData::metadata(Self) -> Any?
+pub fn NotebookCellData::new(NotebookCellKind, String, String) -> Self
+pub fn NotebookCellData::outputs(Self) -> Array[NotebookCellOutput]?
+pub fn NotebookCellData::set_execution_summary(Self, NotebookCellExecutionSummary) -> Unit
+pub fn NotebookCellData::set_kind(Self, NotebookCellKind) -> Unit
+pub fn NotebookCellData::set_language_id(Self, String) -> Unit
+pub fn NotebookCellData::set_metadata(Self, Any) -> Unit
+pub fn NotebookCellData::set_outputs(Self, Array[NotebookCellOutput]) -> Unit
+pub fn NotebookCellData::set_value(Self, String) -> Unit
+pub fn NotebookCellData::value(Self) -> String
+
+pub struct NotebookCellExecutionSummary {
+  executionOrder : Int?
+  success : Bool?
+  timing : NotebookCellExecutionTiming?
+}
+pub fn NotebookCellExecutionSummary::new(execution_order? : Int, success? : Bool, timing? : NotebookCellExecutionTiming) -> Self
+
+pub struct NotebookCellExecutionTiming {
+  startTime : Int
+  endTime : Int
+}
+pub fn NotebookCellExecutionTiming::new(Int, Int) -> Self
+
+pub(all) enum NotebookCellKind {
+  Markup
+  Code
+} derive(Eq)
+
+pub type NotebookCellOutput
+pub fn NotebookCellOutput::clear_metadata(Self) -> Unit
+pub fn NotebookCellOutput::items(Self) -> Array[NotebookCellOutputItem]
+pub fn NotebookCellOutput::metadata(Self) -> Any?
+pub fn NotebookCellOutput::new(Array[NotebookCellOutputItem], metadata? : Any) -> Self
+pub fn NotebookCellOutput::set_items(Self, Array[NotebookCellOutputItem]) -> Unit
+pub fn NotebookCellOutput::set_metadata(Self, Any) -> Unit
+
+pub type NotebookCellOutputItem
+pub fn NotebookCellOutputItem::data(Self) -> Bytes
+pub fn NotebookCellOutputItem::error(JsError) -> Self
+pub fn NotebookCellOutputItem::json(Any, mime? : String) -> Self
+pub fn NotebookCellOutputItem::mime(Self) -> String
+pub fn NotebookCellOutputItem::new(Bytes, String) -> Self
+pub fn NotebookCellOutputItem::set_data(Self, Bytes) -> Unit
+pub fn NotebookCellOutputItem::set_mime(Self, String) -> Unit
+pub fn NotebookCellOutputItem::stderr(String) -> Self
+pub fn NotebookCellOutputItem::stdout(String) -> Self
+pub fn NotebookCellOutputItem::text(String, mime? : String) -> Self
+
+pub type NotebookData
+pub fn NotebookData::cells(Self) -> Array[NotebookCellData]
+pub fn NotebookData::clear_metadata(Self) -> Unit
+pub fn NotebookData::metadata(Self) -> Any?
+pub fn NotebookData::new(Array[NotebookCellData]) -> Self
+pub fn NotebookData::set_cells(Self, Array[NotebookCellData]) -> Unit
+pub fn NotebookData::set_metadata(Self, Any) -> Unit
+
+pub type NotebookDocument
+pub fn NotebookDocument::cell_at(Self, Int) -> NotebookCell
+pub fn NotebookDocument::cell_count(Self) -> Int
+pub fn NotebookDocument::get_cells(Self, range? : NotebookRange) -> Array[NotebookCell]
+pub fn NotebookDocument::is_closed(Self) -> Bool
+pub fn NotebookDocument::is_dirty(Self) -> Bool
+pub fn NotebookDocument::is_untitled(Self) -> Bool
+pub fn NotebookDocument::metadata(Self) -> Any
+pub fn NotebookDocument::notebook_type(Self) -> String
+pub async fn NotebookDocument::save(Self) -> Bool
+pub fn NotebookDocument::uri(Self) -> Uri
+pub fn NotebookDocument::version(Self) -> Int
+
+pub struct NotebookDocumentCellChange {
+  cell : NotebookCell
+  document : TextDocument?
+  metadata : Any?
+  outputs : Array[NotebookCellOutput]?
+  executionSummary : NotebookCellExecutionSummary?
+}
+pub fn NotebookDocumentCellChange::new(NotebookCell, document? : TextDocument, metadata? : Any, outputs? : Array[NotebookCellOutput], execution_summary? : NotebookCellExecutionSummary) -> Self
+
+pub struct NotebookDocumentChangeEvent {
+  notebook : NotebookDocument
+  metadata : Any?
+  contentChanges : Array[NotebookDocumentContentChange]
+  cellChanges : Array[NotebookDocumentCellChange]
+}
+pub fn NotebookDocumentChangeEvent::new(NotebookDocument, content_changes? : Array[NotebookDocumentContentChange], cell_changes? : Array[NotebookDocumentCellChange], metadata? : Any) -> Self
+
+pub struct NotebookDocumentContentChange {
+  range : NotebookRange
+  addedCells : Array[NotebookCell]
+  removedCells : Array[NotebookCell]
+}
+pub fn NotebookDocumentContentChange::new(NotebookRange, Array[NotebookCell], Array[NotebookCell]) -> Self
+
+pub(all) struct NotebookDocumentContentOptions {
+  mut transient_outputs : Bool?
+  mut transient_cell_metadata : Array[(String, Bool)]?
+  mut transient_document_metadata : Array[(String, Bool)]?
+}
+pub fn NotebookDocumentContentOptions::new(transient_outputs? : Bool, transient_cell_metadata? : Array[(String, Bool)], transient_document_metadata? : Array[(String, Bool)]) -> Self
+
+pub struct NotebookDocumentShowOptions {
+  view_column : ViewColumn?
+  preserve_focus : Bool?
+  preview : Bool?
+  selections : Array[NotebookRange]?
+}
+pub fn NotebookDocumentShowOptions::new(view_column? : ViewColumn, preserve_focus? : Bool, preview? : Bool, selections? : Array[NotebookRange]) -> Self
+
+pub struct NotebookDocumentWillSaveEvent {
+  token : CancellationToken
+  notebook : NotebookDocument
+  reason : TextDocumentSaveReason
+}
+pub fn NotebookDocumentWillSaveEvent::wait_until(Self, async () -> Unit) -> Unit
+pub fn NotebookDocumentWillSaveEvent::wait_until_edit(Self, async () -> WorkspaceEdit) -> Unit
+
+pub type NotebookEdit
+pub fn NotebookEdit::clear_new_cell_metadata(Self) -> Unit
+pub fn NotebookEdit::clear_new_notebook_metadata(Self) -> Unit
+pub fn NotebookEdit::delete_cells(NotebookRange) -> Self
+pub fn NotebookEdit::insert_cells(Int, Array[NotebookCellData]) -> Self
+pub fn NotebookEdit::new(NotebookRange, Array[NotebookCellData]) -> Self
+pub fn NotebookEdit::new_cell_metadata(Self) -> Any?
+pub fn NotebookEdit::new_cells(Self) -> Array[NotebookCellData]
+pub fn NotebookEdit::new_notebook_metadata(Self) -> Any?
+pub fn NotebookEdit::range(Self) -> NotebookRange
+pub fn NotebookEdit::replace_cells(NotebookRange, Array[NotebookCellData]) -> Self
+pub fn NotebookEdit::set_new_cell_metadata(Self, Any) -> Unit
+pub fn NotebookEdit::set_new_cells(Self, Array[NotebookCellData]) -> Unit
+pub fn NotebookEdit::set_new_notebook_metadata(Self, Any) -> Unit
+pub fn NotebookEdit::set_range(Self, NotebookRange) -> Unit
+pub fn NotebookEdit::update_cell_metadata(Int, Any) -> Self
+pub fn NotebookEdit::update_notebook_metadata(Any) -> Self
+
+pub(all) type NotebookEditor
+pub fn NotebookEditor::notebook(Self) -> NotebookDocument
+pub fn NotebookEditor::reveal_range(Self, NotebookRange, reveal_type? : NotebookEditorRevealType) -> Unit
+pub fn NotebookEditor::selection(Self) -> NotebookRange
+pub fn NotebookEditor::selections(Self) -> Array[NotebookRange]
+pub fn NotebookEditor::set_selection(Self, NotebookRange) -> Unit
+pub fn NotebookEditor::set_selections(Self, Array[NotebookRange]) -> Unit
+pub fn NotebookEditor::view_column(Self) -> ViewColumn?
+pub fn NotebookEditor::visible_ranges(Self) -> Array[NotebookRange]
+
+pub(all) enum NotebookEditorRevealType {
+  Default
+  InCenter
+  InCenterIfOutsideViewport
+  AtTop
+} derive(Eq)
+
+pub struct NotebookEditorSelectionChangeEvent {
+  notebookEditor : NotebookEditor
+  selections : Array[NotebookRange]
+}
+pub fn NotebookEditorSelectionChangeEvent::new(NotebookEditor, Array[NotebookRange]) -> Self
+
+pub struct NotebookEditorVisibleRangesChangeEvent {
+  notebookEditor : NotebookEditor
+  visibleRanges : Array[NotebookRange]
+}
+pub fn NotebookEditorVisibleRangesChangeEvent::new(NotebookEditor, Array[NotebookRange]) -> Self
+
+pub type NotebookRange
+pub fn NotebookRange::end(Self) -> Int
+pub fn NotebookRange::is_empty(Self) -> Bool
+pub fn NotebookRange::new(Int, Int) -> Self
+pub fn NotebookRange::start(Self) -> Int
+pub fn NotebookRange::with_values(Self, start? : Int, end? : Int) -> Self
+
+pub type NotebookSerializer
+pub fn NotebookSerializer::new(async (Bytes, CancellationToken) -> NotebookData, async (NotebookData, CancellationToken) -> Bytes) -> Self
+
+pub(all) struct OpenDialogOptions {
+  mut default_uri : Uri?
+  mut open_label : String?
+  mut can_select_files : Bool?
+  mut can_select_folders : Bool?
+  mut can_select_many : Bool?
+  mut filters : DialogFilters?
+  mut title : String?
+}
+pub fn OpenDialogOptions::new(default_uri? : Uri, open_label? : String, can_select_files? : Bool, can_select_folders? : Bool, can_select_many? : Bool, filters? : DialogFilters, title? : String) -> Self
+
+pub type OutputChannel
+pub fn OutputChannel::append(Self, String) -> Unit
+pub fn OutputChannel::append_line(Self, String) -> Unit
+pub fn OutputChannel::clear(Self) -> Unit
+pub fn OutputChannel::hide(Self) -> Unit
+pub fn OutputChannel::name(Self) -> String
+pub fn OutputChannel::replace(Self, String) -> Unit
+pub fn OutputChannel::show(Self, preserve_focus? : Bool) -> Unit
+pub impl Disposable for OutputChannel
+
+pub(all) enum OverviewRulerLane {
+  Left
+  Center
+  Right
+  Full
+} derive(Eq)
+
+pub type ParameterInformation
+pub fn ParameterInformation::clear_documentation(Self) -> Unit
+pub fn ParameterInformation::documentation(Self) -> MarkdownStringValue?
+pub fn ParameterInformation::label(Self) -> ParameterLabel?
+pub fn ParameterInformation::new(ParameterLabel, documentation? : MarkdownStringValue) -> Self
+pub fn ParameterInformation::set_documentation(Self, MarkdownStringValue) -> Unit
+pub fn ParameterInformation::set_label(Self, ParameterLabel) -> Unit
+
+pub(all) enum ParameterLabel {
+  Text(String)
+  Range((Int, Int))
+}
+
+pub type Position
+pub fn Position::character(Self) -> Int
+pub fn Position::compare_to(Self, Self) -> Int
+pub fn Position::is_after(Self, Self) -> Bool
+pub fn Position::is_after_or_equal(Self, Self) -> Bool
+pub fn Position::is_before(Self, Self) -> Bool
+pub fn Position::is_before_or_equal(Self, Self) -> Bool
+pub fn Position::is_equal(Self, Self) -> Bool
+pub fn Position::line(Self) -> Int
+pub fn Position::new(Int, Int) -> Self
+pub fn Position::translate(Self, line_delta? : Int, character_delta? : Int) -> Self
+pub fn Position::with_character(Self, Int) -> Self
+pub fn Position::with_line(Self, Int) -> Self
+pub fn Position::with_values(Self, Int, Int) -> Self
+
+pub type ProcessExecution
+pub fn ProcessExecution::args(Self) -> Array[String]
+pub fn ProcessExecution::new(String, options? : ProcessExecutionOptions) -> Self
+pub fn ProcessExecution::new_with_args(String, Array[String], options? : ProcessExecutionOptions) -> Self
+pub fn ProcessExecution::options(Self) -> ProcessExecutionOptions?
+pub fn ProcessExecution::process(Self) -> String
+
+pub(all) struct ProcessExecutionOptions {
+  mut cwd : String?
+  mut env : Array[(String, String)]?
+}
+pub fn ProcessExecutionOptions::new(cwd? : String, env? : Array[(String, String)]) -> Self
+
+pub type Progress[T]
+pub fn[T] Progress::report(Self[T], T) -> Unit
+
+pub(all) enum ProgressLocation {
+  SourceControl
+  Window
+  Notification
+} derive(Eq)
+
+pub(all) enum ProgressLocationValue {
+  Location(ProgressLocation)
+  View(String)
+}
+
+pub(all) struct ProgressOptions {
+  location : ProgressLocationValue
+  mut title : String?
+  mut cancellable : Bool?
+}
+pub fn ProgressOptions::new(ProgressLocationValue, title? : String, cancellable? : Bool) -> Self
+
+pub(all) enum ProviderResult[T] {
+  Value(T)
+  Async(@js_async.Promise[T?])
+  NoneValue
+}
+pub fn[T] ProviderResult::from_async(async () -> T?) -> Self[T]
+
+pub(all) struct Pseudoterminal {
+  mut on_did_write : Event[String]
+  mut on_did_override_dimensions : Event[TerminalDimensions?]?
+  mut on_did_close : Event[Int?]?
+  mut on_did_change_name : Event[String]?
+  open : (TerminalDimensions?) -> Unit
+  close : () -> Unit
+  handle_input : ((String) -> Unit)?
+  set_dimensions : ((TerminalDimensions) -> Unit)?
+}
+pub fn Pseudoterminal::new(Event[String], (TerminalDimensions?) -> Unit, () -> Unit, on_did_override_dimensions? : Event[TerminalDimensions?], on_did_close? : Event[Int?], on_did_change_name? : Event[String], handle_input? : (String) -> Unit, set_dimensions? : (TerminalDimensions) -> Unit) -> Self
+
+pub type QuickInput
+pub fn QuickInput::hide(Self) -> Unit
+pub fn QuickInput::show(Self) -> Unit
+pub impl Disposable for QuickInput
+
+pub struct QuickInputButton {
+  iconPath : IconPath
+  tooltip : String?
+}
+pub fn QuickInputButton::new(IconPath, tooltip? : String) -> Self
+
+pub type QuickInputButtons
+pub fn QuickInputButtons::back() -> QuickInputButton
+pub fn QuickInputButtons::new(QuickInputButton) -> Self
+
+pub type QuickPick[T]
+pub fn[T] QuickPick::active_items(Self[T]) -> Array[T]
+pub fn QuickPick::busy(Self[QuickPickItem]) -> Bool
+pub fn QuickPick::buttons(Self[QuickPickItem]) -> Array[QuickInputButton]
+pub fn QuickPick::can_select_many(Self[QuickPickItem]) -> Bool
+pub fn QuickPick::clear_keep_scroll_position(Self[QuickPickItem]) -> Unit
+pub fn[T] QuickPick::clear_placeholder(Self[T]) -> Unit
+pub fn[T] QuickPick::clear_prompt(Self[T]) -> Unit
+pub fn QuickPick::clear_step(Self[QuickPickItem]) -> Unit
+pub fn QuickPick::clear_title(Self[QuickPickItem]) -> Unit
+pub fn QuickPick::clear_total_steps(Self[QuickPickItem]) -> Unit
+pub fn QuickPick::enabled(Self[QuickPickItem]) -> Bool
+pub fn QuickPick::hide(Self[QuickPickItem]) -> Unit
+pub fn QuickPick::ignore_focus_out(Self[QuickPickItem]) -> Bool
+pub fn[T] QuickPick::items(Self[T]) -> Array[T]
+pub fn QuickPick::keep_scroll_position(Self[QuickPickItem]) -> Bool?
+pub fn QuickPick::match_on_description(Self[QuickPickItem]) -> Bool
+pub fn QuickPick::match_on_detail(Self[QuickPickItem]) -> Bool
+pub fn QuickPick::on_did_accept(Self[QuickPickItem]) -> Event[Unit]
+pub fn QuickPick::on_did_change_active(Self[QuickPickItem]) -> Event[Array[QuickPickItem]]
+pub fn QuickPick::on_did_change_selection(Self[QuickPickItem]) -> Event[Array[QuickPickItem]]
+pub fn QuickPick::on_did_change_value(Self[QuickPickItem]) -> Event[String]
+pub fn QuickPick::on_did_hide(Self[QuickPickItem]) -> Event[Unit]
+pub fn QuickPick::on_did_trigger_button(Self[QuickPickItem]) -> Event[QuickInputButton]
+pub fn QuickPick::on_did_trigger_item_button(Self[QuickPickItem]) -> Event[QuickPickItemButtonEvent[QuickPickItem]]
+pub fn[T] QuickPick::placeholder(Self[T]) -> String?
+pub fn[T] QuickPick::prompt(Self[T]) -> String?
+pub fn[T] QuickPick::selected_items(Self[T]) -> Array[T]
+pub fn[T] QuickPick::set_active_items(Self[T], Array[T]) -> Unit
+pub fn QuickPick::set_busy(Self[QuickPickItem], Bool) -> Unit
+pub fn QuickPick::set_buttons(Self[QuickPickItem], Array[QuickInputButton]) -> Unit
+pub fn QuickPick::set_can_select_many(Self[QuickPickItem], Bool) -> Unit
+pub fn QuickPick::set_enabled(Self[QuickPickItem], Bool) -> Unit
+pub fn QuickPick::set_ignore_focus_out(Self[QuickPickItem], Bool) -> Unit
+pub fn[T] QuickPick::set_items(Self[T], Array[T]) -> Unit
+pub fn QuickPick::set_keep_scroll_position(Self[QuickPickItem], Bool) -> Unit
+pub fn QuickPick::set_match_on_description(Self[QuickPickItem], Bool) -> Unit
+pub fn QuickPick::set_match_on_detail(Self[QuickPickItem], Bool) -> Unit
+pub fn[T] QuickPick::set_placeholder(Self[T], String) -> Unit
+pub fn[T] QuickPick::set_prompt(Self[T], String) -> Unit
+pub fn[T] QuickPick::set_selected_items(Self[T], Array[T]) -> Unit
+pub fn QuickPick::set_step(Self[QuickPickItem], Int) -> Unit
+pub fn QuickPick::set_title(Self[QuickPickItem], String) -> Unit
+pub fn QuickPick::set_total_steps(Self[QuickPickItem], Int) -> Unit
+pub fn[T] QuickPick::set_value(Self[T], String) -> Unit
+pub fn QuickPick::show(Self[QuickPickItem]) -> Unit
+pub fn QuickPick::step(Self[QuickPickItem]) -> Int?
+pub fn QuickPick::title(Self[QuickPickItem]) -> String?
+pub fn QuickPick::total_steps(Self[QuickPickItem]) -> Int?
+pub fn[T] QuickPick::value(Self[T]) -> String
+pub impl[T] Disposable for QuickPick[T]
+
+pub(all) struct QuickPickItem {
+  mut label : String
+  mut kind : QuickPickItemKind?
+  mut iconPath : IconPath?
+  mut description : String?
+  mut detail : String?
+  mut resourceUri : Uri?
+  mut picked : Bool?
+  mut alwaysShow : Bool?
+  mut buttons : Array[QuickInputButton]?
+}
+pub fn QuickPickItem::new(String, kind? : QuickPickItemKind, icon_path? : IconPath, description? : String, detail? : String, resource_uri? : Uri, picked? : Bool, always_show? : Bool, buttons? : Array[QuickInputButton]) -> Self
+
+pub struct QuickPickItemButtonEvent[T] {
+  button : QuickInputButton
+  item : T
+}
+pub fn[T] QuickPickItemButtonEvent::button(Self[T]) -> QuickInputButton
+pub fn[T] QuickPickItemButtonEvent::item(Self[T]) -> T
+pub fn[T] QuickPickItemButtonEvent::new(QuickInputButton, T) -> Self[T]
+
+pub(all) enum QuickPickItemKind {
+  Separator
+  Default
+}
+
+pub(all) struct QuickPickOptions {
+  mut title : String?
+  mut match_on_description : Bool?
+  mut match_on_detail : Bool?
+  mut place_holder : String?
+  mut prompt : String?
+  mut ignore_focus_out : Bool?
+  mut can_pick_many : Bool?
+  on_did_select_item : QuickPickSelectItemCallback?
+}
+pub fn QuickPickOptions::from_strings(title? : String, match_on_description? : Bool, match_on_detail? : Bool, place_holder? : String, prompt? : String, ignore_focus_out? : Bool, can_pick_many? : Bool, on_did_select_item? : (String) -> Unit) -> Self
+pub fn QuickPickOptions::new(title? : String, match_on_description? : Bool, match_on_detail? : Bool, place_holder? : String, prompt? : String, ignore_focus_out? : Bool, can_pick_many? : Bool, on_did_select_item? : (QuickPickItem) -> Unit) -> Self
+
+pub(all) enum QuickPickSelectItemCallback {
+  QuickPickItem((QuickPickItem) -> Unit)
+  StringItem((String) -> Unit)
+}
+
+pub type Range
+pub fn Range::contains_position(Self, Position) -> Bool
+pub fn Range::contains_range(Self, Self) -> Bool
+pub fn Range::end(Self) -> Position
+pub fn Range::from_numbers(Int, Int, Int, Int) -> Self
+pub fn Range::intersection(Self, Self) -> Self?
+pub fn Range::is_empty(Self) -> Bool
+pub fn Range::is_equal(Self, Self) -> Bool
+pub fn Range::is_single_line(Self) -> Bool
+pub fn Range::new(Position, Position) -> Self
+pub fn Range::start(Self) -> Position
+pub fn Range::union(Self, Self) -> Self
+pub fn Range::with_end(Self, Position) -> Self
+pub fn Range::with_positions(Self, Position, Position) -> Self
+pub fn Range::with_start(Self, Position) -> Self
+
+pub struct ReferenceContext {
+  includeDeclaration : Bool
+}
+pub fn ReferenceContext::new(Bool) -> Self
+
+pub type RegExp
+pub fn RegExp::new(String, flags? : String) -> Self
+
+pub type RelativePattern
+pub fn RelativePattern::base(Self) -> String
+pub fn RelativePattern::base_uri(Self) -> Uri
+pub fn RelativePattern::from_path(String, String) -> Self
+pub fn RelativePattern::from_uri(Uri, String) -> Self
+pub fn RelativePattern::from_workspace_folder(WorkspaceFolder, String) -> Self
+pub fn RelativePattern::pattern(Self) -> String
+pub fn RelativePattern::set_base(Self, String) -> Unit
+pub fn RelativePattern::set_base_uri(Self, Uri) -> Unit
+pub fn RelativePattern::set_pattern(Self, String) -> Unit
+
+pub(all) struct RunOptions {
+  mut reevaluate_on_rerun : Bool?
+}
+pub fn RunOptions::new(reevaluate_on_rerun? : Bool) -> Self
+
+pub(all) struct SaveDialogOptions {
+  mut default_uri : Uri?
+  mut save_label : String?
+  mut filters : DialogFilters?
+  mut title : String?
+}
+pub fn SaveDialogOptions::new(default_uri? : Uri, save_label? : String, filters? : DialogFilters, title? : String) -> Self
+
+pub type SecretStorage
+pub async fn SecretStorage::delete(Self, String) -> Unit
+pub async fn SecretStorage::get(Self, String) -> String?
+pub async fn SecretStorage::keys(Self) -> Array[String]
+pub fn SecretStorage::on_did_change(Self) -> Event[SecretStorageChangeEvent]
+pub async fn SecretStorage::store(Self, String, String) -> Unit
+
+pub struct SecretStorageChangeEvent {
+  key : String
+}
+pub fn SecretStorageChangeEvent::new(String) -> Self
+
+pub struct SelectedCompletionInfo {
+  range : Range
+  text : String
+}
+pub fn SelectedCompletionInfo::new(Range, String) -> Self
+
+pub type Selection
+pub fn Selection::active(Self) -> Position
+pub fn Selection::anchor(Self) -> Position
+pub fn Selection::from_numbers(Int, Int, Int, Int) -> Self
+pub fn Selection::is_reversed(Self) -> Bool
+pub fn Selection::new(Position, Position) -> Self
+
+pub type SelectionRange
+pub fn SelectionRange::new(Range, parent? : Self) -> Self
+pub fn SelectionRange::parent(Self) -> Self?
+pub fn SelectionRange::range(Self) -> Range
+
+pub type SemanticTokens
+pub fn SemanticTokens::data(Self) -> Array[Int]
+pub fn SemanticTokens::new(Array[Int], result_id? : String) -> Self
+pub fn SemanticTokens::result_id(Self) -> String?
+
+pub type SemanticTokensBuilder
+pub fn SemanticTokensBuilder::build(Self, result_id? : String) -> SemanticTokens
+pub fn SemanticTokensBuilder::new(legend? : SemanticTokensLegend) -> Self
+pub fn SemanticTokensBuilder::push_range(Self, Range, String, token_modifiers? : Array[String]) -> Unit
+pub fn SemanticTokensBuilder::push_raw(Self, Int, Int, Int, Int, token_modifiers? : Int) -> Unit
+
+pub type SemanticTokensEdit
+pub fn SemanticTokensEdit::data(Self) -> Array[Int]?
+pub fn SemanticTokensEdit::delete_count(Self) -> Int
+pub fn SemanticTokensEdit::new(Int, Int, data? : Array[Int]) -> Self
+pub fn SemanticTokensEdit::start(Self) -> Int
+
+pub type SemanticTokensEdits
+pub fn SemanticTokensEdits::edits(Self) -> Array[SemanticTokensEdit]
+pub fn SemanticTokensEdits::new(Array[SemanticTokensEdit], result_id? : String) -> Self
+pub fn SemanticTokensEdits::result_id(Self) -> String?
+
+pub type SemanticTokensLegend
+pub fn SemanticTokensLegend::new(Array[String], token_modifiers? : Array[String]) -> Self
+pub fn SemanticTokensLegend::token_modifiers(Self) -> Array[String]
+pub fn SemanticTokensLegend::token_types(Self) -> Array[String]
+
+pub(all) enum ShellArgs {
+  StringValue(String)
+  ArrayValue(Array[String])
+}
+
+pub type ShellExecution
+pub fn ShellExecution::args(Self) -> Array[StringOrShellQuotedString]?
+pub fn ShellExecution::command(Self) -> StringOrShellQuotedString?
+pub fn ShellExecution::command_line(Self) -> String?
+pub fn ShellExecution::new_command(StringOrShellQuotedString, Array[StringOrShellQuotedString], options? : ShellExecutionOptions) -> Self
+pub fn ShellExecution::new_command_line(String, options? : ShellExecutionOptions) -> Self
+pub fn ShellExecution::options(Self) -> ShellExecutionOptions?
+
+pub(all) struct ShellExecutionOptions {
+  mut executable : String?
+  mut shell_args : Array[String]?
+  mut shell_quoting : ShellQuotingOptions?
+  mut cwd : String?
+  mut env : Array[(String, String)]?
+}
+pub fn ShellExecutionOptions::new(executable? : String, shell_args? : Array[String], shell_quoting? : ShellQuotingOptions, cwd? : String, env? : Array[(String, String)]) -> Self
+
+pub(all) struct ShellQuotedString {
+  mut value : String
+  mut quoting : ShellQuoting
+}
+pub fn ShellQuotedString::new(String, ShellQuoting) -> Self
+
+pub(all) enum ShellQuoting {
+  Escape
+  Strong
+  Weak
+} derive(Eq)
+
+pub(all) enum ShellQuotingEscape {
+  EscapeString(String)
+  EscapeChars((String, String))
+}
+
+pub(all) struct ShellQuotingOptions {
+  escape : ShellQuotingEscape?
+  mut strong : String?
+  mut weak : String?
+}
+pub fn ShellQuotingOptions::new(escape? : ShellQuotingEscape, strong? : String, weak? : String) -> Self
+
+pub type SignatureHelp
+pub fn SignatureHelp::active_parameter(Self) -> Int
+pub fn SignatureHelp::active_signature(Self) -> Int
+pub fn SignatureHelp::new() -> Self
+pub fn SignatureHelp::set_active_parameter(Self, Int) -> Unit
+pub fn SignatureHelp::set_active_signature(Self, Int) -> Unit
+pub fn SignatureHelp::set_signatures(Self, Array[SignatureInformation]) -> Unit
+pub fn SignatureHelp::signatures(Self) -> Array[SignatureInformation]
+
+pub struct SignatureHelpContext {
+  triggerKind : SignatureHelpTriggerKind
+  triggerCharacter : String?
+  isRetrigger : Bool
+  activeSignatureHelp : SignatureHelp?
+}
+pub fn SignatureHelpContext::new(SignatureHelpTriggerKind, Bool, trigger_character? : String, active_signature_help? : SignatureHelp) -> Self
+
+pub struct SignatureHelpProviderMetadata {
+  trigger_characters : Array[String]
+  retrigger_characters : Array[String]?
+}
+pub fn SignatureHelpProviderMetadata::new(Array[String], retrigger_characters? : Array[String]) -> Self
+
+pub(all) enum SignatureHelpTriggerKind {
+  Invoke
+  TriggerCharacter
+  ContentChange
+} derive(Eq)
+
+pub type SignatureInformation
+pub fn SignatureInformation::active_parameter(Self) -> Int?
+pub fn SignatureInformation::clear_active_parameter(Self) -> Unit
+pub fn SignatureInformation::clear_documentation(Self) -> Unit
+pub fn SignatureInformation::documentation(Self) -> MarkdownStringValue?
+pub fn SignatureInformation::label(Self) -> String
+pub fn SignatureInformation::new(String, documentation? : MarkdownStringValue) -> Self
+pub fn SignatureInformation::parameters(Self) -> Array[ParameterInformation]
+pub fn SignatureInformation::set_active_parameter(Self, Int) -> Unit
+pub fn SignatureInformation::set_documentation(Self, MarkdownStringValue) -> Unit
+pub fn SignatureInformation::set_label(Self, String) -> Unit
+pub fn SignatureInformation::set_parameters(Self, Array[ParameterInformation]) -> Unit
+
+pub type SnippetString
+pub fn SnippetString::append_choice(Self, Array[String], number? : Int) -> Self
+pub fn SnippetString::append_placeholder_snippet(Self, (Self) -> Unit, number? : Int) -> Self
+pub fn SnippetString::append_placeholder_text(Self, String, number? : Int) -> Self
+pub fn SnippetString::append_tabstop(Self, number? : Int) -> Self
+pub fn SnippetString::append_text(Self, String) -> Self
+pub fn SnippetString::append_variable_snippet(Self, String, (Self) -> Unit) -> Self
+pub fn SnippetString::append_variable_text(Self, String, String) -> Self
+pub fn SnippetString::new(String) -> Self
+pub fn SnippetString::set_value(Self, String) -> Unit
+pub fn SnippetString::value(Self) -> String
+
+pub type SnippetTextEdit
+pub fn SnippetTextEdit::insert(Position, SnippetString) -> Self
+pub fn SnippetTextEdit::keep_whitespace(Self) -> Bool?
+pub fn SnippetTextEdit::new(Range, SnippetString) -> Self
+pub fn SnippetTextEdit::range(Self) -> Range
+pub fn SnippetTextEdit::replace(Range, SnippetString) -> Self
+pub fn SnippetTextEdit::snippet(Self) -> SnippetString
+
+pub type SourceBreakpoint
+pub fn SourceBreakpoint::location(Self) -> Location
+pub fn SourceBreakpoint::new(Location, enabled? : Bool, condition? : String, hit_condition? : String, log_message? : String) -> Self
+
+pub type SourceControl
+pub fn SourceControl::accept_input_command(Self) -> Command?
+pub fn SourceControl::clear_accept_input_command(Self) -> Unit
+pub fn SourceControl::clear_commit_template(Self) -> Unit
+pub fn SourceControl::clear_count(Self) -> Unit
+pub fn SourceControl::clear_quick_diff_provider(Self) -> Unit
+pub fn SourceControl::commit_template(Self) -> String?
+pub fn SourceControl::count(Self) -> Int?
+pub fn SourceControl::create_resource_group(Self, String, String) -> SourceControlResourceGroup
+pub fn SourceControl::id(Self) -> String
+pub fn SourceControl::input_box(Self) -> SourceControlInputBox
+pub fn SourceControl::label(Self) -> String
+pub fn SourceControl::root_uri(Self) -> Uri?
+pub fn SourceControl::set_accept_input_command(Self, Command) -> Unit
+pub fn SourceControl::set_commit_template(Self, String) -> Unit
+pub fn SourceControl::set_count(Self, Int) -> Unit
+pub fn[T : QuickDiffProvider] SourceControl::set_quick_diff_provider(Self, T) -> Unit
+pub impl Disposable for SourceControl
+
+pub type SourceControlInputBox
+pub fn SourceControlInputBox::enabled(Self) -> Bool
+pub fn SourceControlInputBox::placeholder(Self) -> String
+pub fn SourceControlInputBox::set_enabled(Self, Bool) -> Unit
+pub fn SourceControlInputBox::set_placeholder(Self, String) -> Unit
+pub fn SourceControlInputBox::set_value(Self, String) -> Unit
+pub fn SourceControlInputBox::set_visible(Self, Bool) -> Unit
+pub fn SourceControlInputBox::value(Self) -> String
+pub fn SourceControlInputBox::visible(Self) -> Bool
+
+pub type SourceControlResourceDecorations
+pub fn SourceControlResourceDecorations::new(strike_through? : Bool, faded? : Bool, tooltip? : String, light? : SourceControlResourceThemableDecorations, dark? : SourceControlResourceThemableDecorations, icon_path? : IconPath) -> Self
+
+pub type SourceControlResourceGroup
+pub fn SourceControlResourceGroup::clear_context_value(Self) -> Unit
+pub fn SourceControlResourceGroup::clear_hide_when_empty(Self) -> Unit
+pub fn SourceControlResourceGroup::context_value(Self) -> String?
+pub fn SourceControlResourceGroup::hide_when_empty(Self) -> Bool?
+pub fn SourceControlResourceGroup::id(Self) -> String
+pub fn SourceControlResourceGroup::label(Self) -> String
+pub fn SourceControlResourceGroup::resource_states(Self) -> Array[SourceControlResourceState]
+pub fn SourceControlResourceGroup::set_context_value(Self, String?) -> Unit
+pub fn SourceControlResourceGroup::set_hide_when_empty(Self, Bool?) -> Unit
+pub fn SourceControlResourceGroup::set_label(Self, String) -> Unit
+pub fn SourceControlResourceGroup::set_resource_states(Self, Array[SourceControlResourceState]) -> Unit
+pub impl Disposable for SourceControlResourceGroup
+
+pub struct SourceControlResourceState {
+  resourceUri : Uri
+  command : Command?
+  decorations : SourceControlResourceDecorations?
+  contextValue : String?
+}
+pub fn SourceControlResourceState::new(Uri, command? : Command, decorations? : SourceControlResourceDecorations, context_value? : String) -> Self
+
+pub type SourceControlResourceThemableDecorations
+pub fn SourceControlResourceThemableDecorations::new(icon_path? : IconPath) -> Self
+
+pub(all) enum StatusBarAlignment {
+  Left
+  Right
+}
+
+pub type StatusBarItem
+pub fn StatusBarItem::accessibility_information(Self) -> AccessibilityInformation?
+pub fn StatusBarItem::alignment(Self) -> StatusBarAlignment
+pub fn StatusBarItem::background_color(Self) -> ThemeColor?
+pub fn StatusBarItem::clear_accessibility_information(Self) -> Unit
+pub fn StatusBarItem::clear_background_color(Self) -> Unit
+pub fn StatusBarItem::clear_color(Self) -> Unit
+pub fn StatusBarItem::clear_command(Self) -> Unit
+pub fn StatusBarItem::clear_name(Self) -> Unit
+pub fn StatusBarItem::clear_tooltip(Self) -> Unit
+pub fn StatusBarItem::color(Self) -> ColorValue?
+pub fn StatusBarItem::command(Self) -> CommandOrString?
+pub fn StatusBarItem::hide(Self) -> Unit
+pub fn StatusBarItem::id(Self) -> String
+pub fn StatusBarItem::name(Self) -> String?
+pub fn StatusBarItem::priority(Self) -> Int?
+pub fn StatusBarItem::set_accessibility_information(Self, AccessibilityInformation) -> Unit
+pub fn StatusBarItem::set_background_color(Self, ThemeColor) -> Unit
+pub fn StatusBarItem::set_color(Self, ColorValue) -> Unit
+pub fn StatusBarItem::set_command(Self, CommandOrString) -> Unit
+pub fn StatusBarItem::set_name(Self, String) -> Unit
+pub fn StatusBarItem::set_text(Self, String) -> Unit
+pub fn StatusBarItem::set_tooltip(Self, Tooltip) -> Unit
+pub fn StatusBarItem::show(Self) -> Unit
+pub fn StatusBarItem::text(Self) -> String
+pub fn StatusBarItem::tooltip(Self) -> Tooltip?
+pub impl Disposable for StatusBarItem
+
+pub(all) enum StringOrBool {
+  Text(String)
+  Boolean(Bool)
+}
+
+pub(all) enum StringOrInt {
+  Text(String)
+  Numeric(Int)
+}
+
+pub(all) enum StringOrShellQuotedString {
+  Text(String)
+  Quoted(ShellQuotedString)
+}
+
+pub(all) enum StringOrSnippetString {
+  Text(String)
+  Snippet(SnippetString)
+}
+
+pub(all) enum StringOrUri {
+  Text(String)
+  UriValue(Uri)
+}
+
+pub type SymbolInformation
+pub fn SymbolInformation::from_range(String, SymbolKind, Range, uri? : Uri, container_name? : String) -> Self
+pub fn SymbolInformation::new(String, SymbolKind, String, Location) -> Self
+
+pub(all) enum SymbolKind {
+  File
+  Module
+  Namespace
+  Package
+  Class
+  Method
+  Property
+  Field
+  Constructor
+  Enum
+  Interface
+  Function
+  Variable
+  Constant
+  String
+  Number
+  Boolean
+  Array
+  Object
+  Key
+  Null
+  EnumMember
+  Struct
+  Event
+  Operator
+  TypeParameter
+} derive(Eq)
+
+pub(all) enum SymbolTag {
+  Deprecated
+} derive(Eq)
+
+pub type Tab
+pub fn Tab::group(Self) -> TabGroup
+pub fn Tab::input(Self) -> TabInput
+pub fn Tab::is_active(Self) -> Bool
+pub fn Tab::is_dirty(Self) -> Bool
+pub fn Tab::is_pinned(Self) -> Bool
+pub fn Tab::is_preview(Self) -> Bool
+pub fn Tab::label(Self) -> String
+
+pub struct TabChangeEvent {
+  opened : Array[Tab]
+  closed : Array[Tab]
+  changed : Array[Tab]
+}
+pub fn TabChangeEvent::new(opened? : Array[Tab], closed? : Array[Tab], changed? : Array[Tab]) -> Self
+
+pub type TabGroup
+pub fn TabGroup::active_tab(Self) -> Tab?
+pub fn TabGroup::is_active(Self) -> Bool
+pub fn TabGroup::tabs(Self) -> Array[Tab]
+pub fn TabGroup::view_column(Self) -> ViewColumn
+
+pub struct TabGroupChangeEvent {
+  opened : Array[TabGroup]
+  closed : Array[TabGroup]
+  changed : Array[TabGroup]
+}
+pub fn TabGroupChangeEvent::new(opened? : Array[TabGroup], closed? : Array[TabGroup], changed? : Array[TabGroup]) -> Self
+
+pub type TabGroups
+pub fn TabGroups::active_tab_group(Self) -> TabGroup
+pub fn TabGroups::all(Self) -> Array[TabGroup]
+pub async fn TabGroups::close_tab(Self, Tab, preserve_focus? : Bool) -> Bool
+pub async fn TabGroups::close_tab_group(Self, TabGroup, preserve_focus? : Bool) -> Bool
+pub fn TabGroups::on_did_change_tab_groups(Self) -> Event[TabGroupChangeEvent]
+pub fn TabGroups::on_did_change_tabs(Self) -> Event[TabChangeEvent]
+
+pub(all) enum TabInput {
+  Text(TabInputText)
+  TextDiff(TabInputTextDiff)
+  Custom(TabInputCustom)
+  Webview(TabInputWebview)
+  Notebook(TabInputNotebook)
+  NotebookDiff(TabInputNotebookDiff)
+  Terminal(TabInputTerminal)
+}
+pub fn TabInput::as_custom(Self) -> TabInputCustom?
+pub fn TabInput::as_notebook(Self) -> TabInputNotebook?
+pub fn TabInput::as_notebook_diff(Self) -> TabInputNotebookDiff?
+pub fn TabInput::as_terminal(Self) -> TabInputTerminal?
+pub fn TabInput::as_text(Self) -> TabInputText?
+pub fn TabInput::as_text_diff(Self) -> TabInputTextDiff?
+pub fn TabInput::as_webview(Self) -> TabInputWebview?
+
+pub type TabInputCustom
+pub fn TabInputCustom::new(Uri, String) -> Self
+pub fn TabInputCustom::uri(Self) -> Uri
+pub fn TabInputCustom::view_type(Self) -> String
+
+pub type TabInputNotebook
+pub fn TabInputNotebook::new(Uri, String) -> Self
+pub fn TabInputNotebook::notebook_type(Self) -> String
+pub fn TabInputNotebook::uri(Self) -> Uri
+
+pub type TabInputNotebookDiff
+pub fn TabInputNotebookDiff::modified(Self) -> Uri
+pub fn TabInputNotebookDiff::new(Uri, Uri, String) -> Self
+pub fn TabInputNotebookDiff::notebook_type(Self) -> String
+pub fn TabInputNotebookDiff::original(Self) -> Uri
+
+pub type TabInputTerminal
+pub fn TabInputTerminal::new() -> Self
+
+pub type TabInputText
+pub fn TabInputText::new(Uri) -> Self
+pub fn TabInputText::uri(Self) -> Uri
+
+pub type TabInputTextDiff
+pub fn TabInputTextDiff::modified(Self) -> Uri
+pub fn TabInputTextDiff::new(Uri, Uri) -> Self
+pub fn TabInputTextDiff::original(Self) -> Uri
+
+pub type TabInputWebview
+pub fn TabInputWebview::new(String) -> Self
+pub fn TabInputWebview::view_type(Self) -> String
+
+pub type Task
+pub fn Task::clear_detail(Self) -> Unit
+pub fn Task::clear_group(Self) -> Unit
+pub fn Task::definition(Self) -> TaskDefinition
+pub fn Task::detail(Self) -> String?
+pub fn Task::group(Self) -> TaskGroup?
+pub fn Task::is_background(Self) -> Bool
+pub fn Task::name(Self) -> String
+pub fn Task::new(TaskDefinition, TaskScope, String, String, execution? : TaskExecutionValue, problem_matchers? : Array[String]) -> Self
+pub fn Task::new_typed(TaskDefinition, TaskScope, String, String, execution? : TaskExecutionValue, problem_matchers? : Array[String]) -> Self
+pub fn Task::presentation_options(Self) -> TaskPresentationOptions
+pub fn Task::problem_matchers(Self) -> Array[String]
+pub fn Task::run_options(Self) -> RunOptions
+pub fn Task::scope(Self) -> TaskScope?
+pub fn Task::set_definition(Self, TaskDefinition) -> Unit
+pub fn Task::set_detail(Self, String?) -> Unit
+pub fn Task::set_group(Self, TaskGroup?) -> Unit
+pub fn Task::set_is_background(Self, Bool) -> Unit
+pub fn Task::set_name(Self, String) -> Unit
+pub fn Task::set_presentation_options(Self, TaskPresentationOptions) -> Unit
+pub fn Task::set_problem_matchers(Self, Array[String]) -> Unit
+pub fn Task::set_run_options(Self, RunOptions) -> Unit
+pub fn Task::set_source(Self, String) -> Unit
+pub fn Task::source(Self) -> String
+
+pub struct TaskDefinition {
+  value : Any
+}
+pub fn TaskDefinition::as_json(Self) -> Any
+pub fn TaskDefinition::from_json(Any) -> Self
+pub fn TaskDefinition::new(String, entries? : Array[(String, Any)]) -> Self
+
+pub struct TaskEndEvent {
+  execution : TaskExecution
+}
+pub fn TaskEndEvent::new(TaskExecution) -> Self
+
+pub type TaskExecution
+pub fn TaskExecution::task(Self) -> Task
+pub fn TaskExecution::terminate(Self) -> Unit
+
+pub(all) enum TaskExecutionValue {
+  ProcessExecutionValue(ProcessExecution)
+  ShellExecutionValue(ShellExecution)
+  CustomExecutionValue(CustomExecution)
+}
+
+pub(all) struct TaskFilter {
+  mut version : String?
+  mut type_ : String?
+}
+pub fn TaskFilter::new(version? : String, type_? : String) -> Self
+
+pub type TaskGroup
+pub fn TaskGroup::build() -> Self
+pub fn TaskGroup::clean() -> Self
+pub fn TaskGroup::id(Self) -> String
+pub fn TaskGroup::is_default(Self) -> Bool?
+pub fn TaskGroup::rebuild() -> Self
+pub fn TaskGroup::test_group() -> Self
+
+pub(all) enum TaskPanelKind {
+  Shared
+  Dedicated
+  New
+} derive(Eq)
+
+pub(all) struct TaskPresentationOptions {
+  mut reveal : TaskRevealKind?
+  mut echo : Bool?
+  mut focus : Bool?
+  mut panel : TaskPanelKind?
+  mut show_reuse_message : Bool?
+  mut clear : Bool?
+  mut close : Bool?
+}
+pub fn TaskPresentationOptions::new(reveal? : TaskRevealKind, echo? : Bool, focus? : Bool, panel? : TaskPanelKind, show_reuse_message? : Bool, clear? : Bool, close? : Bool) -> Self
+
+pub struct TaskProcessEndEvent {
+  execution : TaskExecution
+  exitCode : Int?
+}
+pub fn TaskProcessEndEvent::new(TaskExecution, exit_code? : Int) -> Self
+
+pub struct TaskProcessStartEvent {
+  execution : TaskExecution
+  processId : Int
+}
+pub fn TaskProcessStartEvent::new(TaskExecution, Int) -> Self
+
+pub(all) enum TaskRevealKind {
+  Always
+  Silent
+  Never
+} derive(Eq)
+
+pub(all) enum TaskScope {
+  ScopeKind(TaskScopeKind)
+  WorkspaceFolderScope(WorkspaceFolder)
+}
+
+pub(all) enum TaskScopeKind {
+  Global
+  Workspace
+} derive(Eq)
+
+pub struct TaskStartEvent {
+  execution : TaskExecution
+}
+pub fn TaskStartEvent::new(TaskExecution) -> Self
+
+pub type TelemetryLogger
+pub fn TelemetryLogger::is_errors_enabled(Self) -> Bool
+pub fn TelemetryLogger::is_usage_enabled(Self) -> Bool
+pub fn TelemetryLogger::log_error(Self, JsError, data? : Array[(String, Any)]) -> Unit
+pub fn TelemetryLogger::log_error_event(Self, String, data? : Array[(String, Any)]) -> Unit
+pub fn TelemetryLogger::log_usage(Self, String, data? : Array[(String, Any)]) -> Unit
+pub fn TelemetryLogger::on_did_change_enable_states(Self) -> Event[Self]
+pub impl Disposable for TelemetryLogger
+
+pub struct TelemetryLoggerOptions {
+  ignore_built_in_common_properties : Bool?
+  ignore_unhandled_errors : Bool?
+  additional_common_properties : Array[(String, Any)]?
+}
+pub fn TelemetryLoggerOptions::new(ignore_built_in_common_properties? : Bool, ignore_unhandled_errors? : Bool, additional_common_properties? : Array[(String, Any)]) -> Self
+
+pub type TelemetrySender
+pub async fn TelemetrySender::flush(Self) -> Unit
+pub fn TelemetrySender::send_error_data(Self, JsError, data? : Array[(String, Any)]) -> Unit
+pub fn TelemetrySender::send_event_data(Self, String, data? : Array[(String, Any)]) -> Unit
+
+pub type TelemetryTrustedValue
+pub fn TelemetryTrustedValue::new(Any) -> Self
+pub fn TelemetryTrustedValue::value(Self) -> Any
+
+pub type Terminal
+pub fn Terminal::creation_options(Self) -> TerminalCreationOptions?
+pub fn Terminal::exit_status(Self) -> TerminalExitStatus?
+pub fn Terminal::hide(Self) -> Unit
+pub fn Terminal::name(Self) -> String
+pub async fn Terminal::process_id(Self) -> Int?
+pub fn Terminal::send_text(Self, String, should_execute? : Bool) -> Unit
+pub fn Terminal::shell_integration(Self) -> TerminalShellIntegration?
+pub fn Terminal::show(Self, preserve_focus? : Bool) -> Unit
+pub fn Terminal::state(Self) -> TerminalState
+pub impl Disposable for Terminal
+
+pub(all) enum TerminalCreationOptions {
+  Terminal(TerminalOptions)
+  Extension(ExtensionTerminalOptions)
+}
+pub fn TerminalCreationOptions::as_extension(Self) -> ExtensionTerminalOptions?
+pub fn TerminalCreationOptions::as_terminal(Self) -> TerminalOptions?
+
+pub struct TerminalDimensions {
+  columns : Int
+  rows : Int
+}
+pub fn TerminalDimensions::new(Int, Int) -> Self
+
+pub(all) struct TerminalEditorLocationOptions {
+  mut view_column : ViewColumn
+  mut preserve_focus : Bool?
+}
+pub fn TerminalEditorLocationOptions::new(ViewColumn, preserve_focus? : Bool) -> Self
+
+pub(all) enum TerminalExitReason {
+  Unknown
+  Shutdown
+  Process
+  User
+  Extension
+} derive(Eq)
+
+pub struct TerminalExitStatus {
+  code : Int?
+  reason : TerminalExitReason
+}
+pub fn TerminalExitStatus::new(TerminalExitReason, code? : Int) -> Self
+
+pub type TerminalLink
+pub fn TerminalLink::clear_tooltip(Self) -> Unit
+pub fn TerminalLink::length(Self) -> Int
+pub fn TerminalLink::new(Int, Int, tooltip? : String) -> Self
+pub fn TerminalLink::set_tooltip(Self, String) -> Unit
+pub fn TerminalLink::start_index(Self) -> Int
+pub fn TerminalLink::tooltip(Self) -> String?
+
+pub(all) struct TerminalLinkContext {
+  mut line : String
+  mut terminal : Terminal
+}
+pub fn TerminalLinkContext::new(String, Terminal) -> Self
+
+pub(all) enum TerminalLocation {
+  Panel
+  Editor
+} derive(Eq)
+
+pub(all) enum TerminalLocationValue {
+  Location(TerminalLocation)
+  Editor(TerminalEditorLocationOptions)
+  Split(TerminalSplitLocationOptions)
+}
+
+pub type TerminalOptions
+pub fn TerminalOptions::new(name? : String, shell_path? : String, shell_args? : ShellArgs, cwd? : UriOrString, env? : Array[(String, String?)], strict_env? : Bool, hide_from_user? : Bool, message? : String, icon_path? : IconPath, color? : ThemeColor, location? : TerminalLocationValue, is_transient? : Bool, shell_integration_nonce? : String) -> Self
+
+pub type TerminalProfile
+pub fn TerminalProfile::from_extension(ExtensionTerminalOptions) -> Self
+pub fn TerminalProfile::from_terminal(TerminalOptions) -> Self
+
+pub struct TerminalShellExecution {
+  commandLine : TerminalShellExecutionCommandLine
+  cwd : Uri?
+}
+pub fn TerminalShellExecution::new(TerminalShellExecutionCommandLine, cwd? : Uri) -> Self
+
+pub struct TerminalShellExecutionCommandLine {
+  value : String
+  isTrusted : Bool
+  confidence : TerminalShellExecutionCommandLineConfidence
+}
+pub fn TerminalShellExecutionCommandLine::new(String, Bool, TerminalShellExecutionCommandLineConfidence) -> Self
+
+pub(all) enum TerminalShellExecutionCommandLineConfidence {
+  Low
+  Medium
+  High
+} derive(Eq)
+
+pub struct TerminalShellExecutionEndEvent {
+  terminal : Terminal
+  shellIntegration : TerminalShellIntegration
+  execution : TerminalShellExecution
+  exitCode : Int?
+}
+pub fn TerminalShellExecutionEndEvent::new(Terminal, TerminalShellIntegration, TerminalShellExecution, exit_code? : Int) -> Self
+
+pub struct TerminalShellExecutionStartEvent {
+  terminal : Terminal
+  shellIntegration : TerminalShellIntegration
+  execution : TerminalShellExecution
+}
+pub fn TerminalShellExecutionStartEvent::new(Terminal, TerminalShellIntegration, TerminalShellExecution) -> Self
+
+pub struct TerminalShellIntegration {
+  cwd : Uri?
+}
+pub fn TerminalShellIntegration::execute_command(Self, String, Array[String]) -> TerminalShellExecution
+pub fn TerminalShellIntegration::execute_command_line(Self, String) -> TerminalShellExecution
+
+pub struct TerminalShellIntegrationChangeEvent {
+  terminal : Terminal
+  shellIntegration : TerminalShellIntegration
+}
+pub fn TerminalShellIntegrationChangeEvent::new(Terminal, TerminalShellIntegration) -> Self
+
+pub(all) struct TerminalSplitLocationOptions {
+  mut parent_terminal : Terminal
+}
+pub fn TerminalSplitLocationOptions::new(Terminal) -> Self
+
+pub struct TerminalState {
+  isInteractedWith : Bool
+  shell : String?
+}
+pub fn TerminalState::new(Bool, shell? : String) -> Self
+
+pub type TextDocument
+pub fn TextDocument::encoding(Self) -> String
+pub fn TextDocument::eol(Self) -> EndOfLine
+pub fn TextDocument::file_name(Self) -> String
+pub fn TextDocument::get_text(Self) -> String
+pub fn TextDocument::get_text_range(Self, Range) -> String
+pub fn TextDocument::get_word_range_at_position(Self, Position, regex? : RegExp) -> Range?
+pub fn TextDocument::is_closed(Self) -> Bool
+pub fn TextDocument::is_dirty(Self) -> Bool
+pub fn TextDocument::is_untitled(Self) -> Bool
+pub fn TextDocument::language_id(Self) -> String
+pub fn TextDocument::line_at_line(Self, Int) -> TextLine
+pub fn TextDocument::line_at_position(Self, Position) -> TextLine
+pub fn TextDocument::line_count(Self) -> Int
+pub fn TextDocument::offset_at(Self, Position) -> Int
+pub fn TextDocument::position_at(Self, Int) -> Position
+pub async fn TextDocument::save(Self) -> Bool
+pub fn TextDocument::uri(Self) -> Uri
+pub fn TextDocument::validate_position(Self, Position) -> Position
+pub fn TextDocument::validate_range(Self, Range) -> Range
+pub fn TextDocument::version(Self) -> Int
+
+pub struct TextDocumentChangeEvent {
+  document : TextDocument
+  contentChanges : Array[TextDocumentContentChangeEvent]
+  reason : TextDocumentChangeReason?
+}
+pub fn TextDocumentChangeEvent::new(TextDocument, Array[TextDocumentContentChangeEvent], reason? : TextDocumentChangeReason) -> Self
+
+pub(all) enum TextDocumentChangeReason {
+  Undo
+  Redo
+} derive(Eq)
+
+pub struct TextDocumentContentChangeEvent {
+  range : Range
+  rangeOffset : Int
+  rangeLength : Int
+  text : String
+}
+pub fn TextDocumentContentChangeEvent::new(Range, Int, Int, String) -> Self
+
+pub(all) enum TextDocumentSaveReason {
+  Manual
+  AfterDelay
+  FocusOut
+} derive(Eq)
+
+pub(all) struct TextDocumentShowOptions {
+  mut view_column : ViewColumn?
+  mut preserve_focus : Bool?
+  mut preview : Bool?
+  mut selection : Range?
+}
+pub fn TextDocumentShowOptions::new(view_column? : ViewColumn, preserve_focus? : Bool, preview? : Bool, selection? : Range) -> Self
+
+pub struct TextDocumentWillSaveEvent {
+  token : CancellationToken
+  document : TextDocument
+  reason : TextDocumentSaveReason
+}
+pub fn TextDocumentWillSaveEvent::wait_until(Self, async () -> Unit) -> Unit
+pub fn TextDocumentWillSaveEvent::wait_until_edits(Self, async () -> Array[TextEdit]) -> Unit
+
+pub type TextEdit
+pub fn TextEdit::delete(Range) -> Self
+pub fn TextEdit::insert(Position, String) -> Self
+pub fn TextEdit::new(Range, String) -> Self
+pub fn TextEdit::new_eol(Self) -> EndOfLine?
+pub fn TextEdit::new_text(Self) -> String
+pub fn TextEdit::range(Self) -> Range
+pub fn TextEdit::replace(Range, String) -> Self
+pub fn TextEdit::set_end_of_line(EndOfLine) -> Self
+
+pub type TextEditor
+pub fn TextEditor::document(Self) -> TextDocument
+pub async fn TextEditor::edit(Self, (TextEditorEdit) -> Unit, options? : TextEditorEditOptions) -> Bool
+pub fn TextEditor::hide(Self) -> Unit
+pub async fn TextEditor::insert_snippet(Self, SnippetString, options? : TextEditorInsertSnippetOptions) -> Bool
+pub async fn TextEditor::insert_snippet_at_position(Self, SnippetString, Position, options? : TextEditorInsertSnippetOptions) -> Bool
+pub async fn TextEditor::insert_snippet_at_positions(Self, SnippetString, Array[Position], options? : TextEditorInsertSnippetOptions) -> Bool
+pub async fn TextEditor::insert_snippet_at_range(Self, SnippetString, Range, options? : TextEditorInsertSnippetOptions) -> Bool
+pub async fn TextEditor::insert_snippet_at_ranges(Self, SnippetString, Array[Range], options? : TextEditorInsertSnippetOptions) -> Bool
+pub fn TextEditor::options(Self) -> TextEditorOptions
+pub fn TextEditor::reveal_range(Self, Range, reveal_type? : TextEditorRevealType) -> Unit
+pub fn TextEditor::selection(Self) -> Selection
+pub fn TextEditor::selections(Self) -> Array[Selection]
+pub fn TextEditor::set_decorations_options(Self, TextEditorDecorationType, Array[DecorationOptions]) -> Unit
+pub fn TextEditor::set_decorations_ranges(Self, TextEditorDecorationType, Array[Range]) -> Unit
+pub fn TextEditor::set_options(Self, TextEditorOptions) -> Unit
+pub fn TextEditor::set_selection(Self, Selection) -> Unit
+pub fn TextEditor::set_selections(Self, Array[Selection]) -> Unit
+pub fn TextEditor::show(Self, column? : ViewColumn) -> Unit
+pub fn TextEditor::view_column(Self) -> ViewColumn?
+pub fn TextEditor::visible_ranges(Self) -> Array[Range]
+
+pub(all) enum TextEditorCursorStyle {
+  Line
+  Block
+  Underline
+  LineThin
+  BlockOutline
+  UnderlineThin
+} derive(Eq)
+
+pub struct TextEditorDecorationType {
+  key : String
+}
+pub impl Disposable for TextEditorDecorationType
+
+pub type TextEditorEdit
+pub fn TextEditorEdit::delete_range(Self, Range) -> Unit
+pub fn TextEditorEdit::delete_selection(Self, Selection) -> Unit
+pub fn TextEditorEdit::insert(Self, Position, String) -> Unit
+pub fn TextEditorEdit::replace_position(Self, Position, String) -> Unit
+pub fn TextEditorEdit::replace_range(Self, Range, String) -> Unit
+pub fn TextEditorEdit::replace_selection(Self, Selection, String) -> Unit
+pub fn TextEditorEdit::set_end_of_line(Self, EndOfLine) -> Unit
+
+pub struct TextEditorEditOptions {
+  undo_stop_before : Bool
+  undo_stop_after : Bool
+}
+pub fn TextEditorEditOptions::new(undo_stop_before? : Bool, undo_stop_after? : Bool) -> Self
+
+pub struct TextEditorInsertSnippetOptions {
+  undo_stop_before : Bool
+  undo_stop_after : Bool
+  keep_whitespace : Bool
+}
+pub fn TextEditorInsertSnippetOptions::new(undo_stop_before? : Bool, undo_stop_after? : Bool, keep_whitespace? : Bool) -> Self
+
+pub(all) enum TextEditorLineNumbersStyle {
+  Off
+  On
+  Relative
+  Interval
+} derive(Eq)
+
+pub(all) struct TextEditorOptions {
+  mut tab_size : StringOrInt?
+  mut indent_size : StringOrInt?
+  mut insert_spaces : StringOrBool?
+  mut cursor_style : TextEditorCursorStyle?
+  mut line_numbers : TextEditorLineNumbersStyle?
+}
+pub fn TextEditorOptions::new(tab_size? : StringOrInt, indent_size? : StringOrInt, insert_spaces? : StringOrBool, cursor_style? : TextEditorCursorStyle, line_numbers? : TextEditorLineNumbersStyle) -> Self
+
+pub struct TextEditorOptionsChangeEvent {
+  textEditor : TextEditor
+  options : TextEditorOptions
+}
+pub fn TextEditorOptionsChangeEvent::new(TextEditor, TextEditorOptions) -> Self
+
+pub(all) enum TextEditorRevealType {
+  Default
+  InCenter
+  InCenterIfOutsideViewport
+  AtTop
+} derive(Eq)
+
+pub struct TextEditorSelectionChangeEvent {
+  textEditor : TextEditor
+  selections : Array[Selection]
+  kind : TextEditorSelectionChangeKind?
+}
+pub fn TextEditorSelectionChangeEvent::new(TextEditor, Array[Selection], kind? : TextEditorSelectionChangeKind) -> Self
+
+pub(all) enum TextEditorSelectionChangeKind {
+  Keyboard
+  Mouse
+  Command
+} derive(Eq)
+
+pub struct TextEditorViewColumnChangeEvent {
+  textEditor : TextEditor
+  viewColumn : ViewColumn
+}
+pub fn TextEditorViewColumnChangeEvent::new(TextEditor, ViewColumn) -> Self
+
+pub struct TextEditorVisibleRangesChangeEvent {
+  textEditor : TextEditor
+  visibleRanges : Array[Range]
+}
+pub fn TextEditorVisibleRangesChangeEvent::new(TextEditor, Array[Range]) -> Self
+
+pub struct TextLine {
+  lineNumber : Int
+  text : String
+  range : Range
+  rangeIncludingLineBreak : Range
+  firstNonWhitespaceCharacterIndex : Int
+  isEmptyOrWhitespace : Bool
+}
+pub fn TextLine::new(Int, String, Range, Range, Int, Bool) -> Self
+
+pub type ThemableDecorationAttachmentRenderOptions
+pub fn ThemableDecorationAttachmentRenderOptions::new(content_text? : String, content_icon_path? : UriOrString, border? : String, border_color? : ColorValue, font_style? : String, font_weight? : String, text_decoration? : String, color? : ColorValue, background_color? : ColorValue, margin? : String, width? : String, height? : String) -> Self
+
+pub(all) struct ThemableDecorationInstanceRenderOptions {
+  mut before : ThemableDecorationAttachmentRenderOptions?
+  mut after : ThemableDecorationAttachmentRenderOptions?
+}
+pub fn ThemableDecorationInstanceRenderOptions::new(before? : ThemableDecorationAttachmentRenderOptions, after? : ThemableDecorationAttachmentRenderOptions) -> Self
+
+pub type ThemableDecorationRenderOptions
+pub fn ThemableDecorationRenderOptions::new(background_color? : ColorValue, outline? : String, outline_color? : ColorValue, outline_style? : String, outline_width? : String, border? : String, border_color? : ColorValue, border_radius? : String, border_spacing? : String, border_style? : String, border_width? : String, font_style? : String, font_weight? : String, text_decoration? : String, cursor? : String, color? : ColorValue, opacity? : String, letter_spacing? : String, gutter_icon_path? : UriOrString, gutter_icon_size? : String, overview_ruler_color? : ColorValue, before? : ThemableDecorationAttachmentRenderOptions, after? : ThemableDecorationAttachmentRenderOptions) -> Self
+
+pub type ThemeColor
+pub fn ThemeColor::id(Self) -> String
+pub fn ThemeColor::new(String) -> Self
+
+pub type ThemeIcon
+pub fn ThemeIcon::color(Self) -> ThemeColor?
+pub fn ThemeIcon::file() -> Self
+pub fn ThemeIcon::folder() -> Self
+pub fn ThemeIcon::id(Self) -> String
+pub fn ThemeIcon::new(String, color? : ThemeColor) -> Self
+
+pub(all) enum Tooltip {
+  Text(String)
+  Markdown(MarkdownString)
+}
+
+pub struct TreeCheckboxChangeEvent[T] {
+  items : Array[TreeCheckboxChangeItem[T]]
+}
+pub fn[T] TreeCheckboxChangeEvent::items(Self[T]) -> Array[TreeCheckboxChangeItem[T]]
+pub fn[T] TreeCheckboxChangeEvent::new(Array[TreeCheckboxChangeItem[T]]) -> Self[T]
+
+pub struct TreeCheckboxChangeItem[T] {
+  element : T
+  state : TreeItemCheckboxState
+}
+pub fn[T] TreeCheckboxChangeItem::element(Self[T]) -> T
+pub fn[T] TreeCheckboxChangeItem::new(T, TreeItemCheckboxState) -> Self[T]
+pub fn[T] TreeCheckboxChangeItem::state(Self[T]) -> TreeItemCheckboxState
+
+pub(all) enum TreeDataChange[T] {
+  Element(T)
+  Elements(Array[T])
+  All
+}
+
+pub struct TreeDragAndDropController[T] {
+  drop_mime_types : Array[String]?
+  drag_mime_types : Array[String]?
+  preview_item : T?
+}
+pub fn[T] TreeDragAndDropController::new(drop_mime_types? : Array[String], drag_mime_types? : Array[String], handle_drag? : async (Array[T], DataTransfer, CancellationToken) -> Unit, handle_drop? : async (T?, DataTransfer, CancellationToken) -> Unit) -> Self[T]
+
+pub type TreeItem
+pub fn TreeItem::accessibility_information(Self) -> AccessibilityInformation?
+pub fn TreeItem::checkbox_state(Self) -> TreeItemCheckboxValue?
+pub fn TreeItem::clear_accessibility_information(Self) -> Unit
+pub fn TreeItem::clear_checkbox_state(Self) -> Unit
+pub fn TreeItem::clear_command(Self) -> Unit
+pub fn TreeItem::clear_context_value(Self) -> Unit
+pub fn TreeItem::clear_description(Self) -> Unit
+pub fn TreeItem::clear_icon_path(Self) -> Unit
+pub fn TreeItem::clear_id(Self) -> Unit
+pub fn TreeItem::clear_label(Self) -> Unit
+pub fn TreeItem::clear_resource_uri(Self) -> Unit
+pub fn TreeItem::clear_tooltip(Self) -> Unit
+pub fn TreeItem::collapsible_state(Self) -> TreeItemCollapsibleState
+pub fn TreeItem::command(Self) -> Command?
+pub fn TreeItem::context_value(Self) -> String?
+pub fn TreeItem::description(Self) -> StringOrBool?
+pub fn TreeItem::from_label(TreeItemLabelValue, collapsible_state? : TreeItemCollapsibleState) -> Self
+pub fn TreeItem::from_uri(Uri, collapsible_state? : TreeItemCollapsibleState) -> Self
+pub fn TreeItem::icon_path(Self) -> IconPath?
+pub fn TreeItem::id(Self) -> String?
+pub fn TreeItem::label(Self) -> TreeItemLabelValue?
+pub fn TreeItem::resource_uri(Self) -> Uri?
+pub fn TreeItem::set_accessibility_information(Self, AccessibilityInformation) -> Unit
+pub fn TreeItem::set_checkbox_state(Self, TreeItemCheckboxValue) -> Unit
+pub fn TreeItem::set_collapsible_state(Self, TreeItemCollapsibleState) -> Unit
+pub fn TreeItem::set_command(Self, Command) -> Unit
+pub fn TreeItem::set_context_value(Self, String) -> Unit
+pub fn TreeItem::set_description(Self, StringOrBool) -> Unit
+pub fn TreeItem::set_icon_path(Self, IconPath) -> Unit
+pub fn TreeItem::set_id(Self, String) -> Unit
+pub fn TreeItem::set_label(Self, TreeItemLabelValue) -> Unit
+pub fn TreeItem::set_resource_uri(Self, Uri) -> Unit
+pub fn TreeItem::set_tooltip(Self, Tooltip) -> Unit
+pub fn TreeItem::tooltip(Self) -> Tooltip?
+
+pub struct TreeItemCheckbox {
+  state : TreeItemCheckboxState
+  tooltip : String?
+  accessibility_information : AccessibilityInformation?
+}
+pub fn TreeItemCheckbox::new(TreeItemCheckboxState, tooltip? : String, accessibility_information? : AccessibilityInformation) -> Self
+
+pub(all) enum TreeItemCheckboxState {
+  Unchecked
+  Checked
+} derive(Eq)
+
+pub(all) enum TreeItemCheckboxValue {
+  State(TreeItemCheckboxState)
+  Checkbox(TreeItemCheckbox)
+}
+
+pub(all) enum TreeItemCollapsibleState {
+  None
+  Collapsed
+  Expanded
+} derive(Eq)
+
+pub(all) struct TreeItemLabel {
+  mut label : String
+  mut highlights : Array[(Int, Int)]?
+}
+pub fn TreeItemLabel::new(String, highlights? : Array[(Int, Int)]) -> Self
+
+pub(all) enum TreeItemLabelValue {
+  Text(String)
+  Label(TreeItemLabel)
+}
+
+pub type TreeView[T]
+pub fn[T] TreeView::badge(Self[T]) -> ViewBadge?
+pub fn[T] TreeView::clear_badge(Self[T]) -> Unit
+pub fn[T] TreeView::clear_description(Self[T]) -> Unit
+pub fn[T] TreeView::clear_message(Self[T]) -> Unit
+pub fn[T] TreeView::clear_title(Self[T]) -> Unit
+pub fn[T] TreeView::description(Self[T]) -> String?
+pub fn[T] TreeView::message(Self[T]) -> String?
+pub fn[T] TreeView::on_did_change_checkbox_state(Self[T]) -> Event[TreeCheckboxChangeEvent[T]]
+pub fn[T] TreeView::on_did_change_selection(Self[T]) -> Event[TreeViewSelectionChangeEvent[T]]
+pub fn[T] TreeView::on_did_change_visibility(Self[T]) -> Event[TreeViewVisibilityChangeEvent]
+pub fn[T] TreeView::on_did_collapse_element(Self[T]) -> Event[TreeViewExpansionEvent[T]]
+pub fn[T] TreeView::on_did_expand_element(Self[T]) -> Event[TreeViewExpansionEvent[T]]
+pub async fn[T] TreeView::reveal(Self[T], T, select? : Bool, focus? : Bool, expand? : Bool, expand_levels? : Int) -> Unit
+pub fn[T] TreeView::selection(Self[T]) -> Array[T]
+pub fn[T] TreeView::set_badge(Self[T], ViewBadge) -> Unit
+pub fn[T] TreeView::set_description(Self[T], String) -> Unit
+pub fn[T] TreeView::set_message(Self[T], String) -> Unit
+pub fn[T] TreeView::set_title(Self[T], String) -> Unit
+pub fn[T] TreeView::title(Self[T]) -> String?
+pub fn[T] TreeView::visible(Self[T]) -> Bool
+
+pub struct TreeViewExpansionEvent[T] {
+  element : T
+}
+pub fn[T] TreeViewExpansionEvent::element(Self[T]) -> T
+pub fn[T] TreeViewExpansionEvent::new(T) -> Self[T]
+
+pub type TreeViewOptions[T]
+
+pub struct TreeViewSelectionChangeEvent[T] {
+  selection : Array[T]
+}
+pub fn[T] TreeViewSelectionChangeEvent::new(Array[T]) -> Self[T]
+pub fn[T] TreeViewSelectionChangeEvent::selection(Self[T]) -> Array[T]
+
+pub struct TreeViewVisibilityChangeEvent {
+  visible : Bool
+}
+pub fn TreeViewVisibilityChangeEvent::new(Bool) -> Self
+
+pub type TypeHierarchyItem
+pub fn TypeHierarchyItem::detail(Self) -> String
+pub fn TypeHierarchyItem::kind(Self) -> SymbolKind
+pub fn TypeHierarchyItem::name(Self) -> String
+pub fn TypeHierarchyItem::new(SymbolKind, String, String, Uri, Range, Range) -> Self
+pub fn TypeHierarchyItem::range(Self) -> Range
+pub fn TypeHierarchyItem::selection_range(Self) -> Range
+pub fn TypeHierarchyItem::uri(Self) -> Uri
+
+pub(all) enum UIKind {
+  Desktop
+  Web
+} derive(Eq)
+
+pub type Uri
+pub fn Uri::authority(Self) -> String
+pub fn Uri::file(String) -> Self
+pub fn Uri::fragment(Self) -> String
+pub fn Uri::fs_path(Self) -> String
+pub fn Uri::join_path(Self, Array[String]) -> Self
+pub fn Uri::parse(String, strict? : Bool) -> Self
+pub fn Uri::path(Self) -> String
+pub fn Uri::query(Self) -> String
+pub fn Uri::scheme(Self) -> String
+pub fn Uri::to_json(Self) -> Any
+pub fn Uri::to_string(Self) -> String
+pub fn Uri::with_parts(Self, scheme? : String, authority? : String, path? : String, query? : String, fragment? : String) -> Self
+pub fn Uri::with_query(Self, String) -> Self
+
+pub type UriHandler
+pub async fn UriHandler::handle_uri(Self, Uri) -> Unit
+pub fn UriHandler::new(async (Uri) -> Unit) -> Self
+
+pub(all) enum UriOrString {
+  Path(String)
+  UriValue(Uri)
+}
+
+pub struct ViewBadge {
+  value : Int
+  tooltip : String
+}
+pub fn ViewBadge::new(Int, String) -> Self
+
+pub(all) enum ViewColumn {
+  Active
+  Beside
+  One
+  Two
+  Three
+  Four
+  Five
+  Six
+  Seven
+  Eight
+  Nine
+  Custom(Int)
+} derive(Eq)
+
+pub type Webview
+pub fn Webview::as_webview_uri(Self, Uri) -> Uri
+pub fn Webview::csp_source(Self) -> String
+pub fn Webview::html(Self) -> String
+pub fn Webview::on_did_receive_message(Self) -> Event[Any]
+pub fn Webview::options(Self) -> WebviewOptions
+pub async fn Webview::post_message(Self, Any) -> Bool
+pub fn Webview::set_html(Self, String) -> Unit
+pub fn Webview::set_options(Self, WebviewOptions) -> Unit
+
+pub struct WebviewOptions {
+  enable_scripts : Bool?
+  enable_forms : Bool?
+  enable_command_uris : CommandUrisValue?
+  local_resource_roots : Array[Uri]?
+  port_mapping : Array[WebviewPortMapping]?
+}
+pub fn WebviewOptions::new(enable_scripts? : Bool, enable_forms? : Bool, enable_command_uris? : CommandUrisValue, local_resource_roots? : Array[Uri], port_mapping? : Array[WebviewPortMapping]) -> Self
+
+pub type WebviewPanel
+pub fn WebviewPanel::active(Self) -> Bool
+pub fn WebviewPanel::clear_icon_path(Self) -> Unit
+pub fn WebviewPanel::icon_path(Self) -> IconPath?
+pub fn WebviewPanel::on_did_change_view_state(Self) -> Event[WebviewPanelOnDidChangeViewStateEvent]
+pub fn WebviewPanel::on_did_dispose(Self) -> Event[Unit]
+pub fn WebviewPanel::options(Self) -> WebviewPanelOptions
+pub fn WebviewPanel::reveal(Self, view_column? : ViewColumn, preserve_focus? : Bool) -> Unit
+pub fn WebviewPanel::set_icon_path(Self, IconPath?) -> Unit
+pub fn WebviewPanel::set_title(Self, String) -> Unit
+pub fn WebviewPanel::title(Self) -> String
+pub fn WebviewPanel::view_column(Self) -> ViewColumn?
+pub fn WebviewPanel::view_type(Self) -> String
+pub fn WebviewPanel::visible(Self) -> Bool
+pub fn WebviewPanel::webview(Self) -> Webview
+pub impl Disposable for WebviewPanel
+
+pub struct WebviewPanelOnDidChangeViewStateEvent {
+  webviewPanel : WebviewPanel
+}
+pub fn WebviewPanelOnDidChangeViewStateEvent::new(WebviewPanel) -> Self
+
+pub struct WebviewPanelOptions {
+  enable_find_widget : Bool?
+  retain_context_when_hidden : Bool?
+}
+pub fn WebviewPanelOptions::new(enable_find_widget? : Bool, retain_context_when_hidden? : Bool) -> Self
+
+pub type WebviewPanelSerializer
+pub async fn WebviewPanelSerializer::deserialize_webview_panel(Self, WebviewPanel, Any) -> Unit
+pub fn WebviewPanelSerializer::new(async (WebviewPanel, Any) -> Unit) -> Self
+
+pub struct WebviewPortMapping {
+  webview_port : Int
+  extension_host_port : Int
+}
+pub fn WebviewPortMapping::new(Int, Int) -> Self
+
+pub type WebviewView
+pub fn WebviewView::badge(Self) -> ViewBadge?
+pub fn WebviewView::clear_badge(Self) -> Unit
+pub fn WebviewView::clear_description(Self) -> Unit
+pub fn WebviewView::clear_title(Self) -> Unit
+pub fn WebviewView::description(Self) -> String?
+pub fn WebviewView::on_did_change_visibility(Self) -> Event[Unit]
+pub fn WebviewView::on_did_dispose(Self) -> Event[Unit]
+pub fn WebviewView::set_badge(Self, ViewBadge?) -> Unit
+pub fn WebviewView::set_description(Self, String?) -> Unit
+pub fn WebviewView::set_title(Self, String?) -> Unit
+pub fn WebviewView::show(Self, preserve_focus? : Bool) -> Unit
+pub fn WebviewView::title(Self) -> String?
+pub fn WebviewView::view_type(Self) -> String
+pub fn WebviewView::visible(Self) -> Bool
+pub fn WebviewView::webview(Self) -> Webview
+
+pub struct WebviewViewOptions {
+  retain_context_when_hidden : Bool?
+}
+pub fn WebviewViewOptions::new(retain_context_when_hidden? : Bool) -> Self
+
+pub struct WebviewViewResolveContext {
+  state : Any?
+}
+pub fn WebviewViewResolveContext::new(state? : Any) -> Self
+
+pub struct WindowState {
+  focused : Bool
+  active : Bool
+}
+pub fn WindowState::new(Bool, Bool) -> Self
+
+pub type WorkspaceConfiguration
+pub fn[T] WorkspaceConfiguration::get(Self, String) -> T?
+pub fn WorkspaceConfiguration::get_bool_option(Self, String) -> Bool?
+pub fn WorkspaceConfiguration::get_bool_or(Self, String, Bool) -> Bool
+pub fn[T] WorkspaceConfiguration::get_or(Self, String, T) -> T
+pub fn WorkspaceConfiguration::get_string_option(Self, String) -> String?
+pub fn WorkspaceConfiguration::get_string_or(Self, String, String) -> String
+pub fn WorkspaceConfiguration::has(Self, String) -> Bool
+pub fn[T] WorkspaceConfiguration::inspect(Self, String) -> ConfigurationInspect[T]?
+pub fn WorkspaceConfiguration::key(Self) -> String
+pub async fn WorkspaceConfiguration::update(Self, String, value? : Any, target? : ConfigurationTargetValue, override_in_language? : Bool) -> Unit
+pub async fn WorkspaceConfiguration::update_bool(Self, String, Bool, target? : ConfigurationTarget, override_in_language? : Bool) -> Unit
+pub async fn WorkspaceConfiguration::update_string(Self, String, String, target? : ConfigurationTarget, override_in_language? : Bool) -> Unit
+
+pub type WorkspaceEdit
+pub fn WorkspaceEdit::create_file(Self, Uri, options? : WorkspaceEditCreateFileOptions, metadata? : WorkspaceEditEntryMetadata) -> Unit
+pub fn WorkspaceEdit::delete(Self, Uri, Range, metadata? : WorkspaceEditEntryMetadata) -> Unit
+pub fn WorkspaceEdit::delete_file(Self, Uri, options? : WorkspaceEditDeleteFileOptions, metadata? : WorkspaceEditEntryMetadata) -> Unit
+pub fn WorkspaceEdit::entries(Self) -> Array[(Uri, Array[TextEdit])]
+pub fn WorkspaceEdit::get(Self, Uri) -> Array[TextEdit]
+pub fn WorkspaceEdit::has(Self, Uri) -> Bool
+pub fn WorkspaceEdit::insert(Self, Uri, Position, String, metadata? : WorkspaceEditEntryMetadata) -> Unit
+pub fn WorkspaceEdit::new() -> Self
+pub fn WorkspaceEdit::rename_file(Self, Uri, Uri, options? : WorkspaceEditRenameFileOptions, metadata? : WorkspaceEditEntryMetadata) -> Unit
+pub fn WorkspaceEdit::replace(Self, Uri, Range, String, metadata? : WorkspaceEditEntryMetadata) -> Unit
+pub fn WorkspaceEdit::set_notebook_edits(Self, Uri, Array[NotebookEdit]) -> Unit
+pub fn WorkspaceEdit::set_snippet_edits(Self, Uri, Array[SnippetTextEdit]) -> Unit
+pub fn WorkspaceEdit::set_text_edits(Self, Uri, Array[TextEdit]) -> Unit
+pub fn WorkspaceEdit::size(Self) -> Int
+
+pub struct WorkspaceEditCreateFileOptions {
+  overwrite : Bool?
+  ignore_if_exists : Bool?
+  contents : WorkspaceEditFileContents?
+}
+pub fn WorkspaceEditCreateFileOptions::new(overwrite? : Bool, ignore_if_exists? : Bool, contents? : WorkspaceEditFileContents) -> Self
+
+pub struct WorkspaceEditDeleteFileOptions {
+  recursive : Bool?
+  ignore_if_not_exists : Bool?
+}
+pub fn WorkspaceEditDeleteFileOptions::new(recursive? : Bool, ignore_if_not_exists? : Bool) -> Self
+
+pub(all) struct WorkspaceEditEntryMetadata {
+  mut label : String
+  mut needs_confirmation : Bool
+  mut description : String?
+  mut icon_path : IconPath?
+}
+pub fn WorkspaceEditEntryMetadata::new(String, Bool, description? : String, icon_path? : IconPath) -> Self
+
+pub(all) enum WorkspaceEditFileContents {
+  BytesValue(Bytes)
+  FileValue(DataTransferFile)
+}
+
+pub(all) struct WorkspaceEditMetadata {
+  mut is_refactoring : Bool?
+}
+pub fn WorkspaceEditMetadata::new(is_refactoring? : Bool) -> Self
+
+pub struct WorkspaceEditRenameFileOptions {
+  overwrite : Bool?
+  ignore_if_exists : Bool?
+}
+pub fn WorkspaceEditRenameFileOptions::new(overwrite? : Bool, ignore_if_exists? : Bool) -> Self
+
+pub type WorkspaceFolder
+pub fn WorkspaceFolder::index(Self) -> Int
+pub fn WorkspaceFolder::name(Self) -> String
+pub fn WorkspaceFolder::new(Uri, String, Int) -> Self
+pub fn WorkspaceFolder::uri(Self) -> Uri
+
+pub struct WorkspaceFolderInput {
+  uri : Uri
+  name : String?
+}
+pub fn WorkspaceFolderInput::new(Uri, name? : String) -> Self
+
+pub(all) struct WorkspaceFolderPickOptions {
+  mut place_holder : String?
+  mut ignore_focus_out : Bool?
+}
+pub fn WorkspaceFolderPickOptions::new(place_holder? : String, ignore_focus_out? : Bool) -> Self
+
+pub struct WorkspaceFoldersChangeEvent {
+  added : Array[WorkspaceFolder]
+  removed : Array[WorkspaceFolder]
+}
+pub fn WorkspaceFoldersChangeEvent::new(added? : Array[WorkspaceFolder], removed? : Array[WorkspaceFolder]) -> Self
+
+// Type aliases
+
+// Traits
+pub(open) trait AuthenticationProvider {
+  on_did_change_sessions(Self) -> Event[AuthenticationProviderAuthenticationSessionsChangeEvent]
+  async get_sessions(Self, Array[String]?, AuthenticationProviderSessionOptions) -> Array[AuthenticationSession]
+  async create_session(Self, Array[String], AuthenticationProviderSessionOptions) -> AuthenticationSession
+  async remove_session(Self, String) -> Unit
+}
+
+pub(open) trait CallHierarchyProvider {
+  async prepare_call_hierarchy(Self, TextDocument, Position, CancellationToken) -> Array[CallHierarchyItem]?
+  async provide_call_hierarchy_incoming_calls(Self, CallHierarchyItem, CancellationToken) -> Array[CallHierarchyIncomingCall]?
+  async provide_call_hierarchy_outgoing_calls(Self, CallHierarchyItem, CancellationToken) -> Array[CallHierarchyOutgoingCall]?
+}
+
+pub(open) trait CodeActionProvider {
+  async provide_code_actions(Self, TextDocument, Range, CodeActionContext, CancellationToken) -> Array[CodeAction]?
+  async resolve_code_action(Self, CodeAction, CancellationToken) -> CodeAction?
+}
+
+pub(open) trait CodeLensProvider {
+  on_did_change_code_lenses(Self) -> Event[Unit]?
+  async provide_code_lenses(Self, TextDocument, CancellationToken) -> Array[CodeLens]?
+  async resolve_code_lens(Self, CodeLens, CancellationToken) -> CodeLens?
+}
+
+pub(open) trait CommentingRangeProvider {
+  async provide_commenting_ranges(Self, TextDocument, CancellationToken) -> CommentingRanges?
+}
+
+pub(open) trait CompletionItemProvider {
+  async provide_completion_items(Self, TextDocument, Position, CancellationToken, CompletionContext) -> Array[CompletionItem]?
+  async resolve_completion_item(Self, CompletionItem, CancellationToken) -> CompletionItem?
+}
+
+pub(open) trait CustomEditorProvider {
+  on_did_change_custom_document(Self) -> Event[CustomDocumentChangeEvent[CustomDocument]]?
+  async open_custom_document(Self, Uri, CustomDocumentOpenContext, CancellationToken) -> CustomDocument
+  async resolve_custom_editor(Self, CustomDocument, WebviewPanel, CancellationToken) -> Unit
+  async save_custom_document(Self, CustomDocument, CancellationToken) -> Unit
+  async save_custom_document_as(Self, CustomDocument, Uri, CancellationToken) -> Unit
+  async revert_custom_document(Self, CustomDocument, CancellationToken) -> Unit
+  async backup_custom_document(Self, CustomDocument, CustomDocumentBackupContext, CancellationToken) -> CustomDocumentBackup
+}
+
+pub(open) trait CustomReadonlyEditorProvider {
+  async open_custom_document(Self, Uri, CustomDocumentOpenContext, CancellationToken) -> CustomDocument
+  async resolve_custom_editor(Self, CustomDocument, WebviewPanel, CancellationToken) -> Unit
+}
+
+pub(open) trait CustomTextEditorProvider {
+  async resolve_custom_text_editor(Self, TextDocument, WebviewPanel, CancellationToken) -> Unit
+}
+
+pub(open) trait DeclarationProvider {
+  async provide_declaration(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
+}
+
+pub(open) trait DefinitionProvider {
+  async provide_definition(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
+}
+
+pub(open) trait Disposable {
+  dispose(Self) -> Unit
+}
+
+pub(open) trait DocumentColorProvider {
+  async provide_document_colors(Self, TextDocument, CancellationToken) -> Array[ColorInformation]?
+  async provide_color_presentations(Self, Color, ColorPresentationContext, CancellationToken) -> Array[ColorPresentation]?
+}
+
+pub(open) trait DocumentDropEditProvider {
+  async provide_document_drop_edits(Self, TextDocument, Position, DataTransfer, CancellationToken) -> DocumentDropEdit?
+  metadata(Self) -> DocumentDropEditProviderMetadata?
+}
+
+pub(open) trait DocumentFormattingEditProvider {
+  async provide_document_formatting_edits(Self, TextDocument, FormattingOptions, CancellationToken) -> Array[TextEdit]?
+}
+
+pub(open) trait DocumentHighlightProvider {
+  async provide_document_highlights(Self, TextDocument, Position, CancellationToken) -> Array[DocumentHighlight]?
+}
+
+pub(open) trait DocumentLinkProvider {
+  async provide_document_links(Self, TextDocument, CancellationToken) -> Array[DocumentLink]?
+  async resolve_document_link(Self, DocumentLink, CancellationToken) -> DocumentLink?
+}
+
+pub(open) trait DocumentPasteEditProvider {
+  async provide_document_paste_edits(Self, TextDocument, Array[Range], DataTransfer, DocumentPasteEditContext, CancellationToken) -> DocumentPasteEdit?
+  metadata(Self) -> DocumentPasteProviderMetadata?
+}
+
+pub(open) trait DocumentRangeFormattingEditProvider {
+  async provide_document_range_formatting_edits(Self, TextDocument, Range, FormattingOptions, CancellationToken) -> Array[TextEdit]?
+}
+
+pub(open) trait DocumentRangeSemanticTokensProvider {
+  async provide_document_range_semantic_tokens(Self, TextDocument, Range, CancellationToken) -> SemanticTokens
+}
+
+pub(open) trait DocumentSemanticTokensProvider {
+  async provide_document_semantic_tokens(Self, TextDocument, CancellationToken) -> SemanticTokens
+  provide_document_semantic_tokens_edits(Self) -> (async (TextDocument, String, CancellationToken) -> SemanticTokensEdits)?
+  on_did_change_semantic_tokens(Self) -> Event[Unit]?
+}
+
+pub(open) trait DocumentSymbolProvider {
+  async provide_document_symbols(Self, TextDocument, CancellationToken) -> Array[DocumentSymbol]?
+}
+
+pub(open) trait FileDecorationProvider {
+  on_did_change_file_decorations(Self) -> Event[FileDecorationChange]?
+  async provide_file_decoration(Self, Uri, CancellationToken) -> FileDecoration?
+}
+
+pub(open) trait FileSystemProvider {
+  on_did_change_file(Self) -> Event[Array[FileChangeEvent]]
+  watch(Self, Uri, Bool, Array[String]) -> &Disposable
+  async stat(Self, Uri) -> FileStat
+  async read_directory(Self, Uri) -> Array[DirectoryEntry]
+  async create_directory(Self, Uri) -> Unit
+  async read_file(Self, Uri) -> Bytes
+  async write_file(Self, Uri, Bytes, Bool, Bool) -> Unit
+  async delete(Self, Uri, Bool) -> Unit
+  async rename(Self, Uri, Uri, Bool) -> Unit
+  async copy(Self, Uri, Uri, Bool) -> Unit
+}
+
+pub(open) trait FoldingRangeProvider {
+  async provide_folding_ranges(Self, TextDocument, FoldingContext, CancellationToken) -> Array[FoldingRange]?
+}
+
+pub(open) trait HoverProvider {
+  async provide_hover(Self, TextDocument, Position, CancellationToken) -> Hover?
+}
+
+pub(open) trait ImplementationProvider {
+  async provide_implementation(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
+}
+
+pub(open) trait InlayHintsProvider {
+  async provide_inlay_hints(Self, TextDocument, Range, CancellationToken) -> Array[InlayHint]?
+  async resolve_inlay_hint(Self, InlayHint, CancellationToken) -> InlayHint?
+}
+
+pub(open) trait InlineCompletionItemProvider {
+  async provide_inline_completion_items(Self, TextDocument, Position, InlineCompletionContext, CancellationToken) -> Array[InlineCompletionItem]?
+}
+
+pub(open) trait InlineValuesProvider {
+  async provide_inline_values(Self, TextDocument, Range, InlineValueContext, CancellationToken) -> Array[InlineValue]?
+}
+
+pub(open) trait LinkedEditingRangeProvider {
+  async provide_linked_editing_ranges(Self, TextDocument, Position, CancellationToken) -> LinkedEditingRanges?
+}
+
+pub(open) trait OnTypeFormattingEditProvider {
+  async provide_on_type_formatting_edits(Self, TextDocument, Position, String, FormattingOptions, CancellationToken) -> Array[TextEdit]?
+}
+
+pub(open) trait QuickDiffProvider {
+  async provide_original_resource(Self, Uri, CancellationToken) -> Uri?
+}
+
+pub(open) trait ReferenceProvider {
+  async provide_references(Self, TextDocument, Position, ReferenceContext, CancellationToken) -> Array[Location]?
+}
+
+pub(open) trait RenameProvider {
+  async provide_rename_edits(Self, TextDocument, Position, String, CancellationToken) -> WorkspaceEdit?
+  async prepare_rename(Self, TextDocument, Position, CancellationToken) -> Range?
+}
+
+pub(open) trait SelectionRangeProvider {
+  async provide_selection_ranges(Self, TextDocument, Array[Position], CancellationToken) -> Array[SelectionRange]?
+}
+
+pub(open) trait SignatureHelpProvider {
+  async provide_signature_help(Self, TextDocument, Position, CancellationToken, SignatureHelpContext) -> SignatureHelp?
+}
+
+pub(open) trait TaskProvider {
+  async provide_tasks(Self, CancellationToken) -> Array[Task]?
+  async resolve_task(Self, Task, CancellationToken) -> Task?
+}
+
+pub(open) trait TerminalLinkProvider {
+  async provide_terminal_links(Self, TerminalLinkContext, CancellationToken) -> Array[TerminalLink]?
+  async handle_terminal_link(Self, TerminalLink) -> Unit
+}
+
+pub(open) trait TerminalProfileProvider {
+  async provide_terminal_profile(Self, CancellationToken) -> TerminalProfile?
+}
+
+pub(open) trait TextDocumentContentProvider {
+  on_did_change(Self) -> Event[Uri]?
+  async provide_text_document_content(Self, Uri, CancellationToken) -> String
+}
+
+pub(open) trait TypeDefinitionProvider {
+  async provide_type_definition(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
+}
+
+pub(open) trait TypeHierarchyProvider {
+  async prepare_type_hierarchy(Self, TextDocument, Position, CancellationToken) -> Array[TypeHierarchyItem]?
+  async provide_type_hierarchy_supertypes(Self, TypeHierarchyItem, CancellationToken) -> Array[TypeHierarchyItem]?
+  async provide_type_hierarchy_subtypes(Self, TypeHierarchyItem, CancellationToken) -> Array[TypeHierarchyItem]?
+}
+
+pub(open) trait WebviewViewProvider {
+  async resolve_webview_view(Self, WebviewView, WebviewViewResolveContext, CancellationToken) -> Unit
+}
+
+pub(open) trait WorkspaceSymbolProvider {
+  async provide_workspace_symbols(Self, String, CancellationToken) -> Array[SymbolInformation]?
+  async resolve_workspace_symbol(Self, SymbolInformation, CancellationToken) -> SymbolInformation?
+}
+

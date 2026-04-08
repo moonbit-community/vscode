@@ -1,0 +1,11 @@
+node_modules/**
+.mooncakes/**
+target/**
+target
+ui-test/**
+out/ui-test/**
+.vscode-test/**
+.test-extensions/**
+settings.json
+coverage/**
+coverage

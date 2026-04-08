@@ -1,0 +1,126 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/workspace"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub async fn apply_edit(@vscode.WorkspaceEdit, metadata? : @vscode.WorkspaceEditMetadata) -> Bool
+
+pub fn as_relative_path(String, include_workspace_folder? : Bool) -> String
+
+pub fn as_relative_path_uri(@vscode.Uri, include_workspace_folder? : Bool) -> String
+
+pub fn create_file_system_watcher(@vscode.GlobPattern, ignore_create_events? : Bool, ignore_change_events? : Bool, ignore_delete_events? : Bool) -> @vscode.FileSystemWatcher
+
+pub async fn decode(Bytes) -> String
+
+pub async fn decode_with_encoding(Bytes, String) -> String
+
+pub async fn decode_with_uri(Bytes, @vscode.Uri) -> String
+
+pub async fn encode(String) -> Bytes
+
+pub async fn encode_with_encoding(String, String) -> Bytes
+
+pub async fn encode_with_uri(String, @vscode.Uri) -> Bytes
+
+pub async fn find_files(@vscode.GlobPattern, exclude? : @vscode.GlobPattern, max_results? : Int, token? : @vscode.CancellationToken) -> Array[@vscode.Uri]
+
+pub async fn find_files_no_excludes(@vscode.GlobPattern, max_results? : Int, token? : @vscode.CancellationToken) -> Array[@vscode.Uri]
+
+pub fn fs() -> @vscode.FileSystem
+
+pub fn get_configuration(section? : String, scope? : @vscode.ConfigurationScope) -> @vscode.WorkspaceConfiguration
+
+pub fn get_workspace_folder(@vscode.Uri) -> @vscode.WorkspaceFolder?
+
+pub fn is_trusted() -> Bool
+
+pub fn name() -> String?
+
+pub fn notebook_documents() -> Array[@vscode.NotebookDocument]
+
+pub fn on_did_change_configuration() -> @vscode.Event[@vscode.ConfigurationChangeEvent]
+
+pub fn on_did_change_notebook_document() -> @vscode.Event[@vscode.NotebookDocumentChangeEvent]
+
+pub fn on_did_change_text_document() -> @vscode.Event[@vscode.TextDocumentChangeEvent]
+
+pub fn on_did_change_workspace_folders() -> @vscode.Event[@vscode.WorkspaceFoldersChangeEvent]
+
+pub fn on_did_close_notebook_document() -> @vscode.Event[@vscode.NotebookDocument]
+
+pub fn on_did_close_text_document() -> @vscode.Event[@vscode.TextDocument]
+
+pub fn on_did_create_files() -> @vscode.Event[@vscode.FileCreateEvent]
+
+pub fn on_did_delete_files() -> @vscode.Event[@vscode.FileDeleteEvent]
+
+pub fn on_did_grant_workspace_trust() -> @vscode.Event[Unit]
+
+pub fn on_did_open_notebook_document() -> @vscode.Event[@vscode.NotebookDocument]
+
+pub fn on_did_open_text_document() -> @vscode.Event[@vscode.TextDocument]
+
+pub fn on_did_rename_files() -> @vscode.Event[@vscode.FileRenameEvent]
+
+pub fn on_did_save_notebook_document() -> @vscode.Event[@vscode.NotebookDocument]
+
+pub fn on_did_save_text_document() -> @vscode.Event[@vscode.TextDocument]
+
+pub fn on_will_create_files() -> @vscode.Event[@vscode.FileWillCreateEvent]
+
+pub fn on_will_delete_files() -> @vscode.Event[@vscode.FileWillDeleteEvent]
+
+pub fn on_will_rename_files() -> @vscode.Event[@vscode.FileWillRenameEvent]
+
+pub fn on_will_save_notebook_document() -> @vscode.Event[@vscode.NotebookDocumentWillSaveEvent]
+
+pub fn on_will_save_text_document() -> @vscode.Event[@vscode.TextDocumentWillSaveEvent]
+
+pub async fn open_notebook_document_type(String, content? : @vscode.NotebookData) -> @vscode.NotebookDocument
+
+pub async fn open_notebook_document_uri(@vscode.Uri) -> @vscode.NotebookDocument
+
+pub async fn open_text_document_path(String, encoding? : String) -> @vscode.TextDocument
+
+pub async fn open_text_document_untitled(language? : String, content? : String, encoding? : String) -> @vscode.TextDocument
+
+pub async fn open_text_document_uri(@vscode.Uri, encoding? : String) -> @vscode.TextDocument
+
+pub fn[T : @vscode.FileSystemProvider] register_file_system_provider(String, T, is_case_sensitive? : Bool, is_readonly? : Bool) -> &@vscode.Disposable
+
+pub fn[T : @vscode.FileSystemProvider] register_file_system_provider_readonly_reason(String, T, @vscode.MarkdownString, is_case_sensitive? : Bool) -> &@vscode.Disposable
+
+pub fn register_notebook_serializer(String, @vscode.NotebookSerializer, options? : @vscode.NotebookDocumentContentOptions) -> &@vscode.Disposable
+
+pub fn[T : @vscode.TaskProvider] register_task_provider(String, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.TextDocumentContentProvider] register_text_document_content_provider(String, T) -> &@vscode.Disposable
+
+pub fn root_path() -> String?
+
+pub async fn save(@vscode.Uri) -> @vscode.Uri?
+
+pub async fn save_all(include_untitled? : Bool) -> Bool
+
+pub async fn save_as(@vscode.Uri) -> @vscode.Uri?
+
+pub fn text_documents() -> Array[@vscode.TextDocument]
+
+pub fn update_workspace_folders(Int, delete_count? : Int, folders_to_add? : Array[@vscode.WorkspaceFolderInput]) -> Bool
+
+pub fn workspace_file() -> @vscode.Uri?
+
+pub fn workspace_folders() -> Array[@vscode.WorkspaceFolder]?
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

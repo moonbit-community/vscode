@@ -1,0 +1,6 @@
+[submodule ".codex/skills/moonbit-vscode-test-harness/references/vscode-extension-tester"]
+	path = .codex/skills/moonbit-vscode-test-harness/references/vscode-extension-tester
+	url = https://github.com/redhat-developer/vscode-extension-tester
+[submodule ".codex/skills/moonbit-vscode-samples/references/vscode-extension-samples"]
+	path = .codex/skills/moonbit-vscode-samples/references/vscode-extension-samples
+	url = https://github.com/microsoft/vscode-extension-samples

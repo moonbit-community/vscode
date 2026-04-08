@@ -1,0 +1,54 @@
+{
+  "name": "source-control-sample-moonbit-port",
+  "displayName": "MoonBit Port: source-control-sample",
+  "publisher": "moonbit",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "main": "./_build/js/release/build/vscode-sample-source-control-sample.js",
+  "activationEvents": [
+    "workspaceContains:.jsfiddle",
+    "onCommand:extension.source-control.open",
+    "onCommand:extension.source-control.commit",
+    "onCommand:extension.source-control.refresh",
+    "onCommand:extension.source-control.discard",
+    "onCommand:extension.source-control.checkout",
+    "onCommand:extension.source-control.browse"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.source-control.open",
+        "title": "Open JS Fiddle"
+      },
+      {
+        "command": "extension.source-control.commit",
+        "title": "Commit local changes to JS Fiddle"
+      },
+      {
+        "command": "extension.source-control.refresh",
+        "title": "Refresh JS Fiddle status"
+      },
+      {
+        "command": "extension.source-control.discard",
+        "title": "Discards local changes to JS Fiddle"
+      },
+      {
+        "command": "extension.source-control.checkout",
+        "title": "Checkout another version of this Fiddle"
+      },
+      {
+        "command": "extension.source-control.browse",
+        "title": "Open current Fiddle in the default browser"
+      }
+    ]
+  },
+  "scripts": {
+    "build:moonbit": "moon build --target js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/bzy-debug/vscode.mbt"
+  }
+}

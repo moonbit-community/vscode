@@ -1,0 +1,176 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/window"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn active_color_theme() -> @vscode.ColorTheme
+
+pub fn active_notebook_editor() -> @vscode.NotebookEditor?
+
+pub fn active_terminal() -> @vscode.Terminal?
+
+pub fn active_text_editor() -> @vscode.TextEditor?
+
+pub fn create_input_box() -> @vscode.InputBox
+
+pub fn create_log_output_channel(String) -> @vscode.LogOutputChannel
+
+pub fn create_output_channel(String, language_id? : String) -> @vscode.OutputChannel
+
+pub fn create_quick_pick() -> @vscode.QuickPick[@vscode.QuickPickItem]
+
+pub fn create_status_bar_item(alignment? : @vscode.StatusBarAlignment, priority? : Int) -> @vscode.StatusBarItem
+
+pub fn create_status_bar_item_with_id(String, alignment? : @vscode.StatusBarAlignment, priority? : Int) -> @vscode.StatusBarItem
+
+pub fn create_terminal() -> @vscode.Terminal
+
+pub fn create_terminal_named(String) -> @vscode.Terminal
+
+pub fn create_terminal_with_extension_options(@vscode.ExtensionTerminalOptions) -> @vscode.Terminal
+
+pub fn create_terminal_with_options(@vscode.TerminalOptions) -> @vscode.Terminal
+
+pub fn create_text_editor_decoration_type(@vscode.DecorationRenderOptions) -> @vscode.TextEditorDecorationType
+
+pub fn[T] create_tree_view(String, @vscode.TreeViewOptions[T]) -> @vscode.TreeView[T]
+
+pub fn create_webview_panel(String, String, @vscode.ViewColumn, options? : @vscode.WebviewPanelOptions) -> @vscode.WebviewPanel
+
+pub fn create_webview_panel_show_options(String, String, view_column? : @vscode.ViewColumn, preserve_focus? : Bool, options? : @vscode.WebviewPanelOptions) -> @vscode.WebviewPanel
+
+pub fn on_did_change_active_color_theme() -> @vscode.Event[@vscode.ColorTheme]
+
+pub fn on_did_change_active_notebook_editor() -> @vscode.Event[@vscode.NotebookEditor?]
+
+pub fn on_did_change_active_terminal() -> @vscode.Event[@vscode.Terminal?]
+
+pub fn on_did_change_active_text_editor() -> @vscode.Event[@vscode.TextEditor?]
+
+pub fn on_did_change_notebook_editor_selection() -> @vscode.Event[@vscode.NotebookEditorSelectionChangeEvent]
+
+pub fn on_did_change_notebook_editor_visible_ranges() -> @vscode.Event[@vscode.NotebookEditorVisibleRangesChangeEvent]
+
+pub fn on_did_change_terminal_shell_integration() -> @vscode.Event[@vscode.TerminalShellIntegrationChangeEvent]
+
+pub fn on_did_change_terminal_state() -> @vscode.Event[@vscode.Terminal]
+
+pub fn on_did_change_text_editor_options() -> @vscode.Event[@vscode.TextEditorOptionsChangeEvent]
+
+pub fn on_did_change_text_editor_selection() -> @vscode.Event[@vscode.TextEditorSelectionChangeEvent]
+
+pub fn on_did_change_text_editor_view_column() -> @vscode.Event[@vscode.TextEditorViewColumnChangeEvent]
+
+pub fn on_did_change_text_editor_visible_ranges() -> @vscode.Event[@vscode.TextEditorVisibleRangesChangeEvent]
+
+pub fn on_did_change_visible_notebook_editors() -> @vscode.Event[Array[@vscode.NotebookEditor]]
+
+pub fn on_did_change_visible_text_editors() -> @vscode.Event[Array[@vscode.TextEditor]]
+
+pub fn on_did_change_window_state() -> @vscode.Event[@vscode.WindowState]
+
+pub fn on_did_close_terminal() -> @vscode.Event[@vscode.Terminal]
+
+pub fn on_did_end_terminal_shell_execution() -> @vscode.Event[@vscode.TerminalShellExecutionEndEvent]
+
+pub fn on_did_open_terminal() -> @vscode.Event[@vscode.Terminal]
+
+pub fn on_did_start_terminal_shell_execution() -> @vscode.Event[@vscode.TerminalShellExecutionStartEvent]
+
+pub fn progress_location_notification() -> @vscode.ProgressLocationValue
+
+pub fn progress_location_source_control() -> @vscode.ProgressLocationValue
+
+pub fn progress_location_window() -> @vscode.ProgressLocationValue
+
+pub fn progress_options(@vscode.ProgressLocationValue, title? : String, cancellable? : Bool) -> @vscode.ProgressOptions
+
+pub fn[T] progress_report_message_increment(@vscode.Progress[T], String, increment? : Int) -> Unit
+
+pub fn[T : @vscode.CustomEditorProvider] register_custom_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> &@vscode.Disposable
+
+pub fn[T : @vscode.CustomReadonlyEditorProvider] register_custom_readonly_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> &@vscode.Disposable
+
+pub fn[T : @vscode.CustomTextEditorProvider] register_custom_text_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> &@vscode.Disposable
+
+pub fn[T : @vscode.FileDecorationProvider] register_file_decoration_provider(T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.TerminalLinkProvider] register_terminal_link_provider(T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.TerminalProfileProvider] register_terminal_profile_provider(String, T) -> &@vscode.Disposable
+
+pub fn[T] register_tree_data_provider(String, async (T) -> @vscode.TreeItem, async (T?) -> Array[T]?, on_did_change_tree_data? : @vscode.Event[T?], get_parent? : async (T) -> T?, resolve_tree_item? : async (@vscode.TreeItem, T, @vscode.CancellationToken) -> @vscode.TreeItem?) -> &@vscode.Disposable
+
+pub fn register_uri_handler(@vscode.UriHandler) -> &@vscode.Disposable
+
+pub fn register_webview_panel_serializer(String, @vscode.WebviewPanelSerializer) -> &@vscode.Disposable
+
+pub fn[T : @vscode.WebviewViewProvider] register_webview_view_provider(String, T, options? : @vscode.WebviewViewOptions) -> &@vscode.Disposable
+
+pub fn set_status_bar_message(String) -> &@vscode.Disposable
+
+pub fn set_status_bar_message_timeout(String, Int) -> &@vscode.Disposable
+
+pub fn[X] set_status_bar_message_until(String, async () -> X) -> &@vscode.Disposable
+
+pub async fn show_error_message(String, options? : @vscode.MessageOptions) -> Unit
+
+pub async fn[X] show_error_message_items(String, Array[X], options? : @vscode.MessageOptions) -> X?
+
+pub async fn show_information_message(String, options? : @vscode.MessageOptions) -> Unit
+
+pub async fn[X] show_information_message_items(String, Array[X], options? : @vscode.MessageOptions) -> X?
+
+pub async fn show_input_box(options? : @vscode.InputBoxOptions, token? : @vscode.CancellationToken) -> String?
+
+pub async fn show_notebook_document(@vscode.NotebookDocument, options? : @vscode.NotebookDocumentShowOptions) -> @vscode.NotebookEditor
+
+pub async fn show_open_dialog(options? : @vscode.OpenDialogOptions) -> Array[@vscode.Uri]?
+
+pub async fn show_quick_pick(Array[@vscode.QuickPickItem], options? : @vscode.QuickPickOptions, token? : @vscode.CancellationToken) -> @vscode.QuickPickItem?
+
+pub async fn show_quick_pick_many(Array[@vscode.QuickPickItem], options? : @vscode.QuickPickOptions, token? : @vscode.CancellationToken) -> Array[@vscode.QuickPickItem]?
+
+pub async fn show_quick_pick_strings(Array[String], options? : @vscode.QuickPickOptions, token? : @vscode.CancellationToken) -> String?
+
+pub async fn show_quick_pick_strings_many(Array[String], options? : @vscode.QuickPickOptions, token? : @vscode.CancellationToken) -> Array[String]?
+
+pub async fn show_save_dialog(options? : @vscode.SaveDialogOptions) -> @vscode.Uri?
+
+pub async fn show_text_document(@vscode.TextDocument, options? : @vscode.TextDocumentShowOptions) -> @vscode.TextEditor
+
+pub async fn show_text_document_uri(@vscode.Uri, options? : @vscode.TextDocumentShowOptions) -> @vscode.TextEditor
+
+pub async fn show_warning_message(String, options? : @vscode.MessageOptions) -> Unit
+
+pub async fn[X] show_warning_message_items(String, Array[X], options? : @vscode.MessageOptions) -> X?
+
+pub async fn show_workspace_folder_pick(options? : @vscode.WorkspaceFolderPickOptions) -> @vscode.WorkspaceFolder?
+
+pub fn state() -> @vscode.WindowState
+
+pub fn tab_groups() -> @vscode.TabGroups
+
+pub fn terminals() -> Array[@vscode.Terminal]
+
+pub fn[T] tree_view_options(async (T) -> @vscode.TreeItem, async (T?) -> Array[T]?, on_did_change_tree_data? : @vscode.Event[T?], get_parent? : async (T) -> T?, resolve_tree_item? : async (@vscode.TreeItem, T, @vscode.CancellationToken) -> @vscode.TreeItem?) -> @vscode.TreeViewOptions[T]
+
+pub fn visible_notebook_editors() -> Array[@vscode.NotebookEditor]
+
+pub fn visible_text_editors() -> Array[@vscode.TextEditor]
+
+pub async fn[T] with_progress(@vscode.ProgressOptions, async (@vscode.Progress[T], @vscode.CancellationToken) -> T) -> T
+
+pub async fn[T] with_scm_progress(async (@vscode.Progress[Int]) -> T) -> T
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

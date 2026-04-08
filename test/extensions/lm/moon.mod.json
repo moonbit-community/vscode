@@ -1,0 +1,13 @@
+{
+  "name": "moonbit/vscode-lm-test",
+  "version": "0.0.0",
+  "deps": {
+    "username/vscode": {
+      "path": "../../.."
+    },
+    "moonbitlang/async": {
+      "path": "../../../../async"
+    }
+  },
+  "preferred-target": "js"
+}

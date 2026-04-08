@@ -1,0 +1,30 @@
+{
+  "import": [
+    {
+      "path": "username/vscode/commands"
+    },
+    {
+      "path": "username/vscode/comments"
+    },
+    {
+      "path": "username/vscode"
+    },
+    {
+      "path": "username/vscode/workspace"
+    }
+  ],
+  "link": {
+    "js": {
+      "exports": [
+        "activate",
+        "deactivate"
+      ],
+      "format": "cjs"
+    }
+  },
+  "targets": {
+    "extension.mbt": [
+      "js"
+    ]
+  }
+}

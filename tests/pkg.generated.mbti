@@ -1,0 +1,160 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/tests"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn create_test_controller(String, String) -> TestController
+
+// Errors
+
+// Types and methods
+pub type BranchCoverage
+pub fn BranchCoverage::new(IntOrBool, location? : PositionOrRange, label? : String) -> Self
+
+pub type DeclarationCoverage
+pub fn DeclarationCoverage::new(String, IntOrBool, PositionOrRange) -> Self
+
+pub type FileCoverage
+pub fn FileCoverage::from_details(@vscode.Uri, Array[FileCoverageDetail]) -> Self
+pub fn FileCoverage::new(@vscode.Uri, TestCoverageCount, branch_coverage? : TestCoverageCount, declaration_coverage? : TestCoverageCount, includes_tests? : Array[TestItem]) -> Self
+pub fn FileCoverage::statement_coverage(Self) -> TestCoverageCount
+
+pub type FileCoverageDetail
+pub fn FileCoverageDetail::from_declaration(DeclarationCoverage) -> Self
+pub fn FileCoverageDetail::from_statement(StatementCoverage) -> Self
+
+pub(all) enum IntOrBool {
+  Numeric(Int)
+  Boolean(Bool)
+}
+
+pub(all) enum PositionOrRange {
+  PositionValue(@vscode.Position)
+  RangeValue(@vscode.Range)
+}
+
+pub type StatementCoverage
+pub fn StatementCoverage::new(IntOrBool, PositionOrRange, branches? : Array[BranchCoverage]) -> Self
+
+pub type TestController
+pub fn TestController::add_root_item(Self, TestItem) -> Unit
+pub fn TestController::clear_refresh_handler(Self) -> Unit
+pub fn TestController::clear_resolve_handler(Self) -> Unit
+pub fn TestController::create_run_profile(Self, String, TestRunProfileKind, (TestRunRequest, @vscode.CancellationToken) -> Unit, is_default? : Bool, tag? : TestTag, supports_continuous_run? : Bool) -> TestRunProfile
+pub fn TestController::create_test_item(Self, String, String, uri? : @vscode.Uri) -> TestItem
+pub fn TestController::create_test_run(Self, TestRunRequest, name? : String, persist? : Bool) -> TestRun
+pub fn TestController::id(Self) -> String
+pub fn TestController::invalidate_test_results(Self, items? : TestItemOrMany) -> Unit
+pub fn TestController::label(Self) -> String
+pub fn TestController::remove_root_item(Self, String) -> Unit
+pub fn TestController::root_items_size(Self) -> Int
+pub fn TestController::set_refresh_handler(Self, (@vscode.CancellationToken) -> Unit) -> Unit
+pub fn TestController::set_resolve_handler(Self, (TestItem?) -> Unit) -> Unit
+pub impl @vscode.Disposable for TestController
+
+pub type TestCoverageCount
+pub fn TestCoverageCount::covered(Self) -> Int
+pub fn TestCoverageCount::new(Int, Int) -> Self
+pub fn TestCoverageCount::total(Self) -> Int
+
+pub type TestItem
+pub fn TestItem::busy(Self) -> Bool
+pub fn TestItem::can_resolve_children(Self) -> Bool
+pub fn TestItem::children(Self) -> TestItemCollection
+pub fn TestItem::clear_description(Self) -> Unit
+pub fn TestItem::clear_error(Self) -> Unit
+pub fn TestItem::clear_range(Self) -> Unit
+pub fn TestItem::clear_sort_text(Self) -> Unit
+pub fn TestItem::description(Self) -> String?
+pub fn TestItem::error(Self) -> @vscode.MarkdownStringValue?
+pub fn TestItem::id(Self) -> String
+pub fn TestItem::label(Self) -> String
+pub fn TestItem::parent(Self) -> Self?
+pub fn TestItem::range(Self) -> @vscode.Range?
+pub fn TestItem::set_busy(Self, Bool) -> Unit
+pub fn TestItem::set_can_resolve_children(Self, Bool) -> Unit
+pub fn TestItem::set_description(Self, String?) -> Unit
+pub fn TestItem::set_error(Self, @vscode.MarkdownStringValue?) -> Unit
+pub fn TestItem::set_label(Self, String) -> Unit
+pub fn TestItem::set_range(Self, @vscode.Range?) -> Unit
+pub fn TestItem::set_sort_text(Self, String?) -> Unit
+pub fn TestItem::set_tags(Self, Array[TestTag]) -> Unit
+pub fn TestItem::sort_text(Self) -> String?
+pub fn TestItem::tags(Self) -> Array[TestTag]
+pub fn TestItem::uri(Self) -> @vscode.Uri?
+
+pub type TestItemCollection
+pub fn TestItemCollection::add(Self, TestItem) -> Unit
+pub fn TestItemCollection::delete(Self, String) -> Unit
+pub fn TestItemCollection::get(Self, String) -> TestItem?
+pub fn TestItemCollection::replace(Self, Array[TestItem]) -> Unit
+pub fn TestItemCollection::size(Self) -> Int
+
+pub(all) enum TestItemOrMany {
+  Single(TestItem)
+  Many(Array[TestItem])
+}
+
+pub type TestMessage
+pub fn TestMessage::clear_stack_trace(Self) -> Unit
+pub fn TestMessage::diff(@vscode.MarkdownStringValue, String, String) -> Self
+pub fn TestMessage::new(@vscode.MarkdownStringValue) -> Self
+pub fn TestMessage::set_stack_trace(Self, Array[TestMessageStackFrame]?) -> Unit
+pub fn TestMessage::stack_trace(Self) -> Array[TestMessageStackFrame]?
+
+pub(all) enum TestMessageOrMany {
+  Single(TestMessage)
+  Many(Array[TestMessage])
+}
+
+pub type TestMessageStackFrame
+pub fn TestMessageStackFrame::new(String, uri? : @vscode.Uri, position? : @vscode.Position) -> Self
+
+pub type TestRun
+pub fn TestRun::add_coverage(Self, FileCoverage) -> Unit
+pub fn TestRun::append_output(Self, String, location? : @vscode.Location, test_item? : TestItem) -> Unit
+pub fn TestRun::end(Self) -> Unit
+pub fn TestRun::enqueued(Self, TestItem) -> Unit
+pub fn TestRun::errored(Self, TestItem, TestMessageOrMany, duration? : Int) -> Unit
+pub fn TestRun::failed(Self, TestItem, TestMessageOrMany, duration? : Int) -> Unit
+pub fn TestRun::is_persisted(Self) -> Bool
+pub fn TestRun::name(Self) -> String?
+pub fn TestRun::on_did_dispose(Self) -> @vscode.Event[Unit]
+pub fn TestRun::passed(Self, TestItem, duration? : Int) -> Unit
+pub fn TestRun::skipped(Self, TestItem) -> Unit
+pub fn TestRun::started(Self, TestItem) -> Unit
+pub fn TestRun::token(Self) -> @vscode.CancellationToken
+
+pub type TestRunProfile
+pub fn TestRunProfile::clear_configure_handler(Self) -> Unit
+pub fn TestRunProfile::kind(Self) -> TestRunProfileKind
+pub fn TestRunProfile::on_did_change_default(Self) -> @vscode.Event[Bool]
+pub fn TestRunProfile::set_configure_handler(Self, () -> Unit) -> Unit
+pub fn TestRunProfile::tag(Self) -> TestTag?
+pub impl @vscode.Disposable for TestRunProfile
+
+pub(all) enum TestRunProfileKind {
+  Run
+  Debug
+  Coverage
+} derive(Eq)
+
+pub type TestRunRequest
+pub fn TestRunRequest::continuous(Self) -> Bool?
+pub fn TestRunRequest::excluded_items(Self) -> Array[TestItem]?
+pub fn TestRunRequest::included_items(Self) -> Array[TestItem]?
+pub fn TestRunRequest::new(included_items? : Array[TestItem], exclude? : Array[TestItem], profile? : TestRunProfile, continuous? : Bool, preserve_focus? : Bool) -> Self
+pub fn TestRunRequest::preserve_focus(Self) -> Bool
+pub fn TestRunRequest::profile(Self) -> TestRunProfile?
+
+pub type TestTag
+pub fn TestTag::id(Self) -> String
+pub fn TestTag::new(String) -> Self
+
+// Type aliases
+
+// Traits
+

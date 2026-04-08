@@ -1,0 +1,8 @@
+import {
+  "username/vscode",
+  "username/vscode/internal/v",
+}
+
+options(
+  targets: { "ffi.mbt": [ "js" ], "scm.js.mbt": [ "js" ] },
+)

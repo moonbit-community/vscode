@@ -1,0 +1,10 @@
+{
+  "name": "vscode-moonbit-tooling",
+  "private": true,
+  "devDependencies": {
+    "@types/vscode": "latest"
+  },
+  "scripts": {
+    "update:vscode-dts": "node ./.codex/skills/moonbit-vscode-api-binding-style/scripts/update-vscode-dts.mjs"
+  }
+}

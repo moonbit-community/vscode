@@ -1,0 +1,286 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/lm"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn available() -> Bool
+
+pub fn extension_context_language_model_access_information(@vscode.ExtensionContext) -> LanguageModelAccessInformation
+
+pub async fn invoke_tool(String, LanguageModelToolInvocationOptions, token? : @vscode.CancellationToken) -> LanguageModelToolResult
+
+pub fn on_did_change_chat_models() -> @vscode.Event[Unit]
+
+pub fn register_language_model_chat_provider(String, LanguageModelChatProvider) -> &@vscode.Disposable
+
+pub fn register_mcp_server_definition_provider(String, McpServerDefinitionProvider) -> &@vscode.Disposable
+
+pub fn register_tool(String, LanguageModelTool) -> &@vscode.Disposable
+
+pub async fn select_chat_models(selector? : LanguageModelChatSelector) -> Array[LanguageModelChat]
+
+pub fn tools() -> Array[LanguageModelToolInformation]
+
+pub async fn try_select_chat_models(selector? : LanguageModelChatSelector) -> Array[LanguageModelChat]?
+
+// Errors
+
+// Types and methods
+pub type AsyncIterable[T]
+pub fn[T] AsyncIterable::iterator(Self[T]) -> AsyncIterator[T]
+
+pub type AsyncIterator[T]
+pub async fn[T] AsyncIterator::next(Self[T]) -> AsyncIteratorResult[T]
+
+pub type AsyncIteratorResult[T]
+pub fn[T] AsyncIteratorResult::done(Self[T]) -> Bool
+pub fn[T] AsyncIteratorResult::value(Self[T]) -> T
+
+pub struct ChatLanguageModelToolReference {
+  name : String
+  range : (Int, Int)?
+}
+pub fn ChatLanguageModelToolReference::new(String, range? : (Int, Int)) -> Self
+
+pub type ChatParticipantToolToken
+
+pub struct LanguageModelAccessInformation {
+  on_did_change : @vscode.Event[Unit]
+}
+pub fn LanguageModelAccessInformation::can_send_request(Self, LanguageModelChat) -> Bool?
+
+pub struct LanguageModelChat {
+  name : String
+  id : String
+  vendor : String
+  family : String
+  version : String
+  max_input_tokens : Int
+}
+pub async fn LanguageModelChat::count_tokens_message(Self, LanguageModelChatMessage, token? : @vscode.CancellationToken) -> Int
+pub async fn LanguageModelChat::count_tokens_text(Self, String, token? : @vscode.CancellationToken) -> Int
+pub async fn LanguageModelChat::send_request(Self, Array[LanguageModelChatMessage], options? : LanguageModelChatRequestOptions, token? : @vscode.CancellationToken) -> LanguageModelChatResponse
+
+pub struct LanguageModelChatCapabilities {
+  image_input : Bool?
+  tool_calling : LanguageModelToolCalling?
+}
+pub fn LanguageModelChatCapabilities::new(image_input? : Bool, tool_calling? : LanguageModelToolCalling) -> Self
+
+pub struct LanguageModelChatInformation {
+  id : String
+  name : String
+  family : String
+  tooltip : String?
+  detail : String?
+  version : String
+  max_input_tokens : Int
+  max_output_tokens : Int
+  capabilities : LanguageModelChatCapabilities
+}
+pub fn LanguageModelChatInformation::new(String, String, String, String, Int, Int, LanguageModelChatCapabilities, tooltip? : String, detail? : String) -> Self
+
+pub type LanguageModelChatMessage
+pub fn LanguageModelChatMessage::assistant_parts(Array[LanguageModelInputPart], name? : String) -> Self
+pub fn LanguageModelChatMessage::assistant_text(String, name? : String) -> Self
+pub fn LanguageModelChatMessage::name(Self) -> String?
+pub fn LanguageModelChatMessage::new_with_parts(LanguageModelChatMessageRole, Array[LanguageModelInputPart], name? : String) -> Self
+pub fn LanguageModelChatMessage::new_with_text(LanguageModelChatMessageRole, String, name? : String) -> Self
+pub fn LanguageModelChatMessage::role(Self) -> LanguageModelChatMessageRole
+pub fn LanguageModelChatMessage::user_parts(Array[LanguageModelInputPart], name? : String) -> Self
+pub fn LanguageModelChatMessage::user_text(String, name? : String) -> Self
+
+pub(all) enum LanguageModelChatMessageRole {
+  User
+  Assistant
+} derive(Eq)
+
+pub struct LanguageModelChatProvider {
+  on_did_change_language_model_chat_information : @vscode.Event[Unit]?
+}
+pub fn LanguageModelChatProvider::new(async (PrepareLanguageModelChatModelOptions, @vscode.CancellationToken) -> Array[LanguageModelChatInformation]?, async (LanguageModelChatInformation, Array[LanguageModelChatRequestMessage], ProvideLanguageModelChatResponseOptions, @vscode.Progress[LanguageModelResponsePart], @vscode.CancellationToken) -> Unit, async (LanguageModelChatInformation, LanguageModelTokenCountInput, @vscode.CancellationToken) -> Int, on_did_change_language_model_chat_information? : @vscode.Event[Unit]) -> Self
+
+pub struct LanguageModelChatRequestMessage {
+  role : LanguageModelChatMessageRole
+  content : Array[LanguageModelInputPart]
+  name : String?
+}
+pub fn LanguageModelChatRequestMessage::new(LanguageModelChatMessageRole, Array[LanguageModelInputPart], name? : String) -> Self
+
+pub(all) struct LanguageModelChatRequestOptions {
+  mut justification : String?
+  mut model_options : @vscode.Any?
+  mut tools : Array[LanguageModelChatTool]?
+  mut tool_mode : LanguageModelChatToolMode?
+}
+pub fn LanguageModelChatRequestOptions::new(justification? : String, model_options? : @vscode.Any, tools? : Array[LanguageModelChatTool], tool_mode? : LanguageModelChatToolMode) -> Self
+
+pub(all) struct LanguageModelChatResponse {
+  mut stream : AsyncIterable[LanguageModelResponsePart]
+  mut text : AsyncIterable[String]
+}
+
+pub(all) struct LanguageModelChatSelector {
+  mut vendor : String?
+  mut family : String?
+  mut version : String?
+  mut id : String?
+}
+pub fn LanguageModelChatSelector::new(vendor? : String, family? : String, version? : String, id? : String) -> Self
+
+pub(all) struct LanguageModelChatTool {
+  mut name : String
+  mut description : String
+  mut input_schema : @vscode.Any?
+}
+pub fn LanguageModelChatTool::new(String, String, input_schema? : @vscode.Any) -> Self
+
+pub(all) enum LanguageModelChatToolMode {
+  Auto
+  Required
+} derive(Eq)
+
+pub type LanguageModelConfirmationMessageValue
+pub fn[T] LanguageModelConfirmationMessageValue::from_value(T) -> Self
+pub fn LanguageModelConfirmationMessageValue::markdown(@vscode.MarkdownString) -> Self
+pub fn LanguageModelConfirmationMessageValue::text(String) -> Self
+
+pub type LanguageModelDataPart
+pub fn LanguageModelDataPart::image(Bytes, String) -> Self
+pub fn LanguageModelDataPart::json_value(@vscode.Any, mime? : String) -> Self
+pub fn LanguageModelDataPart::new(Bytes, String) -> Self
+pub fn LanguageModelDataPart::text(String, mime? : String) -> Self
+
+pub type LanguageModelError
+pub fn LanguageModelError::blocked(message? : String) -> Self
+pub fn LanguageModelError::code(Self) -> String
+pub fn LanguageModelError::message(Self) -> String
+pub fn LanguageModelError::no_permissions(message? : String) -> Self
+pub fn LanguageModelError::not_found(message? : String) -> Self
+
+pub type LanguageModelInputPart
+pub fn[T] LanguageModelInputPart::as_value(Self) -> T
+pub fn LanguageModelInputPart::data(LanguageModelDataPart) -> Self
+pub fn[T] LanguageModelInputPart::from_value(T) -> Self
+pub fn LanguageModelInputPart::text(LanguageModelTextPart) -> Self
+pub fn LanguageModelInputPart::tool_call(LanguageModelToolCallPart) -> Self
+pub fn LanguageModelInputPart::tool_result(LanguageModelToolResultPart) -> Self
+
+pub type LanguageModelPromptTsxPart
+pub fn LanguageModelPromptTsxPart::new(@vscode.Any) -> Self
+
+pub type LanguageModelResponsePart
+pub fn LanguageModelResponsePart::data(LanguageModelDataPart) -> Self
+pub fn[T] LanguageModelResponsePart::from_value(T) -> Self
+pub fn LanguageModelResponsePart::text(LanguageModelTextPart) -> Self
+pub fn LanguageModelResponsePart::tool_call(LanguageModelToolCallPart) -> Self
+pub fn LanguageModelResponsePart::tool_result(LanguageModelToolResultPart) -> Self
+
+pub type LanguageModelTextPart
+pub fn LanguageModelTextPart::new(String) -> Self
+
+pub type LanguageModelTokenCountInput
+pub fn[T] LanguageModelTokenCountInput::from_value(T) -> Self
+pub fn LanguageModelTokenCountInput::request_message(LanguageModelChatRequestMessage) -> Self
+pub fn LanguageModelTokenCountInput::text(String) -> Self
+
+pub type LanguageModelTool
+pub async fn LanguageModelTool::invoke(Self, LanguageModelToolInvocationOptions, @vscode.CancellationToken) -> LanguageModelToolResult?
+pub fn LanguageModelTool::new(async (LanguageModelToolInvocationOptions, @vscode.CancellationToken) -> LanguageModelToolResult?, prepare_invocation? : async (LanguageModelToolInvocationPrepareOptions, @vscode.CancellationToken) -> PreparedToolInvocation?) -> Self
+pub async fn LanguageModelTool::prepare_invocation(Self, LanguageModelToolInvocationPrepareOptions, @vscode.CancellationToken) -> PreparedToolInvocation?
+
+pub type LanguageModelToolCallPart
+pub fn LanguageModelToolCallPart::new(String, String, @vscode.Any) -> Self
+
+pub type LanguageModelToolCalling
+pub fn LanguageModelToolCalling::max_tools(Int) -> Self
+pub fn LanguageModelToolCalling::supported(Bool) -> Self
+
+pub(all) struct LanguageModelToolConfirmationMessages {
+  mut title : String
+  mut message : LanguageModelConfirmationMessageValue
+}
+pub fn LanguageModelToolConfirmationMessages::new(String, LanguageModelConfirmationMessageValue) -> Self
+
+pub struct LanguageModelToolInformation {
+  name : String
+  description : String
+  input_schema : @vscode.Any?
+  tags : Array[String]
+}
+
+pub(all) struct LanguageModelToolInvocationOptions {
+  mut tool_invocation_token : ChatParticipantToolToken?
+  mut input : @vscode.Any
+  mut tokenization_options : LanguageModelToolTokenizationOptions?
+}
+pub fn[T] LanguageModelToolInvocationOptions::input(Self) -> T
+pub fn[T] LanguageModelToolInvocationOptions::new(T, tool_invocation_token? : ChatParticipantToolToken, tokenization_options? : LanguageModelToolTokenizationOptions) -> Self
+
+pub(all) struct LanguageModelToolInvocationPrepareOptions {
+  mut input : @vscode.Any
+}
+pub fn[T] LanguageModelToolInvocationPrepareOptions::input(Self) -> T
+pub fn[T] LanguageModelToolInvocationPrepareOptions::new(T) -> Self
+
+pub type LanguageModelToolResult
+pub fn LanguageModelToolResult::content(Self) -> Array[LanguageModelToolResultContentPart]
+pub fn LanguageModelToolResult::new(Array[LanguageModelToolResultContentPart]) -> Self
+
+pub type LanguageModelToolResultContentPart
+pub fn LanguageModelToolResultContentPart::data(LanguageModelDataPart) -> Self
+pub fn[T] LanguageModelToolResultContentPart::from_value(T) -> Self
+pub fn LanguageModelToolResultContentPart::prompt_tsx(LanguageModelPromptTsxPart) -> Self
+pub fn LanguageModelToolResultContentPart::text(LanguageModelTextPart) -> Self
+
+pub type LanguageModelToolResultPart
+pub fn LanguageModelToolResultPart::new(String, Array[LanguageModelToolResultContentPart]) -> Self
+
+pub(all) struct LanguageModelToolTokenizationOptions {
+  mut token_budget : Int
+}
+pub async fn LanguageModelToolTokenizationOptions::count_tokens(Self, String, token? : @vscode.CancellationToken) -> Int
+pub fn LanguageModelToolTokenizationOptions::new(Int, async (String, @vscode.CancellationToken?) -> Int) -> Self
+
+pub type McpHttpServerDefinition
+pub fn McpHttpServerDefinition::label(Self) -> String
+pub fn McpHttpServerDefinition::new(String, @vscode.Uri, headers? : Array[(String, String)], version? : String) -> Self
+
+pub type McpServerDefinition
+pub fn McpServerDefinition::from_http(McpHttpServerDefinition) -> Self
+pub fn McpServerDefinition::from_stdio(McpStdioServerDefinition) -> Self
+pub fn[T] McpServerDefinition::from_value(T) -> Self
+
+pub struct McpServerDefinitionProvider {
+  on_did_change_mcp_server_definitions : @vscode.Event[Unit]?
+}
+pub fn McpServerDefinitionProvider::new(async (@vscode.CancellationToken) -> Array[McpServerDefinition]?, resolve_mcp_server_definition? : async (McpServerDefinition, @vscode.CancellationToken) -> McpServerDefinition?, on_did_change_mcp_server_definitions? : @vscode.Event[Unit]) -> Self
+
+pub type McpStdioServerDefinition
+pub fn McpStdioServerDefinition::label(Self) -> String
+pub fn McpStdioServerDefinition::new(String, String, args? : Array[String], env_entries? : Array[(String, @vscode.Any?)], version? : String) -> Self
+
+pub struct PrepareLanguageModelChatModelOptions {
+  silent : Bool?
+}
+
+pub(all) struct PreparedToolInvocation {
+  mut invocation_message : LanguageModelConfirmationMessageValue?
+  mut confirmation_messages : LanguageModelToolConfirmationMessages?
+}
+pub fn PreparedToolInvocation::new(invocation_message? : LanguageModelConfirmationMessageValue, confirmation_messages? : LanguageModelToolConfirmationMessages) -> Self
+
+pub struct ProvideLanguageModelChatResponseOptions {
+  model_options : @vscode.Any?
+  tools : Array[LanguageModelChatTool]?
+  tool_mode : LanguageModelChatToolMode
+}
+pub fn ProvideLanguageModelChatResponseOptions::new(LanguageModelChatToolMode, model_options? : @vscode.Any, tools? : Array[LanguageModelChatTool]) -> Self
+
+// Type aliases
+
+// Traits
+

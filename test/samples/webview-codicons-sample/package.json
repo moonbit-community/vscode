@@ -1,0 +1,28 @@
+{
+  "name": "webview-codicons-sample-moonbit-port",
+  "displayName": "MoonBit Port: webview-codicons-sample",
+  "publisher": "moonbit",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "main": "./_build/js/release/build/vscode-sample-webview-codicons-sample.js",
+  "activationEvents": [
+    "onCommand:catCodicons.show"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "catCodicons.show",
+        "title": "Show Cat Codicons"
+      }
+    ]
+  },
+  "scripts": {
+    "build:moonbit": "moon build --target js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/bzy-debug/vscode.mbt"
+  }
+}

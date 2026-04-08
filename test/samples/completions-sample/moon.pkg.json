@@ -1,0 +1,24 @@
+{
+  "import": [
+    {
+      "path": "username/vscode/languages"
+    },
+    {
+      "path": "username/vscode"
+    }
+  ],
+  "link": {
+    "js": {
+      "exports": [
+        "activate",
+        "deactivate"
+      ],
+      "format": "cjs"
+    }
+  },
+  "targets": {
+    "extension.mbt": [
+      "js"
+    ]
+  }
+}

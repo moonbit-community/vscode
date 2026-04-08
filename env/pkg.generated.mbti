@@ -1,0 +1,56 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/env"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn app_host() -> String
+
+pub fn app_name() -> String
+
+pub fn app_root() -> String
+
+pub async fn as_external_uri(@vscode.Uri) -> @vscode.Uri
+
+pub fn clipboard() -> @vscode.Clipboard
+
+pub fn create_telemetry_logger(@vscode.TelemetrySender, options? : @vscode.TelemetryLoggerOptions) -> @vscode.TelemetryLogger
+
+pub fn is_new_app_install() -> Bool
+
+pub fn is_telemetry_enabled() -> Bool
+
+pub fn language() -> String
+
+pub fn log_level() -> @vscode.LogLevel
+
+pub fn machine_id() -> String
+
+pub fn on_did_change_log_level() -> @vscode.Event[@vscode.LogLevel]
+
+pub fn on_did_change_shell() -> @vscode.Event[String]
+
+pub fn on_did_change_telemetry_enabled() -> @vscode.Event[Bool]
+
+pub async fn open_external(@vscode.Uri) -> Bool
+
+pub fn remote_name() -> String?
+
+pub fn session_id() -> String
+
+pub fn shell() -> String
+
+pub fn ui_kind() -> @vscode.UIKind
+
+pub fn uri_scheme() -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

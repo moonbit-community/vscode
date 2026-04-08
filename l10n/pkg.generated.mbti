@@ -1,0 +1,26 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/l10n"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn bundle() -> @vscode.Any?
+
+pub fn t(String) -> String
+
+pub fn t_args(String, Array[@vscode.Any]) -> String
+
+pub fn t_named(String, Array[(String, @vscode.Any)]) -> String
+
+pub fn uri() -> @vscode.Uri?
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

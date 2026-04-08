@@ -1,0 +1,32 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/tasks"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub async fn execute_task(@vscode.Task) -> @vscode.TaskExecution
+
+pub async fn fetch_tasks(filter? : @vscode.TaskFilter) -> Array[@vscode.Task]
+
+pub fn on_did_end_task() -> @vscode.Event[@vscode.TaskEndEvent]
+
+pub fn on_did_end_task_process() -> @vscode.Event[@vscode.TaskProcessEndEvent]
+
+pub fn on_did_start_task() -> @vscode.Event[@vscode.TaskStartEvent]
+
+pub fn on_did_start_task_process() -> @vscode.Event[@vscode.TaskProcessStartEvent]
+
+pub fn[T : @vscode.TaskProvider] register_task_provider(String, T) -> &@vscode.Disposable
+
+pub fn task_executions() -> Array[@vscode.TaskExecution]
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

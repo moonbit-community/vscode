@@ -1,0 +1,207 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/internal/v/providers"
+
+import {
+  "username/vscode",
+}
+
+// Values
+
+// Errors
+
+// Types and methods
+pub type AuthenticationProviderObject
+pub fn AuthenticationProviderObject::new(@vscode.Event[@vscode.AuthenticationProviderAuthenticationSessionsChangeEvent], async (Array[String]?, @vscode.AuthenticationProviderSessionOptions) -> Array[@vscode.AuthenticationSession], async (Array[String], @vscode.AuthenticationProviderSessionOptions) -> @vscode.AuthenticationSession, async (String) -> Unit) -> Self
+pub impl AuthenticationProvider for AuthenticationProviderObject
+
+pub type CallHierarchyProviderObject
+pub fn CallHierarchyProviderObject::new_item(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.CallHierarchyItem?, async (@vscode.CallHierarchyItem, @vscode.CancellationToken) -> Array[@vscode.CallHierarchyIncomingCall]?, async (@vscode.CallHierarchyItem, @vscode.CancellationToken) -> Array[@vscode.CallHierarchyOutgoingCall]?) -> Self
+pub fn CallHierarchyProviderObject::new_items(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.CallHierarchyItem]?, async (@vscode.CallHierarchyItem, @vscode.CancellationToken) -> Array[@vscode.CallHierarchyIncomingCall]?, async (@vscode.CallHierarchyItem, @vscode.CancellationToken) -> Array[@vscode.CallHierarchyOutgoingCall]?) -> Self
+
+pub type CodeActionProviderObject[T]
+pub fn CodeActionProviderObject::new(async (@vscode.TextDocument, @vscode.Range, @vscode.CodeActionContext, @vscode.CancellationToken) -> Array[@vscode.CodeAction]?, resolve_action? : async (@vscode.CodeAction, @vscode.CancellationToken) -> @vscode.CodeAction?) -> Self[@vscode.CodeAction]
+
+pub type CodeLensProviderObject[T]
+pub fn CodeLensProviderObject::new(async (@vscode.TextDocument, @vscode.CancellationToken) -> Array[@vscode.CodeLens]?, resolve_lens? : async (@vscode.CodeLens, @vscode.CancellationToken) -> @vscode.CodeLens?, on_did_change? : @vscode.Event[Unit]) -> Self[@vscode.CodeLens]
+
+pub type CommentingRangeProviderObject
+pub fn CommentingRangeProviderObject::new_ranges(async (@vscode.TextDocument, @vscode.CancellationToken) -> Array[@vscode.Range]?) -> Self
+pub fn CommentingRangeProviderObject::new_ranges_with_details(async (@vscode.TextDocument, @vscode.CancellationToken) -> @vscode.CommentingRanges?) -> Self
+
+pub type CompletionItemProviderObject[T]
+pub fn CompletionItemProviderObject::new_items(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken, @vscode.CompletionContext) -> Array[@vscode.CompletionItem]?, resolve_item? : async (@vscode.CompletionItem, @vscode.CancellationToken) -> @vscode.CompletionItem?) -> Self[@vscode.CompletionItem]
+pub fn CompletionItemProviderObject::new_list(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken, @vscode.CompletionContext) -> @vscode.CompletionList[@vscode.CompletionItem]?, resolve_item? : async (@vscode.CompletionItem, @vscode.CancellationToken) -> @vscode.CompletionItem?) -> Self[@vscode.CompletionItem]
+
+pub type CustomEditorProviderObject
+pub fn CustomEditorProviderObject::new(async (@vscode.Uri, @vscode.CustomDocumentOpenContext, @vscode.CancellationToken) -> @vscode.CustomDocument, async (@vscode.CustomDocument, @vscode.WebviewPanel, @vscode.CancellationToken) -> Unit, async (@vscode.CustomDocument, @vscode.CancellationToken) -> Unit, async (@vscode.CustomDocument, @vscode.Uri, @vscode.CancellationToken) -> Unit, async (@vscode.CustomDocument, @vscode.CancellationToken) -> Unit, async (@vscode.CustomDocument, @vscode.CustomDocumentBackupContext, @vscode.CancellationToken) -> @vscode.CustomDocumentBackup, on_did_change_custom_document? : @vscode.Event[@vscode.CustomDocumentChangeEvent[@vscode.CustomDocument]]) -> Self
+
+pub type CustomReadonlyEditorProviderObject
+pub fn CustomReadonlyEditorProviderObject::new(async (@vscode.Uri, @vscode.CustomDocumentOpenContext, @vscode.CancellationToken) -> @vscode.CustomDocument, async (@vscode.CustomDocument, @vscode.WebviewPanel, @vscode.CancellationToken) -> Unit) -> Self
+
+pub type CustomTextEditorProviderObject
+pub fn CustomTextEditorProviderObject::new(async (@vscode.TextDocument, @vscode.WebviewPanel, @vscode.CancellationToken) -> Unit) -> Self
+
+pub type Declaration
+pub fn Declaration::from_location(@vscode.Location) -> Self
+pub fn Declaration::from_location_links(Array[@vscode.LocationLink]) -> Self
+pub fn Declaration::from_locations(Array[@vscode.Location]) -> Self
+
+pub type DeclarationProviderObject
+pub fn DeclarationProviderObject::new_location(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.Location?) -> Self
+pub fn DeclarationProviderObject::new_location_links(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.LocationLink]?) -> Self
+pub fn DeclarationProviderObject::new_locations(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.Location]?) -> Self
+
+pub type Definition
+pub fn Definition::from_location(@vscode.Location) -> Self
+pub fn Definition::from_locations(Array[@vscode.Location]) -> Self
+
+pub type DefinitionLink
+pub fn DefinitionLink::as_location_link(Self) -> @vscode.LocationLink
+pub fn DefinitionLink::from_location_link(@vscode.LocationLink) -> Self
+
+pub type DefinitionProviderObject
+pub fn DefinitionProviderObject::new_location(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.Location?) -> Self
+pub fn DefinitionProviderObject::new_location_links(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.LocationLink]?) -> Self
+pub fn DefinitionProviderObject::new_locations(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.Location]?) -> Self
+
+pub type DocumentColorProviderObject
+pub fn DocumentColorProviderObject::new(async (@vscode.TextDocument, @vscode.CancellationToken) -> Array[@vscode.ColorInformation]?, async (@vscode.Color, @vscode.ColorPresentationContext, @vscode.CancellationToken) -> Array[@vscode.ColorPresentation]?) -> Self
+
+pub type DocumentDropEditProviderObject
+pub fn DocumentDropEditProviderObject::new(async (@vscode.TextDocument, @vscode.Position, @vscode.DataTransfer, @vscode.CancellationToken) -> @vscode.DocumentDropEdit?, metadata? : @vscode.DocumentDropEditProviderMetadata) -> Self
+
+pub type DocumentFormattingEditProviderObject
+pub fn DocumentFormattingEditProviderObject::new(async (@vscode.TextDocument, @vscode.FormattingOptions, @vscode.CancellationToken) -> Array[@vscode.TextEdit]?) -> Self
+
+pub type DocumentHighlightProviderObject
+pub fn DocumentHighlightProviderObject::new(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.DocumentHighlight]?) -> Self
+
+pub type DocumentLinkProviderObject[T]
+pub fn DocumentLinkProviderObject::new(async (@vscode.TextDocument, @vscode.CancellationToken) -> Array[@vscode.DocumentLink]?, resolve_link? : async (@vscode.DocumentLink, @vscode.CancellationToken) -> @vscode.DocumentLink?) -> Self[@vscode.DocumentLink]
+
+pub type DocumentPasteEditProviderObject
+pub fn DocumentPasteEditProviderObject::new(async (@vscode.TextDocument, Array[@vscode.Range], @vscode.DataTransfer, @vscode.DocumentPasteEditContext, @vscode.CancellationToken) -> @vscode.DocumentPasteEdit?, metadata? : @vscode.DocumentPasteProviderMetadata) -> Self
+
+pub type DocumentRangeFormattingEditProviderObject
+pub fn DocumentRangeFormattingEditProviderObject::new(async (@vscode.TextDocument, @vscode.Range, @vscode.FormattingOptions, @vscode.CancellationToken) -> Array[@vscode.TextEdit]?) -> Self
+
+pub type DocumentRangeSemanticTokensProviderObject
+pub fn DocumentRangeSemanticTokensProviderObject::new(async (@vscode.TextDocument, @vscode.Range, @vscode.CancellationToken) -> @vscode.SemanticTokens) -> Self
+
+pub type DocumentSemanticTokensProviderObject
+pub fn DocumentSemanticTokensProviderObject::new(async (@vscode.TextDocument, @vscode.CancellationToken) -> @vscode.SemanticTokens, provide_edits? : async (@vscode.TextDocument, String, @vscode.CancellationToken) -> @vscode.SemanticTokensEdits, on_did_change? : @vscode.Event[Unit]) -> Self
+
+pub type DocumentSymbolProviderObject
+pub fn DocumentSymbolProviderObject::new_information(async (@vscode.TextDocument, @vscode.CancellationToken) -> Array[@vscode.SymbolInformation]?) -> Self
+pub fn DocumentSymbolProviderObject::new_symbols(async (@vscode.TextDocument, @vscode.CancellationToken) -> Array[@vscode.DocumentSymbol]?) -> Self
+
+pub type FileDecorationProviderObject
+pub fn FileDecorationProviderObject::new(async (@vscode.Uri, @vscode.CancellationToken) -> @vscode.FileDecoration?, on_did_change? : @vscode.Event[@vscode.FileDecorationChange]) -> Self
+
+pub type FileSystemProviderObject
+pub async fn FileSystemProviderObject::copy(Self, @vscode.Uri, @vscode.Uri, Bool) -> Unit
+pub async fn FileSystemProviderObject::create_directory(Self, @vscode.Uri) -> Unit
+pub async fn FileSystemProviderObject::delete(Self, @vscode.Uri, Bool) -> Unit
+pub fn FileSystemProviderObject::new(@vscode.Event[Array[@vscode.FileChangeEvent]], (@vscode.Uri, Bool, Array[String]) -> &@vscode.Disposable, async (@vscode.Uri) -> @vscode.FileStat, async (@vscode.Uri) -> Array[@vscode.DirectoryEntry], async (@vscode.Uri) -> Unit, async (@vscode.Uri) -> Bytes, async (@vscode.Uri, Bytes, Bool, Bool) -> Unit, async (@vscode.Uri, Bool) -> Unit, async (@vscode.Uri, @vscode.Uri, Bool) -> Unit, copy_file? : async (@vscode.Uri, @vscode.Uri, Bool) -> Unit) -> Self
+pub fn FileSystemProviderObject::on_did_change_file(Self) -> @vscode.Event[Array[@vscode.FileChangeEvent]]
+pub async fn FileSystemProviderObject::read_directory(Self, @vscode.Uri) -> Array[@vscode.DirectoryEntry]
+pub async fn FileSystemProviderObject::read_file(Self, @vscode.Uri) -> Bytes
+pub async fn FileSystemProviderObject::rename(Self, @vscode.Uri, @vscode.Uri, Bool) -> Unit
+pub async fn FileSystemProviderObject::stat(Self, @vscode.Uri) -> @vscode.FileStat
+pub fn FileSystemProviderObject::watch(Self, @vscode.Uri, Bool, Array[String]) -> &@vscode.Disposable
+pub async fn FileSystemProviderObject::write_file(Self, @vscode.Uri, Bytes, Bool, Bool) -> Unit
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject
+
+pub type FoldingRangeProviderObject
+pub fn FoldingRangeProviderObject::new(async (@vscode.TextDocument, @vscode.FoldingContext, @vscode.CancellationToken) -> Array[@vscode.FoldingRange]?) -> Self
+
+pub type HoverProviderObject
+pub fn HoverProviderObject::new(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.Hover?) -> Self
+
+pub type ImplementationProviderObject
+pub fn ImplementationProviderObject::new_location(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.Location?) -> Self
+pub fn ImplementationProviderObject::new_location_links(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.LocationLink]?) -> Self
+pub fn ImplementationProviderObject::new_locations(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.Location]?) -> Self
+
+pub type InlayHintsProviderObject[T]
+pub fn InlayHintsProviderObject::new(async (@vscode.TextDocument, @vscode.Range, @vscode.CancellationToken) -> Array[@vscode.InlayHint]?, resolve_hint? : async (@vscode.InlayHint, @vscode.CancellationToken) -> @vscode.InlayHint?) -> Self[@vscode.InlayHint]
+
+pub type InlineCompletionItemProviderObject
+pub fn InlineCompletionItemProviderObject::new_items(async (@vscode.TextDocument, @vscode.Position, @vscode.InlineCompletionContext, @vscode.CancellationToken) -> Array[@vscode.InlineCompletionItem]?) -> Self
+pub fn InlineCompletionItemProviderObject::new_list(async (@vscode.TextDocument, @vscode.Position, @vscode.InlineCompletionContext, @vscode.CancellationToken) -> @vscode.InlineCompletionList?) -> Self
+
+pub type InlineValuesProviderObject
+pub fn InlineValuesProviderObject::new(async (@vscode.TextDocument, @vscode.Range, @vscode.InlineValueContext, @vscode.CancellationToken) -> Array[@vscode.InlineValue]?) -> Self
+
+pub type LinkedEditingRangeProviderObject
+pub fn LinkedEditingRangeProviderObject::new(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.LinkedEditingRanges?) -> Self
+
+pub type OnTypeFormattingEditProviderObject
+pub fn OnTypeFormattingEditProviderObject::new(async (@vscode.TextDocument, @vscode.Position, String, @vscode.FormattingOptions, @vscode.CancellationToken) -> Array[@vscode.TextEdit]?) -> Self
+
+pub type ProviderResult[T]
+pub fn[T] ProviderResult::from_async(async () -> T?) -> Self[T]
+pub fn[T] ProviderResult::from_value(T) -> Self[T]
+pub fn[T] ProviderResult::none() -> Self[T]
+
+pub type QuickDiffProviderObject
+pub fn QuickDiffProviderObject::new(async (@vscode.Uri, @vscode.CancellationToken) -> @vscode.Uri?) -> Self
+
+pub type ReferenceProviderObject
+pub fn ReferenceProviderObject::new(async (@vscode.TextDocument, @vscode.Position, @vscode.ReferenceContext, @vscode.CancellationToken) -> Array[@vscode.Location]?) -> Self
+
+pub type RenameProviderObject
+pub fn RenameProviderObject::new(async (@vscode.TextDocument, @vscode.Position, String, @vscode.CancellationToken) -> @vscode.WorkspaceEdit?, prepare_rename? : async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.Range?) -> Self
+
+pub type SelectionRangeProviderObject
+pub fn SelectionRangeProviderObject::new(async (@vscode.TextDocument, Array[@vscode.Position], @vscode.CancellationToken) -> Array[@vscode.SelectionRange]?) -> Self
+
+pub type SignatureHelpProviderObject
+pub fn SignatureHelpProviderObject::new(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken, @vscode.SignatureHelpContext) -> @vscode.SignatureHelp?) -> Self
+
+pub type TaskProviderObject
+pub fn TaskProviderObject::new(async (@vscode.CancellationToken) -> Array[@vscode.Task]?, resolve_task? : async (@vscode.Task, @vscode.CancellationToken) -> @vscode.Task?) -> Self
+pub impl TaskProvider for TaskProviderObject
+
+pub type TerminalLinkProviderObject
+pub fn TerminalLinkProviderObject::new(async (@vscode.TerminalLinkContext, @vscode.CancellationToken) -> Array[@vscode.TerminalLink]?, handle_link? : async (@vscode.TerminalLink) -> Unit) -> Self
+
+pub type TerminalProfileProviderObject
+pub fn TerminalProfileProviderObject::new(async (@vscode.CancellationToken) -> @vscode.TerminalProfile?) -> Self
+
+pub type TextDocumentContentProviderObject
+pub fn TextDocumentContentProviderObject::new(async (@vscode.Uri, @vscode.CancellationToken) -> String, on_did_change? : @vscode.Event[@vscode.Uri]) -> Self
+
+pub type TreeDataProviderObject[T]
+pub fn[T] TreeDataProviderObject::new(async (T) -> @vscode.TreeItem, async (T?) -> Array[T]?, on_did_change_tree_data? : @vscode.Event[T?], get_parent? : async (T) -> T?, resolve_tree_item? : async (@vscode.TreeItem, T, @vscode.CancellationToken) -> @vscode.TreeItem?) -> Self[T]
+
+pub type TypeDefinitionProviderObject
+pub fn TypeDefinitionProviderObject::new_location(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.Location?) -> Self
+pub fn TypeDefinitionProviderObject::new_location_links(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.LocationLink]?) -> Self
+pub fn TypeDefinitionProviderObject::new_locations(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.Location]?) -> Self
+
+pub type TypeHierarchyProviderObject
+pub fn TypeHierarchyProviderObject::new_item(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> @vscode.TypeHierarchyItem?, async (@vscode.TypeHierarchyItem, @vscode.CancellationToken) -> Array[@vscode.TypeHierarchyItem]?, async (@vscode.TypeHierarchyItem, @vscode.CancellationToken) -> Array[@vscode.TypeHierarchyItem]?) -> Self
+pub fn TypeHierarchyProviderObject::new_items(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> Array[@vscode.TypeHierarchyItem]?, async (@vscode.TypeHierarchyItem, @vscode.CancellationToken) -> Array[@vscode.TypeHierarchyItem]?, async (@vscode.TypeHierarchyItem, @vscode.CancellationToken) -> Array[@vscode.TypeHierarchyItem]?) -> Self
+
+pub type WebviewViewProviderObject
+pub fn WebviewViewProviderObject::new(async (@vscode.WebviewView, @vscode.WebviewViewResolveContext, @vscode.CancellationToken) -> Unit) -> Self
+
+pub type WorkspaceSymbolProviderObject[T]
+pub fn WorkspaceSymbolProviderObject::new(async (String, @vscode.CancellationToken) -> Array[@vscode.SymbolInformation]?, resolve_symbol? : async (@vscode.SymbolInformation, @vscode.CancellationToken) -> @vscode.SymbolInformation?) -> Self[@vscode.SymbolInformation]
+
+// Type aliases
+
+// Traits
+pub(open) trait AuthenticationProvider {
+  on_did_change_sessions(Self) -> @vscode.Event[@vscode.AuthenticationProviderAuthenticationSessionsChangeEvent]
+  async get_sessions(Self, Array[String]?, @vscode.AuthenticationProviderSessionOptions) -> Array[@vscode.AuthenticationSession]
+  async create_session(Self, Array[String], @vscode.AuthenticationProviderSessionOptions) -> @vscode.AuthenticationSession
+  async remove_session(Self, String) -> Unit
+}
+
+pub(open) trait TaskProvider {
+  async provide_tasks(Self, @vscode.CancellationToken) -> Array[@vscode.Task]?
+  async resolve_task(Self, @vscode.Task, @vscode.CancellationToken) -> @vscode.Task?
+}
+

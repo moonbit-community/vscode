@@ -1,0 +1,28 @@
+{
+  "name": "chat-sample-moonbit-port",
+  "displayName": "MoonBit Port: Copilot Chat Sample",
+  "publisher": "moonbit",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "main": "./_build/js/release/build/vscode-sample-chat-sample.js",
+  "activationEvents": [
+    "onCommand:cat.namesInEditor"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "cat.namesInEditor",
+        "title": "Use Cat Names in Editor"
+      }
+    ]
+  },
+  "scripts": {
+    "build:moonbit": "moon build --target js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/bzy-debug/vscode.mbt"
+  }
+}

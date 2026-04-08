@@ -1,0 +1,10 @@
+import {
+  "username/vscode/commands",
+  "username/vscode/window",
+  "username/vscode",
+}
+
+options(
+  link: { "js": { "exports": [ "activate", "deactivate" ], "format": "cjs" } },
+  targets: { "extension.mbt": [ "js" ] },
+)

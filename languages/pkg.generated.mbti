@@ -1,0 +1,174 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/languages"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn create_diagnostic_collection(name? : String) -> @vscode.DiagnosticCollection
+
+pub fn create_language_status_item(String, @vscode.DocumentSelector) -> @vscode.LanguageStatusItem
+
+pub fn get_all_diagnostics() -> Array[(@vscode.Uri, Array[@vscode.Diagnostic])]
+
+pub fn get_diagnostics(@vscode.Uri) -> Array[@vscode.Diagnostic]
+
+pub async fn get_languages() -> Array[String]
+
+pub fn match_document(@vscode.DocumentSelector, @vscode.TextDocument) -> Int
+
+pub fn on_did_change_diagnostics() -> @vscode.Event[@vscode.DiagnosticChangeEvent]
+
+pub fn[T : @vscode.CallHierarchyProvider] register_call_hierarchy_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.CodeActionProvider] register_code_actions_provider(@vscode.DocumentSelector, T, metadata? : @vscode.CodeActionProviderMetadata) -> &@vscode.Disposable
+
+pub fn[T : @vscode.CodeLensProvider] register_code_lens_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentColorProvider] register_color_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.CompletionItemProvider] register_completion_item_provider(@vscode.DocumentSelector, T, trigger_characters? : Array[String]) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DeclarationProvider] register_declaration_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DefinitionProvider] register_definition_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentDropEditProvider] register_document_drop_edit_provider(@vscode.DocumentSelector, T, metadata? : @vscode.DocumentDropEditProviderMetadata) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentFormattingEditProvider] register_document_formatting_edit_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentHighlightProvider] register_document_highlight_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentLinkProvider] register_document_link_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentPasteEditProvider] register_document_paste_edit_provider(@vscode.DocumentSelector, T, @vscode.DocumentPasteProviderMetadata) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentRangeFormattingEditProvider] register_document_range_formatting_edit_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentRangeSemanticTokensProvider] register_document_range_semantic_tokens_provider(@vscode.DocumentSelector, T, @vscode.SemanticTokensLegend) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentSemanticTokensProvider] register_document_semantic_tokens_provider(@vscode.DocumentSelector, T, @vscode.SemanticTokensLegend) -> &@vscode.Disposable
+
+pub fn[T : @vscode.DocumentSymbolProvider] register_document_symbol_provider(@vscode.DocumentSelector, T, metadata? : @vscode.DocumentSymbolProviderMetadata) -> &@vscode.Disposable
+
+pub fn register_evaluatable_expression_provider(@vscode.DocumentSelector, EvaluatableExpressionProvider) -> &@vscode.Disposable
+
+pub fn[T : @vscode.FoldingRangeProvider] register_folding_range_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.HoverProvider] register_hover_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.ImplementationProvider] register_implementation_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.InlayHintsProvider] register_inlay_hints_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.InlineCompletionItemProvider] register_inline_completion_item_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.InlineValuesProvider] register_inline_values_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.LinkedEditingRangeProvider] register_linked_editing_range_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.OnTypeFormattingEditProvider] register_on_type_formatting_edit_provider(@vscode.DocumentSelector, T, String, more_trigger_characters? : Array[String]) -> &@vscode.Disposable
+
+pub fn[T : @vscode.ReferenceProvider] register_reference_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.RenameProvider] register_rename_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.SelectionRangeProvider] register_selection_range_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider(@vscode.DocumentSelector, T, trigger_characters? : Array[String]) -> &@vscode.Disposable
+
+pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider_metadata(@vscode.DocumentSelector, T, @vscode.SignatureHelpProviderMetadata) -> &@vscode.Disposable
+
+pub fn[T : @vscode.TypeDefinitionProvider] register_type_definition_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.TypeHierarchyProvider] register_type_hierarchy_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+
+pub fn[T : @vscode.WorkspaceSymbolProvider] register_workspace_symbol_provider(T) -> &@vscode.Disposable
+
+pub fn set_language_configuration(String, LanguageConfiguration) -> &@vscode.Disposable
+
+pub async fn set_text_document_language(@vscode.TextDocument, String) -> @vscode.TextDocument
+
+// Errors
+
+// Types and methods
+pub(all) struct AutoClosingPair {
+  mut open : String
+  mut close : String
+  mut not_in : Array[SyntaxTokenType]?
+}
+pub fn AutoClosingPair::new(String, String, not_in? : Array[SyntaxTokenType]) -> Self
+
+pub struct CharacterPair {
+  open : String
+  close : String
+}
+pub fn CharacterPair::new(String, String) -> Self
+
+pub(all) struct CommentRule {
+  mut line_comment : String?
+  mut block_comment : CharacterPair?
+}
+pub fn CommentRule::new(line_comment? : String, block_comment? : CharacterPair) -> Self
+
+pub(all) struct EnterAction {
+  mut indent_action : IndentAction
+  mut append_text : String?
+  mut remove_text : Int?
+}
+pub fn EnterAction::new(IndentAction, append_text? : String, remove_text? : Int) -> Self
+
+pub type EvaluatableExpression
+pub fn EvaluatableExpression::expression(Self) -> String?
+pub fn EvaluatableExpression::new(@vscode.Range, expression? : String) -> Self
+pub fn EvaluatableExpression::range(Self) -> @vscode.Range
+
+pub type EvaluatableExpressionProvider
+pub fn EvaluatableExpressionProvider::new(async (@vscode.TextDocument, @vscode.Position, @vscode.CancellationToken) -> EvaluatableExpression?) -> Self
+
+pub(all) enum IndentAction {
+  None
+  Indent
+  IndentOutdent
+  Outdent
+} derive(Eq)
+
+pub(all) struct IndentationRule {
+  mut decrease_indent_pattern : @vscode.RegExp
+  mut increase_indent_pattern : @vscode.RegExp
+  mut indent_next_line_pattern : @vscode.RegExp?
+  mut un_indented_line_pattern : @vscode.RegExp?
+}
+pub fn IndentationRule::new(@vscode.RegExp, @vscode.RegExp, indent_next_line_pattern? : @vscode.RegExp, un_indented_line_pattern? : @vscode.RegExp) -> Self
+
+pub(all) struct LanguageConfiguration {
+  mut comments : CommentRule?
+  mut brackets : Array[CharacterPair]?
+  mut word_pattern : @vscode.RegExp?
+  mut indentation_rules : IndentationRule?
+  mut on_enter_rules : Array[OnEnterRule]?
+  mut auto_closing_pairs : Array[AutoClosingPair]?
+}
+pub fn LanguageConfiguration::empty() -> Self
+pub fn LanguageConfiguration::new(comments? : CommentRule, brackets? : Array[CharacterPair], word_pattern? : @vscode.RegExp, indentation_rules? : IndentationRule, on_enter_rules? : Array[OnEnterRule], auto_closing_pairs? : Array[AutoClosingPair]) -> Self
+
+pub(all) struct OnEnterRule {
+  mut before_text : @vscode.RegExp
+  mut action : EnterAction
+  mut after_text : @vscode.RegExp?
+  mut previous_line_text : @vscode.RegExp?
+}
+pub fn OnEnterRule::new(@vscode.RegExp, EnterAction, after_text? : @vscode.RegExp, previous_line_text? : @vscode.RegExp) -> Self
+
+pub(all) enum SyntaxTokenType {
+  Other
+  Comment
+  String
+  RegEx
+} derive(Eq)
+
+// Type aliases
+
+// Traits
+

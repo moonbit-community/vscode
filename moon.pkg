@@ -1,0 +1,22 @@
+import {
+  "moonbitlang/async/js_async",
+  "username/vscode/internal/v",
+}
+
+options(
+  targets: {
+    "base.js.mbt": [ "js" ],
+    "command.js.mbt": [ "js" ],
+    "decoration.js.mbt": [ "js" ],
+    "extension_context.js.mbt": [ "js" ],
+    "notebook.js.mbt": [ "js" ],
+    "options.js.mbt": [ "js" ],
+    "tab.js.mbt": [ "js" ],
+    "terminal.js.mbt": [ "js" ],
+    "tree.js.mbt": [ "js" ],
+    "types.js.mbt": [ "js" ],
+    "uri.js.mbt": [ "js" ],
+    "values.js.mbt": [ "js" ],
+    "webview.js.mbt": [ "js" ],
+  },
+)

@@ -1,0 +1,20 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/scm"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn create_source_control(String, String, root_uri? : @vscode.Uri) -> @vscode.SourceControl
+
+pub fn input_box() -> @vscode.SourceControlInputBox?
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

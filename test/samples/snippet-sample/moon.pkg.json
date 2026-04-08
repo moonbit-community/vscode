@@ -1,0 +1,21 @@
+{
+  "import": [
+    {
+      "path": "username/vscode"
+    }
+  ],
+  "link": {
+    "js": {
+      "exports": [
+        "activate",
+        "deactivate"
+      ],
+      "format": "cjs"
+    }
+  },
+  "targets": {
+    "extension.mbt": [
+      "js"
+    ]
+  }
+}

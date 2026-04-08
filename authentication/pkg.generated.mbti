@@ -1,0 +1,28 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/authentication"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub async fn get_accounts(String) -> Array[@vscode.AuthenticationSessionAccountInformation]
+
+pub async fn get_session(String, Array[String], options? : @vscode.AuthenticationGetSessionOptions) -> @vscode.AuthenticationSession?
+
+pub async fn get_session_from_request(String, @vscode.AuthenticationWwwAuthenticateRequest, options? : @vscode.AuthenticationGetSessionOptions) -> @vscode.AuthenticationSession?
+
+pub fn on_did_change_sessions() -> @vscode.Event[@vscode.AuthenticationSessionsChangeEvent]
+
+pub fn providers() -> Array[@vscode.AuthenticationProviderInformation]
+
+pub fn[T : @vscode.AuthenticationProvider] register_authentication_provider(String, String, T, options? : @vscode.AuthenticationProviderOptions) -> &@vscode.Disposable
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
+

@@ -1,0 +1,35 @@
+{
+  "import": [
+    "moonbitlang/async/js_async",
+    "moonbitlang/core/json",
+    {
+      "path": "username/vscode/commands"
+    },
+    {
+      "path": "username/vscode/window"
+    },
+    {
+      "path": "username/vscode/languages"
+    },
+    {
+      "path": "username/vscode/workspace"
+    },
+    {
+      "path": "username/vscode"
+    }
+  ],
+  "link": {
+    "js": {
+      "exports": [
+        "activate",
+        "deactivate"
+      ],
+      "format": "cjs"
+    }
+  },
+  "targets": {
+    "extension.mbt": [
+      "js"
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/vscode/notebooks"
+
+import {
+  "username/vscode",
+}
+
+// Values
+pub fn create_notebook_controller(String, String, String) -> NotebookController
+
+pub fn create_notebook_controller_with_handler(String, String, String, async (Array[@vscode.NotebookCell], @vscode.NotebookDocument, NotebookController) -> Unit) -> NotebookController
+
+pub fn create_renderer_messaging(String) -> NotebookRendererMessaging
+
+pub fn register_notebook_cell_status_bar_item_provider(String, NotebookCellStatusBarItemProvider) -> &@vscode.Disposable
+
+pub fn try_create_renderer_messaging(String) -> NotebookRendererMessaging?
+
+// Errors
+
+// Types and methods
+pub type NotebookCellExecution
+pub async fn NotebookCellExecution::append_output(Self, NotebookCellOutputOrMany, cell? : @vscode.NotebookCell) -> Unit
+pub async fn NotebookCellExecution::append_output_items(Self, NotebookCellOutputItemOrMany, @vscode.NotebookCellOutput) -> Unit
+pub fn NotebookCellExecution::cell(Self) -> @vscode.NotebookCell
+pub fn NotebookCellExecution::clear_execution_order(Self) -> Unit
+pub async fn NotebookCellExecution::clear_output(Self, cell? : @vscode.NotebookCell) -> Unit
+pub fn NotebookCellExecution::end(Self, success? : Bool, end_time? : Int) -> Unit
+pub fn NotebookCellExecution::execution_order(Self) -> Int?
+pub async fn NotebookCellExecution::replace_output(Self, NotebookCellOutputOrMany, cell? : @vscode.NotebookCell) -> Unit
+pub async fn NotebookCellExecution::replace_output_items(Self, NotebookCellOutputItemOrMany, @vscode.NotebookCellOutput) -> Unit
+pub fn NotebookCellExecution::set_execution_order(Self, Int) -> Unit
+pub fn NotebookCellExecution::start(Self, start_time? : Int) -> Unit
+pub fn NotebookCellExecution::token(Self) -> @vscode.CancellationToken
+
+pub(all) enum NotebookCellOutputItemOrMany {
+  Single(@vscode.NotebookCellOutputItem)
+  Many(Array[@vscode.NotebookCellOutputItem])
+}
+
+pub(all) enum NotebookCellOutputOrMany {
+  Single(@vscode.NotebookCellOutput)
+  Many(Array[@vscode.NotebookCellOutput])
+}
+
+pub(all) enum NotebookCellStatusBarAlignment {
+  Left
+  Right
+} derive(Eq)
+
+pub type NotebookCellStatusBarItem
+pub fn NotebookCellStatusBarItem::alignment(Self) -> NotebookCellStatusBarAlignment
+pub fn NotebookCellStatusBarItem::clear_tooltip(Self) -> Unit
+pub fn NotebookCellStatusBarItem::new(String, NotebookCellStatusBarAlignment) -> Self
+pub fn NotebookCellStatusBarItem::set_alignment(Self, NotebookCellStatusBarAlignment) -> Unit
+pub fn NotebookCellStatusBarItem::set_text(Self, String) -> Unit
+pub fn NotebookCellStatusBarItem::set_tooltip(Self, String) -> Unit
+pub fn NotebookCellStatusBarItem::text(Self) -> String
+pub fn NotebookCellStatusBarItem::tooltip(Self) -> String?
+
+pub(all) struct NotebookCellStatusBarItemProvider {
+  mut on_did_change_cell_status_bar_items : @vscode.Event[Unit]?
+}
+pub fn NotebookCellStatusBarItemProvider::new(async (@vscode.NotebookCell, @vscode.CancellationToken) -> Array[NotebookCellStatusBarItem]?, on_did_change_cell_status_bar_items? : @vscode.Event[Unit]) -> Self
+
+pub type NotebookController
+pub fn NotebookController::create_notebook_cell_execution(Self, @vscode.NotebookCell) -> NotebookCellExecution
+pub fn NotebookController::id(Self) -> String
+pub fn NotebookController::label(Self) -> String
+pub fn NotebookController::notebook_type(Self) -> String
+pub fn NotebookController::update_notebook_affinity(Self, @vscode.NotebookDocument, NotebookControllerAffinity) -> Unit
+pub impl @vscode.Disposable for NotebookController
+
+pub(all) enum NotebookControllerAffinity {
+  Default
+  Preferred
+} derive(Eq)
+
+pub type NotebookRendererMessageEvent
+pub fn NotebookRendererMessageEvent::editor(Self) -> @vscode.NotebookEditor
+pub fn[T] NotebookRendererMessageEvent::message(Self) -> T
+
+pub struct NotebookRendererMessaging {
+  on_did_receive_message : @vscode.Event[NotebookRendererMessageEvent]
+}
+pub async fn[T] NotebookRendererMessaging::post_message(Self, T, editor? : @vscode.NotebookEditor) -> Bool
+
+// Type aliases
+
+// Traits
+
