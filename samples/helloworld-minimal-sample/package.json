@@ -1,14 +1,12 @@
 {
-  "name": "helloworld-sample",
-  "displayName": "helloworld-sample",
-  "description": "HelloWorld example for VS Code",
+  "name": "helloworld-minimal-sample",
+  "description": "Minimal HelloWorld example for VS Code",
   "version": "0.0.1",
+  "publisher": "vscode-samples",
+  "repository": "https://github.com/Microsoft/vscode-extension-samples/helloworld-minimal-sample",
   "engines": {
     "vscode": "^1.100.0"
   },
-  "categories": [
-    "Other"
-  ],
   "activationEvents": [],
   "main": "../../_build/js/release/build/helloworld_minimal_sample/helloworld_minimal_sample.js",
   "contributes": {
@@ -20,6 +18,8 @@
     ]
   },
   "scripts": {
-    "build:moonbit": "moon build . --target js --release"
+    "vscode:prepublish": "npm run build:moonbit",
+    "build:moonbit": "moon build --target js --release",
+    "check:moonbit": "moon check --target js"
   }
 }
