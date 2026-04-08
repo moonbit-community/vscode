@@ -1,0 +1,253 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "vim_sample"
+
+import {
+  "username/vscode",
+  "username/vscode/commands",
+}
+
+// Values
+pub fn activate(@vscode.ExtensionContext) -> Unit
+
+pub fn create_word_characters(String) -> Array[CharacterClass]
+
+pub fn ctrl_modifier_keys() -> ModifierKeys
+
+pub fn deactivate() -> Unit
+
+pub fn editor_command(String, args? : @commands.CommandArgs) -> EditorCommand
+
+pub fn find_command(String, ModifierKeys) -> EditorCommand?
+
+pub fn find_motion(String) -> Motion?
+
+pub fn find_motion_command(String, Bool, ModifierKeys) -> EditorCommand?
+
+pub fn find_next_word(@vscode.TextDocument, @vscode.Position, Array[CharacterClass]) -> Word?
+
+pub fn find_operator(String, ModifierKeys) -> FoundOperator?
+
+pub fn is_motion_prefix(String) -> Bool
+
+pub fn no_modifier_keys() -> ModifierKeys
+
+pub async fn run_operator_normal_mode(OperatorKind, Controller, @vscode.TextEditor, Int, String) -> Bool
+
+pub async fn run_operator_visual_mode(OperatorKind, Controller, @vscode.TextEditor, String) -> Bool
+
+pub fn type_result(Bool, execute_editor_command? : EditorCommand) -> TypeResult
+
+// Errors
+
+// Types and methods
+pub(all) enum CharacterClass {
+  Regular
+  WordSeparator
+  Whitespace
+} derive(Eq)
+
+pub struct ContextKey {
+  name : String
+  mut last_value : Bool?
+}
+pub fn ContextKey::new(String) -> Self
+pub async fn ContextKey::set(Self, Bool) -> Unit
+
+pub struct Controller {
+  mut current_mode : Mode
+  mut current_input : String
+  motion_state : MotionState
+  mut is_visual : Bool
+  mut delete_register : DeleteRegister?
+  mut is_in_composition : Bool
+  mut composing_text : String
+}
+pub fn Controller::clear_input(Self) -> Unit
+pub async fn Controller::composition_end(Self, @vscode.TextEditor) -> TypeResult
+pub fn Controller::composition_start(Self, @vscode.TextEditor) -> Unit
+pub fn Controller::ensure_normal_mode_position(Self, @vscode.TextEditor) -> Unit
+pub fn Controller::find_motion(Self, String) -> Motion?
+pub fn Controller::get_cursor_style(Self) -> @vscode.TextEditorCursorStyle
+pub fn Controller::get_mode(Self) -> Mode
+pub fn Controller::get_status_text(Self) -> String
+pub fn Controller::get_visual(Self) -> Bool
+pub async fn Controller::handle_type(Self, @vscode.TextEditor, String, ModifierKeys) -> TypeResult
+pub fn Controller::has_input(Self) -> Bool
+pub fn Controller::is_motion_prefix(Self, String) -> Bool
+pub fn Controller::new() -> Self
+pub async fn Controller::replace_prev_char(Self, @vscode.TextEditor, String, Int) -> Bool
+pub fn Controller::set_mode(Self, Mode) -> Unit
+pub fn Controller::set_visual(Self, Bool) -> Unit
+pub fn Controller::set_word_separators(Self, String) -> Unit
+
+pub struct CursorMoveArgs {
+  to : String
+  by : String?
+  value : Int
+  select : Bool
+}
+
+pub struct DeleteRegister {
+  is_whole_line : Bool
+  content : String
+}
+
+pub struct EditorCommand {
+  command_id : String
+  args : @commands.CommandArgs?
+}
+
+pub struct EditorScrollArgs {
+  to : String
+  by : String?
+  value : Int
+  revealCursor : Bool
+}
+
+pub struct FoldCommandArgs {
+  levels : Int
+  direction : String
+}
+
+pub struct FoundOperator {
+  operator : OperatorKind
+  repeat_count : Int
+  args : String
+}
+
+pub(all) enum Mode {
+  Insert
+  Normal
+  Replace
+} derive(Eq)
+
+pub struct ModifierKeys {
+  ctrl : Bool
+  alt : Bool
+  shift : Bool
+}
+
+pub(all) enum Motion {
+  NextCharacter
+  Left
+  Right
+  Down
+  Up
+  EndOfLine
+  StartOfLine
+  NextWordStart
+  NextWordEnd
+  GoToLineUndefined
+  GoToFirstLine
+  GoToLastLine
+  GoToLineDefined(Int)
+  Repeating(Motion, Int)
+}
+pub fn Motion::repeat(Self, Bool, Int) -> Self
+pub fn Motion::run(Self, @vscode.TextDocument, @vscode.Position, MotionState) -> @vscode.Position
+
+pub(all) enum MotionCommandDescriptor {
+  CursorMove(String, String?)
+  EditorScroll(String, String?)
+  RevealCurrentLine(String)
+  MoveActiveEditorByPosition
+  MoveActiveEditor(String)
+  Fold
+  Unfold
+}
+pub fn MotionCommandDescriptor::create_command(Self, MotionCommandRequest) -> EditorCommand
+
+pub struct MotionCommandRequest {
+  is_visual : Bool
+  repeat : Int?
+}
+
+pub struct MotionState {
+  mut anchor : @vscode.Position?
+  mut cursor_desired_character : Int
+  mut word_character_class : Array[CharacterClass]
+}
+pub fn MotionState::new() -> Self
+
+pub struct MoveActiveEditorArgs {
+  to : String
+  value : Int?
+}
+
+pub struct NumberAndString {
+  has_repeat_count : Bool
+  repeat_count : Int
+  input : String
+}
+
+pub(all) enum OperatorKind {
+  DeleteCharUnderCursor
+  Insert
+  Append
+  AppendEndOfLine
+  DeleteTo
+  Put
+  Replace
+  ReplaceMode
+  Change
+  Visual
+  DeleteLine
+}
+
+pub struct ReplacePreviousCharCommandArgs {
+  text : String
+  replaceCharCnt : Int
+}
+
+pub struct RevealLineArgs {
+  lineNumber : Int
+  at : String
+}
+
+pub struct StatusBar {
+  actual : @vscode.StatusBarItem
+  mut last_text : String?
+}
+pub fn StatusBar::new() -> Self
+pub fn StatusBar::set_text(Self, String) -> Unit
+
+pub struct TypeCommandArgs {
+  text : String
+}
+
+pub struct TypeResult {
+  has_consumed_input : Bool
+  execute_editor_command : EditorCommand?
+}
+
+pub struct VimExt {
+  in_normal_mode : ContextKey
+  has_input : ContextKey
+  status_bar : StatusBar
+  controller : Controller
+}
+pub async fn VimExt::clear_input(Self) -> Unit
+pub async fn VimExt::composition_end(Self, @vscode.TextEditor) -> Unit
+pub fn VimExt::composition_start(Self, @vscode.TextEditor) -> Unit
+pub async fn VimExt::ensure_state(Self) -> Unit
+pub async fn VimExt::go_to_normal_mode(Self) -> Unit
+pub async fn VimExt::handle_type(Self, @vscode.TextEditor, String, ModifierKeys) -> Unit
+pub fn VimExt::new() -> Self
+pub async fn VimExt::replace_prev_char(Self, @vscode.TextEditor, String, Int) -> Unit
+
+pub struct Word {
+  start : Int
+  end_index : Int
+  word_type : WordType
+}
+
+pub(all) enum WordType {
+  Empty
+  Separator
+  Regular
+} derive(Eq)
+
+// Type aliases
+
+// Traits
+

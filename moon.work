@@ -1,4 +1,5 @@
 members = [
   ".",
   "./samples/helloworld-minimal-sample",
+  "./samples/vim-sample",
 ]
