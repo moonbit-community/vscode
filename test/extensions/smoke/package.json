@@ -12,7 +12,9 @@
     "onCommand:vscode-mbt-tests.echo",
     "onCommand:vscode-mbt-tests.hasCommand",
     "onCommand:vscode-mbt-tests.statusBar",
-    "onCommand:vscode-mbt-tests.workspaceEdit"
+    "onCommand:vscode-mbt-tests.workspaceEdit",
+    "onCommand:vscode-mbt-tests.event",
+    "onCommand:vscode-mbt-tests.contentProviderUri"
   ],
   "main": "../../../_build/js/release/build/vscode_mbt_smoke_extension/vscode_mbt_smoke_extension.js",
   "contributes": {
@@ -32,6 +34,14 @@
       {
         "command": "vscode-mbt-tests.workspaceEdit",
         "title": "MoonBit Smoke: Workspace Edit"
+      },
+      {
+        "command": "vscode-mbt-tests.event",
+        "title": "MoonBit Smoke: Event"
+      },
+      {
+        "command": "vscode-mbt-tests.contentProviderUri",
+        "title": "MoonBit Smoke: Content Provider URI"
       }
     ]
   },

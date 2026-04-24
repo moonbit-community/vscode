@@ -50,6 +50,15 @@ async function run() {
     const value = await vscode.commands.executeCommand('vscode-mbt-tests.event');
     assert.strictEqual(value, '1|sync-1|1|async-1');
   });
+
+  await runCase('opens content from a MoonBit TextDocumentContentProvider', async () => {
+    const uriText = await vscode.commands.executeCommand('vscode-mbt-tests.contentProviderUri');
+    const document = await vscode.workspace.openTextDocument(vscode.Uri.parse(uriText));
+    assert.strictEqual(
+      document.getText(),
+      'moonbit-provider|/provider-resource|source=moonbit'
+    );
+  });
 }
 
 module.exports = { run };

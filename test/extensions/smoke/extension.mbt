@@ -14,8 +14,18 @@ let workspace_edit_command = "vscode-mbt-tests.workspaceEdit"
 let event_command = "vscode-mbt-tests.event"
 
 ///|
+let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
+
+///|
+let content_provider_scheme = "vscode-mbt-smoke"
+
+///|
 priv struct SmokeDisposable {
   disposable : @vscode.Disposable
+}
+
+///|
+priv struct SmokeTextDocumentContentProvider {
 }
 
 ///|
@@ -29,6 +39,22 @@ priv struct EventState {
 ///|
 impl @vscode.AsDisposable for SmokeDisposable with as_disposable(self) {
   self.disposable
+}
+
+///|
+impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider with on_did_change(
+  _self,
+) {
+  None
+}
+
+///|
+impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider with provide_text_document_content(
+  _self,
+  uri,
+  _token,
+) {
+  "moonbit-provider|\{uri.path()}|\{uri.query()}"
 }
 
 ///|
@@ -137,6 +163,11 @@ async fn event_behavior(_args : @commands.CommandArgs) -> String {
 }
 
 ///|
+fn content_provider_uri(_args : @commands.CommandArgs) -> String {
+  "\{content_provider_scheme}:/provider-resource?source=moonbit"
+}
+
+///|
 pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   let status = @window.create_status_bar_item_with_id(
     "vscode-mbt-tests.status",
@@ -167,6 +198,15 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @commands.register_command_async(workspace_edit_command, apply_workspace_edit),
   )
   ctx.subscribe(@commands.register_command_async(event_command, event_behavior))
+  ctx.subscribe(
+    @commands.register_command(content_provider_uri_command, content_provider_uri),
+  )
+  ctx.subscribe(
+    @workspace.register_text_document_content_provider(
+      content_provider_scheme,
+      SmokeTextDocumentContentProvider::{},
+    ),
+  )
 }
 
 ///|
