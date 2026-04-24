@@ -75,11 +75,16 @@ pub extern "js" fn ExtensionContext::subscriptions(
 
 ///|
 /// Add a disposable resource to this extension context.
-pub extern "js" fn ExtensionContext::subscribe(
+pub fn ExtensionContext::subscribe(
   self : ExtensionContext,
   disposable : &Disposable,
-) -> Unit =
-  #| (ctx, disposable) => {
+) -> Unit {
+  extension_context_subscribe_ffi(self, disposable_to_js_ffi(disposable))
+}
+
+///|
+extern "js" fn disposable_to_js_ffi(disposable : &Disposable) -> JsValue =
+  #| (disposable) => {
   #|   const value =
   #|     disposable && typeof disposable.dispose === "function"
   #|       ? disposable
@@ -89,7 +94,16 @@ pub extern "js" fn ExtensionContext::subscribe(
   #|           typeof disposable.method_table.method_0 === "function"
   #|         ? { dispose: () => disposable.method_table.method_0(disposable.self) }
   #|         : disposable;
-  #|   ctx.subscriptions.push(value);
+  #|   return value;
+  #| }
+
+///|
+extern "js" fn extension_context_subscribe_ffi(
+  ctx : ExtensionContext,
+  disposable : JsValue,
+) -> Unit =
+  #| (ctx, disposable) => {
+  #|   ctx.subscriptions.push(disposable);
   #| }
 
 ///|
