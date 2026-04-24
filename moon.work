@@ -7,4 +7,5 @@ members = [
   "./samples/progress-sample",
   "./samples/statusbar-sample",
   "./samples/vim-sample",
+  "./test/extensions/smoke",
 ]

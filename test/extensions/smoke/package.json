@@ -1,0 +1,42 @@
+{
+  "name": "vscode-mbt-smoke-extension",
+  "displayName": "VS Code MoonBit Binding Smoke Tests",
+  "description": "Small extension used by integration tests for the MoonBit VS Code API bindings.",
+  "version": "0.0.1",
+  "publisher": "vscode-mbt-tests",
+  "private": true,
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "activationEvents": [
+    "onCommand:vscode-mbt-tests.echo",
+    "onCommand:vscode-mbt-tests.hasCommand",
+    "onCommand:vscode-mbt-tests.statusBar",
+    "onCommand:vscode-mbt-tests.workspaceEdit"
+  ],
+  "main": "../../../_build/js/release/build/vscode_mbt_smoke_extension/vscode_mbt_smoke_extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-mbt-tests.echo",
+        "title": "MoonBit Smoke: Echo"
+      },
+      {
+        "command": "vscode-mbt-tests.hasCommand",
+        "title": "MoonBit Smoke: Has Command"
+      },
+      {
+        "command": "vscode-mbt-tests.statusBar",
+        "title": "MoonBit Smoke: Status Bar"
+      },
+      {
+        "command": "vscode-mbt-tests.workspaceEdit",
+        "title": "MoonBit Smoke: Workspace Edit"
+      }
+    ]
+  },
+  "scripts": {
+    "build:moonbit": "moon build --target js --release",
+    "check:moonbit": "moon check --target js"
+  }
+}

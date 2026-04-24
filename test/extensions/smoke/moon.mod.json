@@ -1,0 +1,6 @@
+{
+  "name": "vscode_mbt_smoke_extension",
+  "deps": {
+    "username/vscode": "0.1.0"
+  }
+}

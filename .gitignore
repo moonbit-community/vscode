@@ -10,6 +10,8 @@ node_modules/
 package-lock.json
 test/extensions/window/out/
 test/extensions/window/*.vsix
+test/extensions/smoke/out/
+test/extensions/smoke/*.vsix
 test/extensions/authentication/out/
 test/extensions/authentication/*.vsix
 test/extensions/comments/out/
@@ -42,6 +44,8 @@ test/extensions/lm/out/
 test/extensions/lm/*.vsix
 test/extensions/authentication/fixture/*
 !test/extensions/authentication/fixture/.gitkeep
+test/extensions/smoke/fixture/*
+!test/extensions/smoke/fixture/.gitkeep
 test/extensions/comments/fixture/*
 !test/extensions/comments/fixture/.gitkeep
 test/extensions/debug/fixture/*

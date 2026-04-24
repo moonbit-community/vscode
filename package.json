@@ -2,9 +2,13 @@
   "name": "vscode-moonbit-tooling",
   "private": true,
   "devDependencies": {
-    "@types/vscode": "latest"
+    "@types/vscode": "latest",
+    "@vscode/test-electron": "^2.5.2"
   },
   "scripts": {
+    "build:test-extension:smoke": "moon -C test/extensions/smoke build --target js --release",
+    "check:test-extension:smoke": "moon -C test/extensions/smoke check --target js",
+    "test:integration": "npm run build:test-extension:smoke && node test/extensions/smoke/run-tests.js",
     "update:vscode-dts": "node ./.codex/skills/moonbit-vscode-api-binding-style/scripts/update-vscode-dts.mjs"
   }
 }
