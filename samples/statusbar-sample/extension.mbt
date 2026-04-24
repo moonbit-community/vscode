@@ -57,17 +57,16 @@ pub async fn show_selection_count() -> Unit {
 ///|
 pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   let status = SelectionStatusBar::new()
-  let subscriptions = ctx.subscriptions()
-  subscriptions.push(status.item)
-  subscriptions.push(@commands.register_command_async("sample.showSelectionCount", async fn(
+  ctx.subscribe(status.item)
+  ctx.subscribe(@commands.register_command_async("sample.showSelectionCount", async fn(
     _args,
   ) {
     show_selection_count()
   }))
-  subscriptions.push(@window.on_did_change_active_text_editor().subscribe(_ => {
+  ctx.subscribe(@window.on_did_change_active_text_editor().subscribe(_ => {
     status.update()
   }))
-  subscriptions.push(@window.on_did_change_text_editor_selection().subscribe(_ => {
+  ctx.subscribe(@window.on_did_change_text_editor_selection().subscribe(_ => {
     status.update()
   }))
   status.update()

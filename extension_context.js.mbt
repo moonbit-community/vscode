@@ -74,6 +74,25 @@ pub extern "js" fn ExtensionContext::subscriptions(
   #| (ctx) => ctx.subscriptions
 
 ///|
+/// Add a disposable resource to this extension context.
+pub extern "js" fn ExtensionContext::subscribe(
+  self : ExtensionContext,
+  disposable : &Disposable,
+) -> Unit =
+  #| (ctx, disposable) => {
+  #|   const value =
+  #|     disposable && typeof disposable.dispose === "function"
+  #|       ? disposable
+  #|       : disposable &&
+  #|           disposable.self !== undefined &&
+  #|           disposable.method_table &&
+  #|           typeof disposable.method_table.method_0 === "function"
+  #|         ? { dispose: () => disposable.method_table.method_0(disposable.self) }
+  #|         : disposable;
+  #|   ctx.subscriptions.push(value);
+  #| }
+
+///|
 /// Access workspace state memento.
 pub extern "js" fn ExtensionContext::workspace_state(
   self : ExtensionContext,

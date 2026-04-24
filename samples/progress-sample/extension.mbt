@@ -52,8 +52,7 @@ pub async fn run_progress_demo() -> Unit {
 
 ///|
 pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
-  let subscriptions = ctx.subscriptions()
-  subscriptions.push(@commands.register_command_async("extension.startTask", async fn(
+  ctx.subscribe(@commands.register_command_async("extension.startTask", async fn(
     _args,
   ) {
     run_progress_demo()

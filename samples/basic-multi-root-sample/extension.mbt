@@ -88,28 +88,27 @@ fn update_status(status : @vscode.StatusBarItem) -> Unit {
 
 ///|
 pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
-  let subscriptions = ctx.subscriptions()
   let status = @window.create_status_bar_item(
     alignment=@vscode.StatusBarAlignment::Left,
     priority=1000000,
   )
-  subscriptions.push(status)
-  subscriptions.push(@workspace.on_did_change_workspace_folders().subscribe(_ => {
+  ctx.subscribe(status)
+  ctx.subscribe(@workspace.on_did_change_workspace_folders().subscribe(_ => {
     update_status(status)
   }))
-  subscriptions.push(@workspace.on_did_change_configuration().subscribe(_ => {
+  ctx.subscribe(@workspace.on_did_change_configuration().subscribe(_ => {
     update_status(status)
   }))
-  subscriptions.push(@window.on_did_change_active_text_editor().subscribe(_ => {
+  ctx.subscribe(@window.on_did_change_active_text_editor().subscribe(_ => {
     update_status(status)
   }))
-  subscriptions.push(@window.on_did_change_text_editor_view_column().subscribe(_ => {
+  ctx.subscribe(@window.on_did_change_text_editor_view_column().subscribe(_ => {
     update_status(status)
   }))
-  subscriptions.push(@workspace.on_did_open_text_document().subscribe(_ => {
+  ctx.subscribe(@workspace.on_did_open_text_document().subscribe(_ => {
     update_status(status)
   }))
-  subscriptions.push(@workspace.on_did_close_text_document().subscribe(_ => {
+  ctx.subscribe(@workspace.on_did_close_text_document().subscribe(_ => {
     update_status(status)
   }))
   update_status(status)

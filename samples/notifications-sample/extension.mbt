@@ -76,13 +76,12 @@ fn spawn_command(command_id : String) -> Unit {
 
 ///|
 pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
-  let subscriptions = ctx.subscriptions()
-  subscriptions.push(@commands.register_command_async("notifications-sample.showInfo", async fn(
+  ctx.subscribe(@commands.register_command_async("notifications-sample.showInfo", async fn(
     _args,
   ) {
     @window.show_information_message("Info Notification")
   }))
-  subscriptions.push(@commands.register_command_async(
+  ctx.subscribe(@commands.register_command_async(
     "notifications-sample.showInfoAsModal",
     async fn(_args) {
       @window.show_information_message(
@@ -91,31 +90,31 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       )
     },
   ))
-  subscriptions.push(@commands.register_command_async(
+  ctx.subscribe(@commands.register_command_async(
     "notifications-sample.showWarning",
     async fn(_args) {
       @window.show_warning_message("Warning Notification")
     },
   ))
-  subscriptions.push(@commands.register_command_async(
+  ctx.subscribe(@commands.register_command_async(
     "notifications-sample.showWarningWithActions",
     async fn(_args) {
       show_warning_with_actions()
     },
   ))
-  subscriptions.push(@commands.register_command_async(
+  ctx.subscribe(@commands.register_command_async(
     "notifications-sample.showError",
     async fn(_args) {
       @window.show_error_message("Error Notification")
     },
   ))
-  subscriptions.push(@commands.register_command_async(
+  ctx.subscribe(@commands.register_command_async(
     "notifications-sample.showProgress",
     async fn(_args) {
       show_progress_notification()
     },
   ))
-  subscriptions.push(@commands.register_command("notifications-sample.showAll", _args => {
+  ctx.subscribe(@commands.register_command("notifications-sample.showAll", _args => {
     spawn_command("notifications-sample.showInfo")
     spawn_command("notifications-sample.showWarning")
     spawn_command("notifications-sample.showWarningWithActions")

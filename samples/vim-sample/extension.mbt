@@ -204,29 +204,29 @@ fn selection_is_empty(selection : @vscode.Selection) -> Bool {
 
 ///|
 fn register_command_nice(
-  subscriptions : Array[&@vscode.Disposable],
+  ctx : @vscode.ExtensionContext,
   command_id : String,
   run : async (@commands.CommandArgs) -> Unit,
 ) -> Unit {
-  subscriptions.push(@commands.register_command_async(command_id, run))
+  ctx.subscribe(@commands.register_command_async(command_id, run))
 }
 
 ///|
 fn register_command_nice_sync(
-  subscriptions : Array[&@vscode.Disposable],
+  ctx : @vscode.ExtensionContext,
   command_id : String,
   run : (@commands.CommandArgs) -> Unit,
 ) -> Unit {
-  subscriptions.push(@commands.register_command(command_id, run))
+  ctx.subscribe(@commands.register_command(command_id, run))
 }
 
 ///|
 fn register_ctrl_key_binding(
-  subscriptions : Array[&@vscode.Disposable],
+  ctx : @vscode.ExtensionContext,
   vim_ext : VimExt,
   key : String,
 ) -> Unit {
-  register_command_nice(subscriptions, key, async fn(_args) {
+  register_command_nice(ctx, key, async fn(_args) {
     match @window.active_text_editor() {
       Some(editor) => vim_ext.handle_type(editor, key, ctrl_modifier_keys())
       None => ()
@@ -236,10 +236,9 @@ fn register_ctrl_key_binding(
 
 ///|
 async fn async_activate(ctx : @vscode.ExtensionContext) -> Unit {
-  let subscriptions = ctx.subscriptions()
   let vim_ext = VimExt::new()
 
-  register_command_nice(subscriptions, "type", async fn(args) {
+  register_command_nice(ctx, "type", async fn(args) {
     let type_args : TypeCommandArgs? = args.get(0)
     match (@window.active_text_editor(), type_args) {
       (Some(editor), Some(type_args)) =>
@@ -247,7 +246,7 @@ async fn async_activate(ctx : @vscode.ExtensionContext) -> Unit {
       _ => ()
     }
   })
-  register_command_nice(subscriptions, "replacePreviousChar", async fn(args) {
+  register_command_nice(ctx, "replacePreviousChar", async fn(args) {
     let replace_args : ReplacePreviousCharCommandArgs? = args.get(0)
     match (@window.active_text_editor(), replace_args) {
       (Some(editor), Some(replace_args)) =>
@@ -259,33 +258,33 @@ async fn async_activate(ctx : @vscode.ExtensionContext) -> Unit {
       _ => ()
     }
   })
-  register_command_nice_sync(subscriptions, "compositionStart", fn(_args) {
+  register_command_nice_sync(ctx, "compositionStart", fn(_args) {
     match @window.active_text_editor() {
       Some(editor) => vim_ext.composition_start(editor)
       None => ()
     }
   })
-  register_command_nice(subscriptions, "compositionEnd", async fn(_args) {
+  register_command_nice(ctx, "compositionEnd", async fn(_args) {
     match @window.active_text_editor() {
       Some(editor) => vim_ext.composition_end(editor)
       None => ()
     }
   })
-  register_command_nice(subscriptions, "vim.goToNormalMode", async fn(_args) {
+  register_command_nice(ctx, "vim.goToNormalMode", async fn(_args) {
     vim_ext.go_to_normal_mode()
   })
-  register_command_nice(subscriptions, "vim.clearInput", async fn(_args) {
+  register_command_nice(ctx, "vim.clearInput", async fn(_args) {
     vim_ext.clear_input()
   })
 
-  register_ctrl_key_binding(subscriptions, vim_ext, "e")
-  register_ctrl_key_binding(subscriptions, vim_ext, "d")
-  register_ctrl_key_binding(subscriptions, vim_ext, "f")
-  register_ctrl_key_binding(subscriptions, vim_ext, "y")
-  register_ctrl_key_binding(subscriptions, vim_ext, "u")
-  register_ctrl_key_binding(subscriptions, vim_ext, "b")
+  register_ctrl_key_binding(ctx, vim_ext, "e")
+  register_ctrl_key_binding(ctx, vim_ext, "d")
+  register_ctrl_key_binding(ctx, vim_ext, "f")
+  register_ctrl_key_binding(ctx, vim_ext, "y")
+  register_ctrl_key_binding(ctx, vim_ext, "u")
+  register_ctrl_key_binding(ctx, vim_ext, "b")
 
-  subscriptions.push(
+  ctx.subscribe(
     @window.on_did_change_active_text_editor().subscribe_async(async fn(
       editor,
     ) {
@@ -296,7 +295,7 @@ async fn async_activate(ctx : @vscode.ExtensionContext) -> Unit {
     }),
   )
 
-  subscriptions.push(
+  ctx.subscribe(
     @window.on_did_change_text_editor_selection().subscribe_async(async fn(
       event,
     ) {
@@ -327,7 +326,7 @@ async fn async_activate(ctx : @vscode.ExtensionContext) -> Unit {
   )
 
   vim_ext.controller.set_word_separators(configured_word_separators())
-  subscriptions.push(
+  ctx.subscribe(
     @workspace.on_did_change_configuration().subscribe(_event => {
       vim_ext.controller.set_word_separators(configured_word_separators())
     }),

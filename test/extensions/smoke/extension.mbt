@@ -55,20 +55,21 @@ async fn apply_workspace_edit(args : @commands.CommandArgs) -> String {
 }
 
 ///|
-pub fn activate(_ctx : @vscode.ExtensionContext) -> Unit {
+pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   let status = @window.create_status_bar_item_with_id(
     "vscode-mbt-tests.status",
     alignment=@vscode.StatusBarAlignment::Left,
     priority=100,
   )
-  ignore(@commands.register_command(echo_command, echo))
-  ignore(@commands.register_command_async(has_command_command, has_command))
-  ignore(
+  ctx.subscribe(status)
+  ctx.subscribe(@commands.register_command(echo_command, echo))
+  ctx.subscribe(@commands.register_command_async(has_command_command, has_command))
+  ctx.subscribe(
     @commands.register_command(status_bar_command, fn(_args) {
       status_bar_value(status)
     }),
   )
-  ignore(
+  ctx.subscribe(
     @commands.register_command_async(workspace_edit_command, apply_workspace_edit),
   )
 }
