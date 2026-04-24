@@ -8,6 +8,10 @@ import {
 // Values
 pub fn activate_async(ExtensionContext, async (ExtensionContext) -> Unit) -> Unit
 
+pub fn disposable_from(Array[&Disposable]) -> &Disposable
+
+pub fn disposable_new(() -> Unit) -> &Disposable
+
 pub fn version() -> String
 
 // Errors

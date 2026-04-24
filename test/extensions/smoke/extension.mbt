@@ -21,6 +21,11 @@ impl @vscode.Disposable for SmokeDisposable with dispose(self) {
 }
 
 ///|
+fn SmokeDisposable::new(name : String) -> &@vscode.Disposable {
+  SmokeDisposable::{ name }
+}
+
+///|
 extern "js" fn write_disposable_marker(name : String) -> Unit =
   #| (name) => {
   #|   const marker = process.env.VSCODE_MBT_SMOKE_DISPOSE_MARKER;
@@ -81,6 +86,17 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     priority=100,
   )
   ctx.subscribe(SmokeDisposable::{ name: "trait-disposable" })
+  ctx.subscribe(@vscode.disposable_new(fn() {
+    write_disposable_marker("callback-disposable")
+  }))
+  ctx.subscribe(
+    @vscode.disposable_from([
+      @vscode.disposable_new(fn() {
+        write_disposable_marker("combined-callback-disposable")
+      }),
+      SmokeDisposable::new("combined-trait-disposable"),
+    ]),
+  )
   ctx.subscribe(status)
   ctx.subscribe(@commands.register_command(echo_command, echo))
   ctx.subscribe(@commands.register_command_async(has_command_command, has_command))

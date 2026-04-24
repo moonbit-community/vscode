@@ -76,21 +76,6 @@ pub fn ExtensionContext::subscribe(
 }
 
 ///|
-extern "js" fn disposable_to_js_ffi(disposable : &Disposable) -> JsValue =
-  #| (disposable) => {
-  #|   const value =
-  #|     disposable && typeof disposable.dispose === "function"
-  #|       ? disposable
-  #|       : disposable &&
-  #|           disposable.self !== undefined &&
-  #|           disposable.method_table &&
-  #|           typeof disposable.method_table.method_0 === "function"
-  #|         ? { dispose: () => disposable.method_table.method_0(disposable.self) }
-  #|         : disposable;
-  #|   return value;
-  #| }
-
-///|
 extern "js" fn extension_context_subscribe_ffi(
   ctx : ExtensionContext,
   disposable : JsValue,

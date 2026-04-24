@@ -28,16 +28,25 @@ async function main() {
     ]
   });
   assertNoDisposeError();
-  assertTraitDisposableWasDisposed(disposeMarker);
+  assertDisposablesWereDisposed(disposeMarker);
 }
 
-function assertTraitDisposableWasDisposed(disposeMarker) {
+function assertDisposablesWereDisposed(disposeMarker) {
   if (!fs.existsSync(disposeMarker)) {
-    throw new Error(`MoonBit trait disposable marker was not written: ${disposeMarker}`);
+    throw new Error(`MoonBit disposable marker was not written: ${disposeMarker}`);
   }
-  const text = fs.readFileSync(disposeMarker, 'utf8');
-  if (!text.split(/\r?\n/).includes('trait-disposable')) {
-    throw new Error(`MoonBit trait disposable marker was missing expected entry: ${disposeMarker}`);
+  const entries = fs.readFileSync(disposeMarker, 'utf8').split(/\r?\n/);
+  const expectedEntries = [
+    'trait-disposable',
+    'callback-disposable',
+    'combined-callback-disposable',
+    'combined-trait-disposable'
+  ];
+  const missingEntries = expectedEntries.filter(entry => !entries.includes(entry));
+  if (missingEntries.length > 0) {
+    throw new Error(
+      `MoonBit disposable marker was missing entries: ${missingEntries.join(', ')}\n${disposeMarker}`
+    );
   }
 }
 
