@@ -45,6 +45,11 @@ async function run() {
       fs.rmSync(fixturePath, { force: true });
     }
   });
+
+  await runCase('fires EventEmitter listeners and disposes subscriptions', async () => {
+    const value = await vscode.commands.executeCommand('vscode-mbt-tests.event');
+    assert.strictEqual(value, '1|sync-1|1|async-1');
+  });
 }
 
 module.exports = { run };

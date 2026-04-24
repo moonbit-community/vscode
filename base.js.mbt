@@ -12,6 +12,12 @@ pub(open) trait Disposable {
 }
 
 ///|
+/// Dispose a resource returned by VS Code or implemented as a MoonBit trait object.
+pub fn disposable_dispose(disposable : &Disposable) -> Unit {
+  disposable_dispose_ffi(disposable_to_js_ffi(disposable))
+}
+
+///|
 /// Create a disposable that invokes a callback when disposed.
 pub fn disposable_new(call_on_dispose : () -> Unit) -> &Disposable {
   disposable_new_ffi(call_on_dispose)
@@ -30,6 +36,10 @@ extern "js" fn disposable_new_ffi(call_on_dispose : () -> Unit) -> &Disposable =
 ///|
 extern "js" fn disposable_from_ffi(disposables : Array[JsValue]) -> &Disposable =
   #| (disposables) => require("vscode").Disposable.from(...disposables)
+
+///|
+extern "js" fn disposable_dispose_ffi(disposable : JsValue) -> Unit =
+  #| (disposable) => disposable.dispose()
 
 ///|
 extern "js" fn disposable_to_js_ffi(disposable : &Disposable) -> JsValue =
