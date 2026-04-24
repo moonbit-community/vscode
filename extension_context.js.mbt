@@ -67,13 +67,6 @@ fn[T] extension_js_to_option(value : JsValue) -> T? {
 }
 
 ///|
-/// Access extension subscriptions array.
-pub extern "js" fn ExtensionContext::subscriptions(
-  self : ExtensionContext,
-) -> Array[&Disposable] =
-  #| (ctx) => ctx.subscriptions
-
-///|
 /// Add a disposable resource to this extension context.
 pub fn ExtensionContext::subscribe(
   self : ExtensionContext,

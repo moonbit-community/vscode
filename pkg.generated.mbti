@@ -954,7 +954,6 @@ pub fn ExtensionContext::extension_uri(Self) -> Uri
 pub fn ExtensionContext::global_state(Self) -> Memento
 pub fn ExtensionContext::secrets(Self) -> SecretStorage
 pub fn ExtensionContext::subscribe(Self, &Disposable) -> Unit
-pub fn ExtensionContext::subscriptions(Self) -> Array[&Disposable]
 pub fn ExtensionContext::workspace_state(Self) -> Memento
 
 pub(all) enum ExtensionKind {

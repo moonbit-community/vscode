@@ -7,13 +7,16 @@ async function main() {
   const extensionTestsPath = path.join(__dirname, 'suite', 'index.js');
   const workspacePath = path.join(__dirname, 'fixture');
   const testHome = path.join(__dirname, '..', '..', '..', '.vscode-test', 'home');
+  const disposeMarker = path.join(__dirname, '..', '..', '..', '.vscode-test', 'smoke-dispose-marker.txt');
   fs.mkdirSync(testHome, { recursive: true });
+  fs.rmSync(disposeMarker, { force: true });
 
   await runTests({
     extensionDevelopmentPath,
     extensionTestsPath,
     extensionTestsEnv: {
-      HOME: testHome
+      HOME: testHome,
+      VSCODE_MBT_SMOKE_DISPOSE_MARKER: disposeMarker
     },
     launchArgs: [
       workspacePath,
@@ -25,6 +28,17 @@ async function main() {
     ]
   });
   assertNoDisposeError();
+  assertTraitDisposableWasDisposed(disposeMarker);
+}
+
+function assertTraitDisposableWasDisposed(disposeMarker) {
+  if (!fs.existsSync(disposeMarker)) {
+    throw new Error(`MoonBit trait disposable marker was not written: ${disposeMarker}`);
+  }
+  const text = fs.readFileSync(disposeMarker, 'utf8');
+  if (!text.split(/\r?\n/).includes('trait-disposable')) {
+    throw new Error(`MoonBit trait disposable marker was missing expected entry: ${disposeMarker}`);
+  }
 }
 
 function assertNoDisposeError() {
