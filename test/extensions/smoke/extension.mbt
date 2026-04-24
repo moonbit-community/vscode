@@ -20,12 +20,35 @@ let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 let content_provider_scheme = "vscode-mbt-smoke"
 
 ///|
+let file_system_provider_uri_command = "vscode-mbt-tests.fileSystemProviderUri"
+
+///|
+let file_system_read_directory_command = "vscode-mbt-tests.fileSystemReadDirectory"
+
+///|
+let file_system_provider_scheme = "vscode-mbt-fs"
+
+///|
+let file_system_file_name = "hello.txt"
+
+///|
+let file_system_file_path = "/hello.txt"
+
+///|
+let file_system_file_content = "moonbit file system provider"
+
+///|
 priv struct SmokeDisposable {
   disposable : @vscode.Disposable
 }
 
 ///|
 priv struct SmokeTextDocumentContentProvider {
+}
+
+///|
+priv struct SmokeFileSystemProvider {
+  changes : @vscode.EventEmitter[Array[@vscode.FileChangeEvent]]
 }
 
 ///|
@@ -55,6 +78,128 @@ impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider wi
   _token,
 ) {
   "moonbit-provider|\{uri.path()}|\{uri.query()}"
+}
+
+///|
+fn SmokeFileSystemProvider::new() -> SmokeFileSystemProvider {
+  SmokeFileSystemProvider::{ changes: @vscode.EventEmitter::new() }
+}
+
+///|
+fn SmokeFileSystemProvider::is_root(uri : @vscode.Uri) -> Bool {
+  let path = uri.path()
+  path == "" || path == "/"
+}
+
+///|
+fn SmokeFileSystemProvider::is_file(uri : @vscode.Uri) -> Bool {
+  uri.path() == file_system_file_path
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with on_did_change_file(
+  self,
+) {
+  self.changes.event()
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with watch(
+  _self,
+  _uri,
+  _recursive,
+  _excludes,
+) {
+  write_disposable_marker("fs-watch")
+  @vscode.Disposable::new(fn() {
+    write_disposable_marker("fs-watch-disposable")
+  })
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with stat(
+  _self,
+  uri,
+) {
+  if SmokeFileSystemProvider::is_root(uri) {
+    @vscode.FileStat::new(@vscode.FileType::Directory, 0, 0, 0)
+  } else {
+    @vscode.FileStat::new(
+      @vscode.FileType::File,
+      0,
+      0,
+      file_system_file_content.length(),
+      permissions=@vscode.FilePermission::Readonly,
+    )
+  }
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with read_directory(
+  _self,
+  _uri,
+) {
+  [@vscode.DirectoryEntry::new(file_system_file_name, @vscode.FileType::File)]
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with create_directory(
+  _self,
+  _uri,
+) {
+  ()
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with read_file(
+  _self,
+  uri,
+) {
+  if SmokeFileSystemProvider::is_file(uri) {
+    @workspace.encode(file_system_file_content)
+  } else {
+    @workspace.encode("")
+  }
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with write_file(
+  _self,
+  _uri,
+  _content,
+  _create,
+  _overwrite,
+) {
+  ()
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with delete(
+  _self,
+  _uri,
+  _recursive,
+) {
+  ()
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with rename(
+  _self,
+  _old_uri,
+  _new_uri,
+  _overwrite,
+) {
+  ()
+}
+
+///|
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with copy(
+  _self,
+  _source,
+  _destination,
+  _overwrite,
+) {
+  ()
 }
 
 ///|
@@ -168,6 +313,29 @@ fn content_provider_uri(_args : @commands.CommandArgs) -> String {
 }
 
 ///|
+fn file_system_provider_uri(_args : @commands.CommandArgs) -> String {
+  "\{file_system_provider_scheme}:\{file_system_file_path}"
+}
+
+///|
+async fn file_system_read_directory(_args : @commands.CommandArgs) -> String {
+  let entries = @workspace.fs().read_directory(
+    @vscode.Uri::parse("\{file_system_provider_scheme}:/"),
+  )
+  match entries.get(0) {
+    None => "missing"
+    Some(entry) => {
+      let file_type = if entry.file_type == @vscode.FileType::File {
+        "file"
+      } else {
+        "other"
+      }
+      "\{entry.name}|\{file_type}"
+    }
+  }
+}
+
+///|
 pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   let status = @window.create_status_bar_item_with_id(
     "vscode-mbt-tests.status",
@@ -205,6 +373,24 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @workspace.register_text_document_content_provider(
       content_provider_scheme,
       SmokeTextDocumentContentProvider::{},
+    ),
+  )
+  let file_system_provider = SmokeFileSystemProvider::new()
+  ctx.subscribe(
+    @workspace.register_file_system_provider(
+      file_system_provider_scheme,
+      file_system_provider,
+      is_readonly=true,
+    ),
+  )
+  ctx.subscribe(
+    @commands.register_command(
+      file_system_provider_uri_command, file_system_provider_uri,
+    ),
+  )
+  ctx.subscribe(
+    @commands.register_command_async(
+      file_system_read_directory_command, file_system_read_directory,
     ),
   )
 }

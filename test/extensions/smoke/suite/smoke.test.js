@@ -1,6 +1,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
+const { TextDecoder } = require('util');
 const vscode = require('vscode');
 
 async function runCase(name, fn) {
@@ -58,6 +59,33 @@ async function run() {
       document.getText(),
       'moonbit-provider|/provider-resource|source=moonbit'
     );
+  });
+
+  await runCase('serves files from a MoonBit FileSystemProvider', async () => {
+    const content = 'moonbit file system provider';
+    const uriText = await vscode.commands.executeCommand('vscode-mbt-tests.fileSystemProviderUri');
+    const uri = vscode.Uri.parse(uriText);
+
+    const stat = await vscode.workspace.fs.stat(uri);
+    assert.strictEqual(stat.type, vscode.FileType.File);
+    assert.strictEqual(stat.size, Buffer.byteLength(content, 'utf8'));
+    assert.strictEqual(stat.permissions, vscode.FilePermission.Readonly);
+
+    const bytes = await vscode.workspace.fs.readFile(uri);
+    assert.strictEqual(new TextDecoder().decode(bytes), content);
+
+    const entries = await vscode.workspace.fs.readDirectory(vscode.Uri.parse('vscode-mbt-fs:/'));
+    assert.deepStrictEqual(entries, [['hello.txt', vscode.FileType.File]]);
+
+    const moonbitEntries = await vscode.commands.executeCommand(
+      'vscode-mbt-tests.fileSystemReadDirectory'
+    );
+    assert.strictEqual(moonbitEntries, 'hello.txt|file');
+
+    const watcher = vscode.workspace.createFileSystemWatcher(
+      new vscode.RelativePattern(vscode.Uri.parse('vscode-mbt-fs:/'), '*')
+    );
+    watcher.dispose();
   });
 }
 

@@ -40,7 +40,9 @@ function assertDisposablesWereDisposed(disposeMarker) {
     'as-disposable',
     'callback-disposable',
     'combined-callback-disposable',
-    'combined-as-disposable'
+    'combined-as-disposable',
+    'fs-watch',
+    'fs-watch-disposable'
   ];
   const missingEntries = expectedEntries.filter(entry => !entries.includes(entry));
   if (missingEntries.length > 0) {

@@ -777,10 +777,11 @@ pub struct DialogFilters {
 }
 pub fn DialogFilters::new(Array[(String, Array[String])]) -> Self
 
-pub struct DirectoryEntry {
+pub(all) struct DirectoryEntry {
   name : String
   file_type : FileType
 }
+pub fn DirectoryEntry::new(String, FileType) -> Self
 
 pub type Disposable
 pub fn Disposable::dispose(Self) -> Unit

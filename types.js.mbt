@@ -3129,7 +3129,7 @@ pub(all) enum FilePermission {
 } derive(Eq)
 
 ///|
-pub struct DirectoryEntry {
+pub(all) struct DirectoryEntry {
   name : String
   file_type : FileType
 }
@@ -3200,6 +3200,41 @@ pub fn FileStat::new(
   permissions? : FilePermission,
 ) -> FileStat {
   FileStat::{ file_type, ctime, mtime, size, permissions }
+}
+
+///|
+pub fn DirectoryEntry::new(
+  name : String,
+  file_type : FileType,
+) -> DirectoryEntry {
+  DirectoryEntry::{ name, file_type }
+}
+
+///|
+fn DirectoryEntry::from_js(raw : JsValue) -> DirectoryEntry {
+  DirectoryEntry::{
+    name: directory_entry_name_raw(raw),
+    file_type: directory_entry_file_type_raw(raw),
+  }
+}
+
+///|
+extern "js" fn directory_entry_name_raw(raw : JsValue) -> String =
+  #| (entry) => entry[0]
+
+///|
+extern "js" fn directory_entry_file_type_raw(raw : JsValue) -> FileType =
+  #| (entry) => entry[1]
+
+///|
+fn directory_entries_from_js(
+  raw_entries : Array[JsValue],
+) -> Array[DirectoryEntry] {
+  let entries : Array[DirectoryEntry] = []
+  for raw_entry in raw_entries {
+    entries.push(DirectoryEntry::from_js(raw_entry))
+  }
+  entries
 }
 
 ///|
@@ -7474,7 +7509,7 @@ pub async fn FileSystem::stat(self : FileSystem, uri : Uri) -> FileStat {
 extern "js" fn FileSystem::read_directory_promise(
   self : FileSystem,
   uri : Uri,
-) -> @js_async.Promise[Array[DirectoryEntry]] =
+) -> @js_async.Promise[Array[JsValue]] =
   #| (fs, uri) => fs.readDirectory(uri)
 
 ///|
@@ -7486,7 +7521,9 @@ pub async fn FileSystem::read_directory(
   self : FileSystem,
   uri : Uri,
 ) -> Array[DirectoryEntry] {
-  @js_async.Promise::wait(FileSystem::read_directory_promise(self, uri))
+  directory_entries_from_js(
+    @js_async.Promise::wait(FileSystem::read_directory_promise(self, uri)),
+  )
 }
 
 ///|

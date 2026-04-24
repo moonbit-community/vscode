@@ -3528,6 +3528,58 @@ fn file_stat_to_js(value : @vscode.FileStat) -> @v.JsValue {
 }
 
 ///|
+fn directory_entry_to_js(value : @vscode.DirectoryEntry) -> @v.JsValue {
+  directory_entry_to_js_ffi(value.name, value.file_type)
+}
+
+///|
+extern "js" fn directory_entry_to_js_ffi(
+  name : String,
+  file_type : @vscode.FileType,
+) -> @v.JsValue =
+  #| (name, type) => [name, type]
+
+///|
+fn directory_entry_array_to_js(
+  values : Array[@vscode.DirectoryEntry],
+) -> Array[@v.JsValue] {
+  let encoded : Array[@v.JsValue] = []
+  for value in values {
+    encoded.push(directory_entry_to_js(value))
+  }
+  encoded
+}
+
+///|
+fn directory_entry_from_js(value : @v.JsValue) -> @vscode.DirectoryEntry {
+  @vscode.DirectoryEntry::new(
+    directory_entry_name_raw(value),
+    directory_entry_file_type_raw(value),
+  )
+}
+
+///|
+extern "js" fn directory_entry_name_raw(value : @v.JsValue) -> String =
+  #| (entry) => entry[0]
+
+///|
+extern "js" fn directory_entry_file_type_raw(
+  value : @v.JsValue,
+) -> @vscode.FileType =
+  #| (entry) => entry[1]
+
+///|
+fn directory_entry_array_from_js(
+  values : Array[@v.JsValue],
+) -> Array[@vscode.DirectoryEntry] {
+  let decoded : Array[@vscode.DirectoryEntry] = []
+  for value in values {
+    decoded.push(directory_entry_from_js(value))
+  }
+  decoded
+}
+
+///|
 pub async fn FileSystemProviderObject::stat(
   self : FileSystemProviderObject,
   uri : @vscode.Uri,
@@ -3541,7 +3593,7 @@ pub async fn FileSystemProviderObject::stat(
 extern "js" fn FileSystemProviderObject::read_directory_promise(
   self : FileSystemProviderObject,
   uri : @vscode.Uri,
-) -> @js_async.Promise[Array[@vscode.DirectoryEntry]] =
+) -> @js_async.Promise[Array[@v.JsValue]] =
   #| (provider, uri) => Promise.resolve(provider.readDirectory(uri))
 
 ///|
@@ -3549,8 +3601,10 @@ pub async fn FileSystemProviderObject::read_directory(
   self : FileSystemProviderObject,
   uri : @vscode.Uri,
 ) -> Array[@vscode.DirectoryEntry] {
-  @js_async.Promise::wait(
-    FileSystemProviderObject::read_directory_promise(self, uri),
+  directory_entry_array_from_js(
+    @js_async.Promise::wait(
+      FileSystemProviderObject::read_directory_promise(self, uri),
+    ),
   )
 }
 
@@ -3725,7 +3779,11 @@ pub fn FileSystemProviderObject::new(
     uri => {
       @js_async.Promise::from_async(async fn() { file_stat_to_js(stat(uri)) })
     },
-    uri => @js_async.Promise::from_async(() => read_directory(uri)),
+    uri => {
+      @js_async.Promise::from_async(async fn() {
+        directory_entry_array_to_js(read_directory(uri))
+      })
+    },
     uri => @js_async.Promise::from_async(() => create_directory(uri)),
     uri => @js_async.Promise::from_async(() => read_file(uri)),
     (uri, content, create, overwrite) => {
@@ -3750,9 +3808,7 @@ extern "js" fn file_system_provider_ffi(
   on_did_change_file : @v.JsValue,
   watch : (@vscode.Uri, Bool, Array[String]) -> @vscode.Disposable,
   stat : (@vscode.Uri) -> @js_async.Promise[@v.JsValue],
-  read_directory : (@vscode.Uri) -> @js_async.Promise[
-    Array[@vscode.DirectoryEntry],
-  ],
+  read_directory : (@vscode.Uri) -> @js_async.Promise[Array[@v.JsValue]],
   create_directory : (@vscode.Uri) -> @js_async.Promise[Unit],
   read_file : (@vscode.Uri) -> @js_async.Promise[Bytes],
   write_file : (@vscode.Uri, Bytes, Bool, Bool) -> @js_async.Promise[Unit],
