@@ -343,8 +343,13 @@ extern "js" fn source_control_resource_group_dispose_raw(
   #| (group) => group.dispose()
 
 ///|
-pub impl Disposable for SourceControlResourceGroup with dispose(self) {
+pub fn SourceControlResourceGroup::dispose(self : SourceControlResourceGroup) -> Unit {
   source_control_resource_group_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for SourceControlResourceGroup with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -554,8 +559,13 @@ extern "js" fn source_control_dispose_raw(source : SourceControl) -> Unit =
   #| (source) => source.dispose()
 
 ///|
-pub impl Disposable for SourceControl with dispose(self) {
+pub fn SourceControl::dispose(self : SourceControl) -> Unit {
   source_control_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for SourceControl with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|

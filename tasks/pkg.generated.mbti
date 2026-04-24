@@ -18,7 +18,7 @@ pub fn on_did_start_task() -> @vscode.Event[@vscode.TaskStartEvent]
 
 pub fn on_did_start_task_process() -> @vscode.Event[@vscode.TaskProcessStartEvent]
 
-pub fn[T : @vscode.TaskProvider] register_task_provider(String, T) -> &@vscode.Disposable
+pub fn[T : @vscode.TaskProvider] register_task_provider(String, T) -> @vscode.Disposable
 
 pub fn task_executions() -> Array[@vscode.TaskExecution]
 

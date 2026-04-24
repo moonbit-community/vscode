@@ -22,13 +22,13 @@ pub async fn get_commands(filter_internal? : Bool) -> Array[String]
 
 pub async fn get_commands_contains(String, filter_internal? : Bool) -> Bool
 
-pub fn[X] register_command(String, (CommandArgs) -> X) -> &@vscode.Disposable
+pub fn[X] register_command(String, (CommandArgs) -> X) -> @vscode.Disposable
 
-pub fn[X] register_command_async(String, async (CommandArgs) -> X) -> &@vscode.Disposable
+pub fn[X] register_command_async(String, async (CommandArgs) -> X) -> @vscode.Disposable
 
-pub fn register_text_editor_command(String, (@vscode.TextEditor, @vscode.TextEditorEdit, CommandArgs) -> Unit) -> &@vscode.Disposable
+pub fn register_text_editor_command(String, (@vscode.TextEditor, @vscode.TextEditorEdit, CommandArgs) -> Unit) -> @vscode.Disposable
 
-pub fn register_text_editor_command_async(String, async (@vscode.TextEditor, @vscode.TextEditorEdit, CommandArgs) -> Unit) -> &@vscode.Disposable
+pub fn register_text_editor_command_async(String, async (@vscode.TextEditor, @vscode.TextEditorEdit, CommandArgs) -> Unit) -> @vscode.Disposable
 
 // Errors
 

@@ -318,7 +318,7 @@ extern "js" fn webview_panel_show_options_ffi(
 extern "js" fn window_set_status_bar_message_ffi(
   text : String,
   hide_after : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (text, hideAfter) => {
   #|   const vscode = require("vscode");
   #|   if (hideAfter === undefined || hideAfter === null) {
@@ -417,7 +417,7 @@ extern "js" fn window_create_terminal_with_extension_options_ffi(
 extern "js" fn window_register_tree_data_provider_ffi(
   view_id : String,
   provider : @providers.TreeDataProviderObject[@v.JsValue],
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (viewId, provider) => require("vscode").window.registerTreeDataProvider(viewId, provider)
 
 ///|
@@ -430,14 +430,14 @@ extern "js" fn window_create_tree_view_ffi(
 ///|
 extern "js" fn window_register_uri_handler_ffi(
   handler : @vscode.UriHandler,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (handler) => require("vscode").window.registerUriHandler(handler)
 
 ///|
 extern "js" fn window_register_webview_panel_serializer_ffi(
   view_type : String,
   serializer : @vscode.WebviewPanelSerializer,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (viewType, serializer) =>
   #|   require("vscode").window.registerWebviewPanelSerializer(viewType, serializer)
 
@@ -446,7 +446,7 @@ extern "js" fn window_register_webview_view_provider_ffi(
   view_id : String,
   provider : @providers.WebviewViewProviderObject,
   options : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (viewId, provider, options) => require("vscode").window.registerWebviewViewProvider(viewId, provider, options)
 
 ///|
@@ -454,25 +454,25 @@ extern "js" fn window_register_custom_editor_provider_ffi(
   view_type : String,
   provider : @providers.CustomEditorProviderObject,
   options : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (viewType, provider, options) =>
   #|   require("vscode").window.registerCustomEditorProvider(viewType, provider, options)
 
 ///|
 extern "js" fn window_register_terminal_link_provider_ffi(
   provider : @providers.TerminalLinkProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (provider) => require("vscode").window.registerTerminalLinkProvider(provider)
 
 ///|
 extern "js" fn window_register_terminal_profile_provider_ffi(
   id : String,
   provider : @providers.TerminalProfileProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (id, provider) => require("vscode").window.registerTerminalProfileProvider(id, provider)
 
 ///|
 extern "js" fn window_register_file_decoration_provider_ffi(
   provider : @providers.FileDecorationProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (provider) => require("vscode").window.registerFileDecorationProvider(provider)

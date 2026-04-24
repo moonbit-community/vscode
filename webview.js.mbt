@@ -385,8 +385,13 @@ extern "js" fn webview_panel_dispose_raw(panel : WebviewPanel) -> Unit =
   #| (panel) => panel.dispose()
 
 ///|
-pub impl Disposable for WebviewPanel with dispose(self) {
+pub fn WebviewPanel::dispose(self : WebviewPanel) -> Unit {
   webview_panel_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for WebviewPanel with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|

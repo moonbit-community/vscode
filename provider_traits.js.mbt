@@ -339,7 +339,7 @@ pub(open) trait TextDocumentContentProvider {
 ///|
 pub(open) trait FileSystemProvider {
   on_did_change_file(Self) -> Event[Array[FileChangeEvent]]
-  watch(Self, Uri, Bool, Array[String]) -> &Disposable
+  watch(Self, Uri, Bool, Array[String]) -> Disposable
   async stat(Self, Uri) -> FileStat
   async read_directory(Self, Uri) -> Array[DirectoryEntry]
   async create_directory(Self, Uri) -> Unit

@@ -391,7 +391,7 @@ pub async fn try_select_chat_models(
 pub fn register_tool(
   name : String,
   tool : LanguageModelTool,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   lm_register_tool_ffi(name, tool)
 }
 
@@ -467,7 +467,7 @@ pub async fn invoke_tool(
 pub fn register_mcp_server_definition_provider(
   id : String,
   provider : McpServerDefinitionProvider,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   lm_register_mcp_server_definition_provider_ffi(id, provider)
 }
 
@@ -480,7 +480,7 @@ pub fn register_mcp_server_definition_provider(
 pub fn register_language_model_chat_provider(
   vendor : String,
   provider : LanguageModelChatProvider,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   lm_register_language_model_chat_provider_ffi(vendor, provider)
 }
 

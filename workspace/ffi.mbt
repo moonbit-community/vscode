@@ -172,7 +172,7 @@ extern "js" fn workspace_open_text_document_untitled_ffi(
 extern "js" fn workspace_register_text_document_content_provider_ffi(
   scheme : String,
   provider : @providers.TextDocumentContentProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (scheme, provider) =>
   #|   require("vscode").workspace.registerTextDocumentContentProvider(scheme, provider)
 
@@ -245,7 +245,7 @@ extern "js" fn workspace_register_notebook_serializer_ffi(
   notebook_type : String,
   serializer : @vscode.NotebookSerializer,
   options : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (notebookType, serializer, options) =>
   #|   require("vscode").workspace.registerNotebookSerializer(notebookType, serializer, options)
 
@@ -317,7 +317,7 @@ extern "js" fn workspace_on_did_change_configuration_ffi() -> Event[
 extern "js" fn workspace_register_task_provider_ffi(
   task_type : String,
   provider : @providers.TaskProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (type, provider) => require("vscode").workspace.registerTaskProvider(type, provider)
 
 ///|
@@ -327,7 +327,7 @@ extern "js" fn workspace_register_file_system_provider_ffi(
   is_case_sensitive : @v.JsValue,
   is_readonly : @v.JsValue,
   is_readonly_reason : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (scheme, provider, isCaseSensitive, isReadonly, isReadonlyReason) => {
   #|   const options = {};
   #|   if (isCaseSensitive !== undefined && isCaseSensitive !== null) {

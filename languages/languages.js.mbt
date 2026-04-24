@@ -1310,7 +1310,7 @@ pub fn[T : @vscode.CompletionItemProvider] register_completion_item_provider(
   selector : DocumentSelector,
   provider : T,
   trigger_characters? : Array[String],
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_completion_item_provider_ffi(
     document_selector_to_js(selector),
     completion_item_provider_object(provider),
@@ -1331,7 +1331,7 @@ pub fn[T : @vscode.CompletionItemProvider] register_completion_item_provider(
 pub fn[T : @vscode.InlineCompletionItemProvider] register_inline_completion_item_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_inline_completion_item_provider_ffi(
     document_selector_to_js(selector),
     inline_completion_item_provider_object(provider),
@@ -1353,7 +1353,7 @@ pub fn[T : @vscode.CodeActionProvider] register_code_actions_provider(
   selector : DocumentSelector,
   provider : T,
   metadata? : CodeActionProviderMetadata,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   let metadata_js = match metadata {
     None => @v.JsValue::make(())
     Some(value) => code_action_provider_metadata_to_js(value)
@@ -1378,7 +1378,7 @@ pub fn[T : @vscode.CodeActionProvider] register_code_actions_provider(
 pub fn[T : @vscode.CodeLensProvider] register_code_lens_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_code_lens_provider_ffi(
     document_selector_to_js(selector),
     code_lens_provider_object(provider),
@@ -1398,7 +1398,7 @@ pub fn[T : @vscode.CodeLensProvider] register_code_lens_provider(
 pub fn[T : @vscode.DefinitionProvider] register_definition_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_definition_provider_ffi(
     document_selector_to_js(selector),
     definition_provider_object(provider),
@@ -1418,7 +1418,7 @@ pub fn[T : @vscode.DefinitionProvider] register_definition_provider(
 pub fn[T : @vscode.ImplementationProvider] register_implementation_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_implementation_provider_ffi(
     document_selector_to_js(selector),
     implementation_provider_object(provider),
@@ -1438,7 +1438,7 @@ pub fn[T : @vscode.ImplementationProvider] register_implementation_provider(
 pub fn[T : @vscode.TypeDefinitionProvider] register_type_definition_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_type_definition_provider_ffi(
     document_selector_to_js(selector),
     type_definition_provider_object(provider),
@@ -1458,7 +1458,7 @@ pub fn[T : @vscode.TypeDefinitionProvider] register_type_definition_provider(
 pub fn[T : @vscode.DeclarationProvider] register_declaration_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_declaration_provider_ffi(
     document_selector_to_js(selector),
     declaration_provider_object(provider),
@@ -1478,7 +1478,7 @@ pub fn[T : @vscode.DeclarationProvider] register_declaration_provider(
 pub fn[T : @vscode.HoverProvider] register_hover_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_hover_provider_ffi(
     document_selector_to_js(selector),
     hover_provider_object(provider),
@@ -1497,7 +1497,7 @@ pub fn[T : @vscode.HoverProvider] register_hover_provider(
 pub fn register_evaluatable_expression_provider(
   selector : DocumentSelector,
   provider : EvaluatableExpressionProvider,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_evaluatable_expression_provider_ffi(
     document_selector_to_js(selector),
     provider,
@@ -1519,7 +1519,7 @@ pub fn register_evaluatable_expression_provider(
 pub fn[T : @vscode.InlineValuesProvider] register_inline_values_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_inline_values_provider_ffi(
     document_selector_to_js(selector),
     inline_values_provider_object(provider),
@@ -1539,7 +1539,7 @@ pub fn[T : @vscode.InlineValuesProvider] register_inline_values_provider(
 pub fn[T : @vscode.DocumentHighlightProvider] register_document_highlight_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_document_highlight_provider_ffi(
     document_selector_to_js(selector),
     document_highlight_provider_object(provider),
@@ -1561,7 +1561,7 @@ pub fn[T : @vscode.DocumentSymbolProvider] register_document_symbol_provider(
   selector : DocumentSelector,
   provider : T,
   metadata? : DocumentSymbolProviderMetadata,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   let metadata_js = match metadata {
     None => @v.JsValue::make(())
     Some(value) => document_symbol_provider_metadata_to_js(value)
@@ -1584,7 +1584,7 @@ pub fn[T : @vscode.DocumentSymbolProvider] register_document_symbol_provider(
 /// @returns A {@link Disposable} that unregisters this provider when being disposed.
 pub fn[T : @vscode.WorkspaceSymbolProvider] register_workspace_symbol_provider(
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_workspace_symbol_provider_ffi(
     workspace_symbol_provider_object(provider),
   )
@@ -1603,7 +1603,7 @@ pub fn[T : @vscode.WorkspaceSymbolProvider] register_workspace_symbol_provider(
 pub fn[T : @vscode.ReferenceProvider] register_reference_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_reference_provider_ffi(
     document_selector_to_js(selector),
     reference_provider_object(provider),
@@ -1623,7 +1623,7 @@ pub fn[T : @vscode.ReferenceProvider] register_reference_provider(
 pub fn[T : @vscode.RenameProvider] register_rename_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_rename_provider_ffi(
     document_selector_to_js(selector),
     rename_provider_object(provider),
@@ -1644,7 +1644,7 @@ pub fn[T : @vscode.DocumentSemanticTokensProvider] register_document_semantic_to
   selector : DocumentSelector,
   provider : T,
   legend : SemanticTokensLegend,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_document_semantic_tokens_provider_ffi(
     document_selector_to_js(selector),
     document_semantic_tokens_provider_object(provider),
@@ -1672,7 +1672,7 @@ pub fn[T : @vscode.DocumentRangeSemanticTokensProvider] register_document_range_
   selector : DocumentSelector,
   provider : T,
   legend : SemanticTokensLegend,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_document_range_semantic_tokens_provider_ffi(
     document_selector_to_js(selector),
     document_range_semantic_tokens_provider_object(provider),
@@ -1693,7 +1693,7 @@ pub fn[T : @vscode.DocumentRangeSemanticTokensProvider] register_document_range_
 pub fn[T : @vscode.DocumentFormattingEditProvider] register_document_formatting_edit_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_document_formatting_edit_provider_ffi(
     document_selector_to_js(selector),
     document_formatting_edit_provider_object(provider),
@@ -1717,7 +1717,7 @@ pub fn[T : @vscode.DocumentFormattingEditProvider] register_document_formatting_
 pub fn[T : @vscode.DocumentRangeFormattingEditProvider] register_document_range_formatting_edit_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_document_range_formatting_edit_provider_ffi(
     document_selector_to_js(selector),
     document_range_formatting_edit_provider_object(provider),
@@ -1741,7 +1741,7 @@ pub fn[T : @vscode.OnTypeFormattingEditProvider] register_on_type_formatting_edi
   provider : T,
   first_trigger_character : String,
   more_trigger_characters? : Array[String],
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_on_type_formatting_edit_provider_ffi(
     document_selector_to_js(selector),
     on_type_formatting_edit_provider_object(provider),
@@ -1765,7 +1765,7 @@ pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider(
   selector : DocumentSelector,
   provider : T,
   trigger_characters? : Array[String],
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_signature_help_provider_ffi(
     document_selector_to_js(selector),
     signature_help_provider_object(provider),
@@ -1788,7 +1788,7 @@ pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider_metad
   selector : DocumentSelector,
   provider : T,
   metadata : SignatureHelpProviderMetadata,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_signature_help_provider_metadata_ffi(
     document_selector_to_js(selector),
     signature_help_provider_object(provider),
@@ -1809,7 +1809,7 @@ pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider_metad
 pub fn[T : @vscode.DocumentLinkProvider] register_document_link_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_document_link_provider_ffi(
     document_selector_to_js(selector),
     document_link_provider_object(provider),
@@ -1829,7 +1829,7 @@ pub fn[T : @vscode.DocumentLinkProvider] register_document_link_provider(
 pub fn[T : @vscode.DocumentColorProvider] register_color_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_color_provider_ffi(
     document_selector_to_js(selector),
     document_color_provider_object(provider),
@@ -1849,7 +1849,7 @@ pub fn[T : @vscode.DocumentColorProvider] register_color_provider(
 pub fn[T : @vscode.InlayHintsProvider] register_inlay_hints_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_inlay_hints_provider_ffi(
     document_selector_to_js(selector),
     inlay_hints_provider_object(provider),
@@ -1873,7 +1873,7 @@ pub fn[T : @vscode.InlayHintsProvider] register_inlay_hints_provider(
 pub fn[T : @vscode.FoldingRangeProvider] register_folding_range_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_folding_range_provider_ffi(
     document_selector_to_js(selector),
     folding_range_provider_object(provider),
@@ -1893,7 +1893,7 @@ pub fn[T : @vscode.FoldingRangeProvider] register_folding_range_provider(
 pub fn[T : @vscode.SelectionRangeProvider] register_selection_range_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_selection_range_provider_ffi(
     document_selector_to_js(selector),
     selection_range_provider_object(provider),
@@ -1909,7 +1909,7 @@ pub fn[T : @vscode.SelectionRangeProvider] register_selection_range_provider(
 pub fn[T : @vscode.CallHierarchyProvider] register_call_hierarchy_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_call_hierarchy_provider_ffi(
     document_selector_to_js(selector),
     call_hierarchy_provider_object(provider),
@@ -1925,7 +1925,7 @@ pub fn[T : @vscode.CallHierarchyProvider] register_call_hierarchy_provider(
 pub fn[T : @vscode.TypeHierarchyProvider] register_type_hierarchy_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_type_hierarchy_provider_ffi(
     document_selector_to_js(selector),
     type_hierarchy_provider_object(provider),
@@ -1945,7 +1945,7 @@ pub fn[T : @vscode.TypeHierarchyProvider] register_type_hierarchy_provider(
 pub fn[T : @vscode.LinkedEditingRangeProvider] register_linked_editing_range_provider(
   selector : DocumentSelector,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_linked_editing_range_provider_ffi(
     document_selector_to_js(selector),
     linked_editing_range_provider_object(provider),
@@ -1972,7 +1972,7 @@ pub fn[T : @vscode.DocumentDropEditProvider] register_document_drop_edit_provide
   selector : DocumentSelector,
   provider : T,
   metadata? : DocumentDropEditProviderMetadata,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   let metadata_js = match metadata {
     None => @v.JsValue::make(())
     Some(value) => document_drop_edit_provider_metadata_to_js(value)
@@ -2007,7 +2007,7 @@ pub fn[T : @vscode.DocumentPasteEditProvider] register_document_paste_edit_provi
   selector : DocumentSelector,
   provider : T,
   metadata : DocumentPasteProviderMetadata,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_register_document_paste_edit_provider_ffi(
     document_selector_to_js(selector),
     document_paste_edit_provider_object(provider),
@@ -2024,7 +2024,7 @@ pub fn[T : @vscode.DocumentPasteEditProvider] register_document_paste_edit_provi
 pub fn set_language_configuration(
   language : String,
   configuration : LanguageConfiguration,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   languages_set_language_configuration_ffi(
     language,
     language_configuration_to_js(configuration),

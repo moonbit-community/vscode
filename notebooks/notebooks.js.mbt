@@ -156,8 +156,13 @@ extern "js" fn notebook_controller_dispose_raw(
   #| (controller) => controller.dispose()
 
 ///|
-pub impl @vscode.Disposable for NotebookController with dispose(self) {
+pub fn NotebookController::dispose(self : NotebookController) -> Unit {
   notebook_controller_dispose_raw(self)
+}
+
+///|
+pub impl @vscode.AsDisposable for NotebookController with as_disposable(self) {
+  @v.JsValue::make(self).cast()
 }
 
 ///|
@@ -505,7 +510,7 @@ pub fn NotebookCellStatusBarItemProvider::new(
 pub fn register_notebook_cell_status_bar_item_provider(
   notebook_type : String,
   provider : NotebookCellStatusBarItemProvider,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   notebooks_register_notebook_cell_status_bar_item_provider_ffi(
     notebook_type, provider,
   )

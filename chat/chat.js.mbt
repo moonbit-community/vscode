@@ -452,7 +452,7 @@ pub fn register_chat_context_provider(
   provider_id : String,
   provide_chat_context_for_resource : (Uri, CancellationToken) -> Any?,
   resolve_chat_context? : (Any, CancellationToken) -> Any?,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   let resolve_callback : ((Any, CancellationToken) -> @v.JsValue)? = match
     resolve_chat_context {
     None => None
@@ -526,15 +526,14 @@ extern "js" fn chat_participant_dispose_raw(
   #| (participant) => participant.dispose()
 
 ///|
-pub impl @vscode.Disposable for ChatParticipant with dispose(self) {
+pub fn ChatParticipant::dispose(self : ChatParticipant) -> Unit {
   chat_participant_dispose_raw(self)
 }
 
 ///|
-pub extern "js" fn ChatParticipant::as_disposable(
-  self : ChatParticipant,
-) -> &@vscode.Disposable =
-  #| (participant) => ({ dispose: () => participant.dispose() })
+pub impl @vscode.AsDisposable for ChatParticipant with as_disposable(self) {
+  @v.JsValue::make(self).cast()
+}
 
 ///|
 /// All of the chat messages so far in the current chat session. Currently, only chat messages for the current participant are included.

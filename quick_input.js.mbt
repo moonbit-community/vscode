@@ -89,6 +89,11 @@ extern "js" fn quick_input_dispose_raw(input : QuickInput) -> Unit =
   #| (input) => input.dispose()
 
 ///|
-pub impl Disposable for QuickInput with dispose(self) {
+pub fn QuickInput::dispose(self : QuickInput) -> Unit {
   quick_input_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for QuickInput with as_disposable(self) {
+  disposable_from_js(self)
 }

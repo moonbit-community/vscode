@@ -15,7 +15,7 @@ let event_command = "vscode-mbt-tests.event"
 
 ///|
 priv struct SmokeDisposable {
-  name : String
+  disposable : @vscode.Disposable
 }
 
 ///|
@@ -27,13 +27,17 @@ priv struct EventState {
 }
 
 ///|
-impl @vscode.Disposable for SmokeDisposable with dispose(self) {
-  write_disposable_marker(self.name)
+impl @vscode.AsDisposable for SmokeDisposable with as_disposable(self) {
+  self.disposable
 }
 
 ///|
-fn SmokeDisposable::new(name : String) -> &@vscode.Disposable {
-  SmokeDisposable::{ name }
+fn SmokeDisposable::new(name : String) -> SmokeDisposable {
+  SmokeDisposable::{
+    disposable: @vscode.Disposable::new(fn() {
+      write_disposable_marker(name)
+    }),
+  }
 }
 
 ///|
@@ -112,7 +116,7 @@ async fn event_behavior(_args : @commands.CommandArgs) -> String {
     state.sync_count = state.sync_count + 1
   })
   emitter.fire("sync-1")
-  @vscode.disposable_dispose(sync_subscription)
+  sync_subscription.dispose()
   emitter.fire("sync-ignored")
   let async_subscription = emitter.event().subscribe_async(async fn(value) {
     wait_next_tick()
@@ -122,7 +126,7 @@ async fn event_behavior(_args : @commands.CommandArgs) -> String {
   emitter.fire("async-1")
   wait_next_tick()
   wait_next_tick()
-  @vscode.disposable_dispose(async_subscription)
+  async_subscription.dispose()
   emitter.fire("async-ignored")
   wait_next_tick()
   wait_next_tick()
@@ -137,16 +141,16 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     alignment=@vscode.StatusBarAlignment::Left,
     priority=100,
   )
-  ctx.subscribe(SmokeDisposable::{ name: "trait-disposable" })
-  ctx.subscribe(@vscode.disposable_new(fn() {
+  ctx.subscribe(SmokeDisposable::new("as-disposable"))
+  ctx.subscribe(@vscode.Disposable::new(fn() {
     write_disposable_marker("callback-disposable")
   }))
   ctx.subscribe(
-    @vscode.disposable_from([
-      @vscode.disposable_new(fn() {
+    @vscode.Disposable::from([
+      @vscode.Disposable::new(fn() {
         write_disposable_marker("combined-callback-disposable")
       }),
-      SmokeDisposable::new("combined-trait-disposable"),
+      SmokeDisposable::new("combined-as-disposable").as_disposable(),
     ]),
   )
   ctx.subscribe(status)

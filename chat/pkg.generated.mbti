@@ -13,7 +13,7 @@ pub fn create_chat_participant(String, async (ChatRequest, ChatContext, ChatResp
 
 pub fn create_chat_participant_with_handler(String, ChatRequestHandler) -> ChatParticipant
 
-pub fn register_chat_context_provider(@vscode.DocumentSelector, String, (@vscode.Uri, @vscode.CancellationToken) -> @vscode.Any?, resolve_chat_context? : (@vscode.Any, @vscode.CancellationToken) -> @vscode.Any?) -> &@vscode.Disposable
+pub fn register_chat_context_provider(@vscode.DocumentSelector, String, (@vscode.Uri, @vscode.CancellationToken) -> @vscode.Any?, resolve_chat_context? : (@vscode.Any, @vscode.CancellationToken) -> @vscode.Any?) -> @vscode.Disposable
 
 pub fn try_create_chat_participant(String, async (ChatRequest, ChatContext, ChatResponseStream, @vscode.CancellationToken) -> ChatResult?) -> ChatParticipant?
 
@@ -62,9 +62,9 @@ pub(all) struct ChatParticipant {
   mut followup_provider : ChatFollowupProvider?
   on_did_receive_feedback : @vscode.Event[ChatResultFeedback]
 }
-pub fn ChatParticipant::as_disposable(Self) -> &@vscode.Disposable
+pub fn ChatParticipant::dispose(Self) -> Unit
 pub fn ChatParticipant::set_request_handler_async(Self, async (ChatRequest, ChatContext, ChatResponseStream, @vscode.CancellationToken) -> ChatResult?) -> Unit
-pub impl @vscode.Disposable for ChatParticipant
+pub impl @vscode.AsDisposable for ChatParticipant
 
 pub struct ChatPromptReference {
   id : String

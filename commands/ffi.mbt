@@ -5,7 +5,7 @@
 extern "js" fn register_command_ffi(
   command : String,
   handler : CommandHandler,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (command, handler) => require("vscode").commands.registerCommand(
   #|   command,
   #|   async (...args) => await handler(args),
@@ -15,7 +15,7 @@ extern "js" fn register_command_ffi(
 extern "js" fn register_text_editor_command_ffi(
   command : String,
   handler : TextEditorCommandHandler,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (command, handler) => require("vscode").commands.registerTextEditorCommand(
   #|   command,
   #|   async (editor, edit, ...args) => await handler(editor, edit, args),

@@ -25,7 +25,7 @@ pub type EventEmitter[T]
 pub fn[T] Event::subscribe(
   self : Event[T],
   listener : (T) -> Unit,
-) -> &Disposable {
+) -> Disposable {
   event_subscribe_ffi(
     JsValue::make(self),
     value => listener(value.cast()),
@@ -37,7 +37,7 @@ pub fn[T] Event::subscribe(
 pub fn[T] Event::subscribe_async(
   self : Event[T],
   listener : async (T) -> Unit,
-) -> &Disposable {
+) -> Disposable {
   self.subscribe(value => {
     ignore(@js_async.Promise::from_async(() => listener(value)))
   })
@@ -68,8 +68,13 @@ pub fn[T] EventEmitter::fire(self : EventEmitter[T], value : T) -> Unit {
 
 ///|
 /// Dispose this object and free resources.
-pub impl[T] Disposable for EventEmitter[T] with dispose(self) {
+pub fn[T] EventEmitter::dispose(self : EventEmitter[T]) -> Unit {
   event_emitter_dispose_ffi(JsValue::make(self))
+}
+
+///|
+pub impl[T] AsDisposable for EventEmitter[T] with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -99,8 +104,13 @@ extern "js" fn cancellation_token_source_dispose_raw(
   #| (source) => source.dispose()
 
 ///|
-pub impl Disposable for CancellationTokenSource with dispose(self) {
+pub fn CancellationTokenSource::dispose(self : CancellationTokenSource) -> Unit {
   cancellation_token_source_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for CancellationTokenSource with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -727,15 +737,14 @@ extern "js" fn diagnostic_collection_dispose_raw(
   #| (collection) => collection.dispose()
 
 ///|
-pub impl Disposable for DiagnosticCollection with dispose(self) {
+pub fn DiagnosticCollection::dispose(self : DiagnosticCollection) -> Unit {
   diagnostic_collection_dispose_raw(self)
 }
 
 ///|
-pub extern "js" fn DiagnosticCollection::as_disposable(
-  self : DiagnosticCollection,
-) -> &Disposable =
-  #| (collection) => collection
+pub impl AsDisposable for DiagnosticCollection with as_disposable(self) {
+  disposable_from_js(self)
+}
 
 ///|
 /// Get the diagnostics for a given resource. *Note* that you cannot
@@ -1428,8 +1437,13 @@ extern "js" fn language_status_item_dispose_raw(
   #| (item) => item.dispose()
 
 ///|
-pub impl Disposable for LanguageStatusItem with dispose(self) {
+pub fn LanguageStatusItem::dispose(self : LanguageStatusItem) -> Unit {
   language_status_item_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for LanguageStatusItem with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -4728,8 +4742,13 @@ extern "js" fn text_editor_decoration_type_dispose_raw(
   #| (decoration) => decoration.dispose()
 
 ///|
-pub impl Disposable for TextEditorDecorationType with dispose(self) {
+pub fn TextEditorDecorationType::dispose(self : TextEditorDecorationType) -> Unit {
   text_editor_decoration_type_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for TextEditorDecorationType with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -5188,7 +5207,7 @@ extern "js" fn event_subscribe_ffi(
   event : JsValue,
   listener : (JsValue) -> Unit,
   this_arg : JsValue,
-) -> &Disposable =
+) -> Disposable =
   #| (event, listener, thisArg) => event((e) => listener(e), thisArg)
 
 ///|
@@ -5258,8 +5277,13 @@ extern "js" fn output_channel_dispose_raw(channel : OutputChannel) -> Unit =
   #| (channel) => channel.dispose()
 
 ///|
-pub impl Disposable for OutputChannel with dispose(self) {
+pub fn OutputChannel::dispose(self : OutputChannel) -> Unit {
   output_channel_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for OutputChannel with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -5358,8 +5382,13 @@ extern "js" fn log_output_channel_dispose_raw(
   #| (channel) => channel.dispose()
 
 ///|
-pub impl Disposable for LogOutputChannel with dispose(self) {
+pub fn LogOutputChannel::dispose(self : LogOutputChannel) -> Unit {
   log_output_channel_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for LogOutputChannel with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -5379,8 +5408,13 @@ extern "js" fn status_bar_item_dispose_raw(item : StatusBarItem) -> Unit =
   #| (item) => item.dispose()
 
 ///|
-pub impl Disposable for StatusBarItem with dispose(self) {
+pub fn StatusBarItem::dispose(self : StatusBarItem) -> Unit {
   status_bar_item_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for StatusBarItem with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -5732,8 +5766,13 @@ extern "js" fn terminal_dispose_raw(terminal : Terminal) -> Unit =
   #| (terminal) => terminal.dispose()
 
 ///|
-pub impl Disposable for Terminal with dispose(self) {
+pub fn Terminal::dispose(self : Terminal) -> Unit {
   terminal_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for Terminal with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -6112,8 +6151,13 @@ extern "js" fn quick_pick_dispose_raw(picker : JsValue) -> Unit =
   #| (picker) => picker.dispose()
 
 ///|
-pub impl[T] Disposable for QuickPick[T] with dispose(self) {
+pub fn[T] QuickPick::dispose(self : QuickPick[T]) -> Unit {
   quick_pick_dispose_raw(JsValue::make(self))
+}
+
+///|
+pub impl[T] AsDisposable for QuickPick[T] with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -6642,8 +6686,13 @@ extern "js" fn input_box_dispose_raw(input : InputBox) -> Unit =
   #| (input) => input.dispose()
 
 ///|
-pub impl Disposable for InputBox with dispose(self) {
+pub fn InputBox::dispose(self : InputBox) -> Unit {
   input_box_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for InputBox with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -7345,8 +7394,13 @@ extern "js" fn file_system_watcher_dispose_raw(
   #| (watcher) => watcher.dispose()
 
 ///|
-pub impl Disposable for FileSystemWatcher with dispose(self) {
+pub fn FileSystemWatcher::dispose(self : FileSystemWatcher) -> Unit {
   file_system_watcher_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for FileSystemWatcher with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -9393,8 +9447,13 @@ extern "js" fn comment_controller_dispose_raw(
   #| (controller) => controller.dispose()
 
 ///|
-pub impl Disposable for CommentController with dispose(self) {
+pub fn CommentController::dispose(self : CommentController) -> Unit {
   comment_controller_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for CommentController with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -9609,8 +9668,13 @@ extern "js" fn comment_thread_dispose_raw(thread : CommentThread) -> Unit =
   #| (thread) => thread.dispose()
 
 ///|
-pub impl Disposable for CommentThread with dispose(self) {
+pub fn CommentThread::dispose(self : CommentThread) -> Unit {
   comment_thread_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for CommentThread with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|
@@ -14074,8 +14138,13 @@ extern "js" fn telemetry_logger_dispose_raw(logger : TelemetryLogger) -> Unit =
   #| (logger) => logger.dispose()
 
 ///|
-pub impl Disposable for TelemetryLogger with dispose(self) {
+pub fn TelemetryLogger::dispose(self : TelemetryLogger) -> Unit {
   telemetry_logger_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for TelemetryLogger with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|

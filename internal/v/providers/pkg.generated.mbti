@@ -102,13 +102,13 @@ pub type FileSystemProviderObject
 pub async fn FileSystemProviderObject::copy(Self, @vscode.Uri, @vscode.Uri, Bool) -> Unit
 pub async fn FileSystemProviderObject::create_directory(Self, @vscode.Uri) -> Unit
 pub async fn FileSystemProviderObject::delete(Self, @vscode.Uri, Bool) -> Unit
-pub fn FileSystemProviderObject::new(@vscode.Event[Array[@vscode.FileChangeEvent]], (@vscode.Uri, Bool, Array[String]) -> &@vscode.Disposable, async (@vscode.Uri) -> @vscode.FileStat, async (@vscode.Uri) -> Array[@vscode.DirectoryEntry], async (@vscode.Uri) -> Unit, async (@vscode.Uri) -> Bytes, async (@vscode.Uri, Bytes, Bool, Bool) -> Unit, async (@vscode.Uri, Bool) -> Unit, async (@vscode.Uri, @vscode.Uri, Bool) -> Unit, copy_file? : async (@vscode.Uri, @vscode.Uri, Bool) -> Unit) -> Self
+pub fn FileSystemProviderObject::new(@vscode.Event[Array[@vscode.FileChangeEvent]], (@vscode.Uri, Bool, Array[String]) -> @vscode.Disposable, async (@vscode.Uri) -> @vscode.FileStat, async (@vscode.Uri) -> Array[@vscode.DirectoryEntry], async (@vscode.Uri) -> Unit, async (@vscode.Uri) -> Bytes, async (@vscode.Uri, Bytes, Bool, Bool) -> Unit, async (@vscode.Uri, Bool) -> Unit, async (@vscode.Uri, @vscode.Uri, Bool) -> Unit, copy_file? : async (@vscode.Uri, @vscode.Uri, Bool) -> Unit) -> Self
 pub fn FileSystemProviderObject::on_did_change_file(Self) -> @vscode.Event[Array[@vscode.FileChangeEvent]]
 pub async fn FileSystemProviderObject::read_directory(Self, @vscode.Uri) -> Array[@vscode.DirectoryEntry]
 pub async fn FileSystemProviderObject::read_file(Self, @vscode.Uri) -> Bytes
 pub async fn FileSystemProviderObject::rename(Self, @vscode.Uri, @vscode.Uri, Bool) -> Unit
 pub async fn FileSystemProviderObject::stat(Self, @vscode.Uri) -> @vscode.FileStat
-pub fn FileSystemProviderObject::watch(Self, @vscode.Uri, Bool, Array[String]) -> &@vscode.Disposable
+pub fn FileSystemProviderObject::watch(Self, @vscode.Uri, Bool, Array[String]) -> @vscode.Disposable
 pub async fn FileSystemProviderObject::write_file(Self, @vscode.Uri, Bytes, Bool, Bool) -> Unit
 pub impl @vscode.FileSystemProvider for FileSystemProviderObject
 

@@ -43,7 +43,7 @@ extern "js" fn notebooks_status_bar_item_provider_ffi(
 extern "js" fn notebooks_register_notebook_cell_status_bar_item_provider_ffi(
   notebook_type : String,
   provider : NotebookCellStatusBarItemProvider,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (notebookType, provider) =>
   #|   require("vscode").notebooks.registerNotebookCellStatusBarItemProvider(notebookType, provider)
 

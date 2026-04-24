@@ -484,8 +484,13 @@ extern "js" fn test_controller_dispose_raw(controller : TestController) -> Unit 
   #| (controller) => controller.dispose()
 
 ///|
-pub impl @vscode.Disposable for TestController with dispose(self) {
+pub fn TestController::dispose(self : TestController) -> Unit {
   test_controller_dispose_raw(self)
+}
+
+///|
+pub impl @vscode.AsDisposable for TestController with as_disposable(self) {
+  @v.JsValue::make(self).cast()
 }
 
 ///|
@@ -583,8 +588,13 @@ extern "js" fn test_run_profile_dispose_raw(profile : TestRunProfile) -> Unit =
   #| (profile) => profile.dispose()
 
 ///|
-pub impl @vscode.Disposable for TestRunProfile with dispose(self) {
+pub fn TestRunProfile::dispose(self : TestRunProfile) -> Unit {
   test_run_profile_dispose_raw(self)
+}
+
+///|
+pub impl @vscode.AsDisposable for TestRunProfile with as_disposable(self) {
+  @v.JsValue::make(self).cast()
 }
 
 ///|

@@ -8,12 +8,6 @@ import {
 // Values
 pub fn activate_async(ExtensionContext, async (ExtensionContext) -> Unit) -> Unit
 
-pub fn disposable_dispose(&Disposable) -> Unit
-
-pub fn disposable_from(Array[&Disposable]) -> &Disposable
-
-pub fn disposable_new(() -> Unit) -> &Disposable
-
 pub fn version() -> String
 
 // Errors
@@ -152,9 +146,10 @@ pub(all) struct CancellationToken {
 
 pub type CancellationTokenSource
 pub fn CancellationTokenSource::cancel(Self) -> Unit
+pub fn CancellationTokenSource::dispose(Self) -> Unit
 pub fn CancellationTokenSource::new() -> Self
 pub fn CancellationTokenSource::token(Self) -> CancellationToken
-pub impl Disposable for CancellationTokenSource
+pub impl AsDisposable for CancellationTokenSource
 
 pub type Clipboard
 pub async fn Clipboard::read_text(Self) -> String
@@ -312,13 +307,14 @@ pub fn CommentController::clear_commenting_range_provider(Self) -> Unit
 pub fn CommentController::clear_options(Self) -> Unit
 pub fn CommentController::clear_reaction_handler(Self) -> Unit
 pub fn CommentController::create_comment_thread(Self, Uri, Range, Array[Comment]) -> CommentThread
+pub fn CommentController::dispose(Self) -> Unit
 pub fn CommentController::id(Self) -> String
 pub fn CommentController::label(Self) -> String
 pub fn CommentController::options(Self) -> CommentOptions?
 pub fn[T : CommentingRangeProvider] CommentController::set_commenting_range_provider(Self, T) -> Unit
 pub fn CommentController::set_options(Self, CommentOptions) -> Unit
 pub fn CommentController::set_reaction_handler(Self, async (Comment, CommentReaction) -> Unit) -> Unit
-pub impl Disposable for CommentController
+pub impl AsDisposable for CommentController
 
 pub(all) enum CommentMode {
   Editing
@@ -353,6 +349,7 @@ pub fn CommentThread::clear_range(Self) -> Unit
 pub fn CommentThread::collapsible_state(Self) -> CommentThreadCollapsibleState
 pub fn CommentThread::comments(Self) -> Array[Comment]
 pub fn CommentThread::context_value(Self) -> String?
+pub fn CommentThread::dispose(Self) -> Unit
 pub fn CommentThread::is_equal(Self, Self) -> Bool
 pub fn CommentThread::label(Self) -> String?
 pub fn CommentThread::range(Self) -> Range?
@@ -364,7 +361,7 @@ pub fn CommentThread::set_label(Self, String) -> Unit
 pub fn CommentThread::set_range(Self, Range) -> Unit
 pub fn CommentThread::state(Self) -> CommentThreadState?
 pub fn CommentThread::uri(Self) -> Uri
-pub impl Disposable for CommentThread
+pub impl AsDisposable for CommentThread
 
 pub(all) enum CommentThreadCanReply {
   BoolValue(Bool)
@@ -519,9 +516,10 @@ pub(all) enum ConfigurationTargetValue {
 }
 
 pub type CustomDocument
+pub fn CustomDocument::dispose(Self) -> Unit
 pub fn CustomDocument::new(Uri, () -> Unit) -> Self
 pub fn CustomDocument::uri(Self) -> Uri
-pub impl Disposable for CustomDocument
+pub impl AsDisposable for CustomDocument
 
 pub type CustomDocumentBackup
 pub fn CustomDocumentBackup::delete(Self) -> Unit
@@ -747,13 +745,13 @@ pub fn DiagnosticCodeValue::as_int(Self) -> Int?
 pub fn DiagnosticCodeValue::as_text(Self) -> String?
 
 pub type DiagnosticCollection
-pub fn DiagnosticCollection::as_disposable(Self) -> &Disposable
 pub fn DiagnosticCollection::clear(Self) -> Unit
 pub fn DiagnosticCollection::delete(Self, Uri) -> Unit
+pub fn DiagnosticCollection::dispose(Self) -> Unit
 pub fn DiagnosticCollection::get(Self, Uri) -> Array[Diagnostic]?
 pub fn DiagnosticCollection::name(Self) -> String
 pub fn DiagnosticCollection::set(Self, Uri, Array[Diagnostic]) -> Unit
-pub impl Disposable for DiagnosticCollection
+pub impl AsDisposable for DiagnosticCollection
 
 pub type DiagnosticRelatedInformation
 pub fn DiagnosticRelatedInformation::location(Self) -> Location
@@ -783,6 +781,12 @@ pub struct DirectoryEntry {
   name : String
   file_type : FileType
 }
+
+pub type Disposable
+pub fn Disposable::dispose(Self) -> Unit
+pub fn Disposable::from(Array[Self]) -> Self
+pub fn Disposable::new(() -> Unit) -> Self
+pub impl AsDisposable for Disposable
 
 pub type DocumentDropEdit
 pub fn DocumentDropEdit::additional_edit(Self) -> WorkspaceEdit?
@@ -931,14 +935,15 @@ pub(all) struct EnvironmentVariableScope {
 pub fn EnvironmentVariableScope::new(workspace_folder? : WorkspaceFolder) -> Self
 
 pub type Event[T]
-pub fn[T] Event::subscribe(Self[T], (T) -> Unit) -> &Disposable
-pub fn[T] Event::subscribe_async(Self[T], async (T) -> Unit) -> &Disposable
+pub fn[T] Event::subscribe(Self[T], (T) -> Unit) -> Disposable
+pub fn[T] Event::subscribe_async(Self[T], async (T) -> Unit) -> Disposable
 
 pub type EventEmitter[T]
+pub fn[T] EventEmitter::dispose(Self[T]) -> Unit
 pub fn[T] EventEmitter::event(Self[T]) -> Event[T]
 pub fn[T] EventEmitter::fire(Self[T], T) -> Unit
 pub fn[T] EventEmitter::new() -> Self[T]
-pub impl[T] Disposable for EventEmitter[T]
+pub impl[T] AsDisposable for EventEmitter[T]
 
 pub type Extension[T]
 pub async fn[T] Extension::activate(Self[T]) -> T
@@ -959,7 +964,7 @@ pub fn ExtensionContext::extension_path(Self) -> String
 pub fn ExtensionContext::extension_uri(Self) -> Uri
 pub fn ExtensionContext::global_state(Self) -> Memento
 pub fn ExtensionContext::secrets(Self) -> SecretStorage
-pub fn ExtensionContext::subscribe(Self, &Disposable) -> Unit
+pub fn[T : AsDisposable] ExtensionContext::subscribe(Self, T) -> Unit
 pub fn ExtensionContext::workspace_state(Self) -> Memento
 
 pub(all) enum ExtensionKind {
@@ -1068,13 +1073,14 @@ pub fn FileSystemError::no_permissions(message_or_uri? : StringOrUri) -> Self
 pub fn FileSystemError::unavailable(message_or_uri? : StringOrUri) -> Self
 
 pub type FileSystemWatcher
+pub fn FileSystemWatcher::dispose(Self) -> Unit
 pub fn FileSystemWatcher::ignore_change_events(Self) -> Bool
 pub fn FileSystemWatcher::ignore_create_events(Self) -> Bool
 pub fn FileSystemWatcher::ignore_delete_events(Self) -> Bool
 pub fn FileSystemWatcher::on_did_change(Self) -> Event[Uri]
 pub fn FileSystemWatcher::on_did_create(Self) -> Event[Uri]
 pub fn FileSystemWatcher::on_did_delete(Self) -> Event[Uri]
-pub impl Disposable for FileSystemWatcher
+pub impl AsDisposable for FileSystemWatcher
 
 pub(all) enum FileType {
   Unknown
@@ -1271,6 +1277,7 @@ pub fn InputBox::clear_title(Self) -> Unit
 pub fn InputBox::clear_total_steps(Self) -> Unit
 pub fn InputBox::clear_validation_message(Self) -> Unit
 pub fn InputBox::clear_value_selection(Self) -> Unit
+pub fn InputBox::dispose(Self) -> Unit
 pub fn InputBox::enabled(Self) -> Bool
 pub fn InputBox::hide(Self) -> Unit
 pub fn InputBox::ignore_focus_out(Self) -> Bool
@@ -1301,7 +1308,7 @@ pub fn InputBox::total_steps(Self) -> Int?
 pub fn InputBox::validation_message(Self) -> InputBoxValidationResult?
 pub fn InputBox::value(Self) -> String
 pub fn InputBox::value_selection(Self) -> Array[Int]?
-pub impl Disposable for InputBox
+pub impl AsDisposable for InputBox
 
 pub(all) struct InputBoxOptions {
   mut title : String?
@@ -1349,6 +1356,7 @@ pub fn LanguageSelector::as_document_selector(Self) -> DocumentSelector
 pub type LanguageStatusItem
 pub fn LanguageStatusItem::accessibility_information(Self) -> AccessibilityInformation?
 pub fn LanguageStatusItem::clear_accessibility_information(Self) -> Unit
+pub fn LanguageStatusItem::dispose(Self) -> Unit
 pub fn LanguageStatusItem::selector(Self) -> DocumentSelector
 pub fn LanguageStatusItem::set_accessibility_information(Self, AccessibilityInformation) -> Unit
 pub fn LanguageStatusItem::set_selector(Self, DocumentSelector) -> Unit
@@ -1356,7 +1364,7 @@ pub fn LanguageStatusItem::set_severity(Self, LanguageStatusSeverity) -> Unit
 pub fn LanguageStatusItem::set_text(Self, String) -> Unit
 pub fn LanguageStatusItem::severity(Self) -> LanguageStatusSeverity
 pub fn LanguageStatusItem::text(Self) -> String
-pub impl Disposable for LanguageStatusItem
+pub impl AsDisposable for LanguageStatusItem
 
 pub(all) enum LanguageStatusSeverity {
   Information
@@ -1396,13 +1404,14 @@ pub(all) enum LogLevel {
 
 pub type LogOutputChannel
 pub fn LogOutputChannel::debug(Self, String) -> Unit
+pub fn LogOutputChannel::dispose(Self) -> Unit
 pub fn LogOutputChannel::error(Self, String) -> Unit
 pub fn LogOutputChannel::info(Self, String) -> Unit
 pub fn LogOutputChannel::log_level(Self) -> LogLevel
 pub fn LogOutputChannel::on_did_change_log_level(Self) -> Event[LogLevel]
 pub fn LogOutputChannel::trace(Self, String) -> Unit
 pub fn LogOutputChannel::warn(Self, String) -> Unit
-pub impl Disposable for LogOutputChannel
+pub impl AsDisposable for LogOutputChannel
 
 pub type MarkdownString
 pub fn MarkdownString::append_codeblock(Self, String, language? : String) -> Self
@@ -1670,11 +1679,12 @@ pub type OutputChannel
 pub fn OutputChannel::append(Self, String) -> Unit
 pub fn OutputChannel::append_line(Self, String) -> Unit
 pub fn OutputChannel::clear(Self) -> Unit
+pub fn OutputChannel::dispose(Self) -> Unit
 pub fn OutputChannel::hide(Self) -> Unit
 pub fn OutputChannel::name(Self) -> String
 pub fn OutputChannel::replace(Self, String) -> Unit
 pub fn OutputChannel::show(Self, preserve_focus? : Bool) -> Unit
-pub impl Disposable for OutputChannel
+pub impl AsDisposable for OutputChannel
 
 pub(all) enum OverviewRulerLane {
   Left
@@ -1765,9 +1775,10 @@ pub(all) struct Pseudoterminal {
 pub fn Pseudoterminal::new(Event[String], (TerminalDimensions?) -> Unit, () -> Unit, on_did_override_dimensions? : Event[TerminalDimensions?], on_did_close? : Event[Int?], on_did_change_name? : Event[String], handle_input? : (String) -> Unit, set_dimensions? : (TerminalDimensions) -> Unit) -> Self
 
 pub type QuickInput
+pub fn QuickInput::dispose(Self) -> Unit
 pub fn QuickInput::hide(Self) -> Unit
 pub fn QuickInput::show(Self) -> Unit
-pub impl Disposable for QuickInput
+pub impl AsDisposable for QuickInput
 
 pub struct QuickInputButton {
   iconPath : IconPath
@@ -1790,6 +1801,7 @@ pub fn[T] QuickPick::clear_prompt(Self[T]) -> Unit
 pub fn QuickPick::clear_step(Self[QuickPickItem]) -> Unit
 pub fn QuickPick::clear_title(Self[QuickPickItem]) -> Unit
 pub fn QuickPick::clear_total_steps(Self[QuickPickItem]) -> Unit
+pub fn[T] QuickPick::dispose(Self[T]) -> Unit
 pub fn QuickPick::enabled(Self[QuickPickItem]) -> Bool
 pub fn QuickPick::hide(Self[QuickPickItem]) -> Unit
 pub fn QuickPick::ignore_focus_out(Self[QuickPickItem]) -> Bool
@@ -1829,7 +1841,7 @@ pub fn QuickPick::step(Self[QuickPickItem]) -> Int?
 pub fn QuickPick::title(Self[QuickPickItem]) -> String?
 pub fn QuickPick::total_steps(Self[QuickPickItem]) -> Int?
 pub fn[T] QuickPick::value(Self[T]) -> String
-pub impl[T] Disposable for QuickPick[T]
+pub impl[T] AsDisposable for QuickPick[T]
 
 pub(all) struct QuickPickItem {
   mut label : String
@@ -2101,6 +2113,7 @@ pub fn SourceControl::clear_quick_diff_provider(Self) -> Unit
 pub fn SourceControl::commit_template(Self) -> String?
 pub fn SourceControl::count(Self) -> Int?
 pub fn SourceControl::create_resource_group(Self, String, String) -> SourceControlResourceGroup
+pub fn SourceControl::dispose(Self) -> Unit
 pub fn SourceControl::id(Self) -> String
 pub fn SourceControl::input_box(Self) -> SourceControlInputBox
 pub fn SourceControl::label(Self) -> String
@@ -2109,7 +2122,7 @@ pub fn SourceControl::set_accept_input_command(Self, Command) -> Unit
 pub fn SourceControl::set_commit_template(Self, String) -> Unit
 pub fn SourceControl::set_count(Self, Int) -> Unit
 pub fn[T : QuickDiffProvider] SourceControl::set_quick_diff_provider(Self, T) -> Unit
-pub impl Disposable for SourceControl
+pub impl AsDisposable for SourceControl
 
 pub type SourceControlInputBox
 pub fn SourceControlInputBox::enabled(Self) -> Bool
@@ -2128,6 +2141,7 @@ pub type SourceControlResourceGroup
 pub fn SourceControlResourceGroup::clear_context_value(Self) -> Unit
 pub fn SourceControlResourceGroup::clear_hide_when_empty(Self) -> Unit
 pub fn SourceControlResourceGroup::context_value(Self) -> String?
+pub fn SourceControlResourceGroup::dispose(Self) -> Unit
 pub fn SourceControlResourceGroup::hide_when_empty(Self) -> Bool?
 pub fn SourceControlResourceGroup::id(Self) -> String
 pub fn SourceControlResourceGroup::label(Self) -> String
@@ -2136,7 +2150,7 @@ pub fn SourceControlResourceGroup::set_context_value(Self, String?) -> Unit
 pub fn SourceControlResourceGroup::set_hide_when_empty(Self, Bool?) -> Unit
 pub fn SourceControlResourceGroup::set_label(Self, String) -> Unit
 pub fn SourceControlResourceGroup::set_resource_states(Self, Array[SourceControlResourceState]) -> Unit
-pub impl Disposable for SourceControlResourceGroup
+pub impl AsDisposable for SourceControlResourceGroup
 
 pub struct SourceControlResourceState {
   resourceUri : Uri
@@ -2166,6 +2180,7 @@ pub fn StatusBarItem::clear_name(Self) -> Unit
 pub fn StatusBarItem::clear_tooltip(Self) -> Unit
 pub fn StatusBarItem::color(Self) -> ColorValue?
 pub fn StatusBarItem::command(Self) -> CommandOrString?
+pub fn StatusBarItem::dispose(Self) -> Unit
 pub fn StatusBarItem::hide(Self) -> Unit
 pub fn StatusBarItem::id(Self) -> String
 pub fn StatusBarItem::name(Self) -> String?
@@ -2180,7 +2195,7 @@ pub fn StatusBarItem::set_tooltip(Self, Tooltip) -> Unit
 pub fn StatusBarItem::show(Self) -> Unit
 pub fn StatusBarItem::text(Self) -> String
 pub fn StatusBarItem::tooltip(Self) -> Tooltip?
-pub impl Disposable for StatusBarItem
+pub impl AsDisposable for StatusBarItem
 
 pub(all) enum StringOrBool {
   Text(String)
@@ -2442,13 +2457,14 @@ pub struct TaskStartEvent {
 pub fn TaskStartEvent::new(TaskExecution) -> Self
 
 pub type TelemetryLogger
+pub fn TelemetryLogger::dispose(Self) -> Unit
 pub fn TelemetryLogger::is_errors_enabled(Self) -> Bool
 pub fn TelemetryLogger::is_usage_enabled(Self) -> Bool
 pub fn TelemetryLogger::log_error(Self, JsError, data? : Array[(String, Any)]) -> Unit
 pub fn TelemetryLogger::log_error_event(Self, String, data? : Array[(String, Any)]) -> Unit
 pub fn TelemetryLogger::log_usage(Self, String, data? : Array[(String, Any)]) -> Unit
 pub fn TelemetryLogger::on_did_change_enable_states(Self) -> Event[Self]
-pub impl Disposable for TelemetryLogger
+pub impl AsDisposable for TelemetryLogger
 
 pub struct TelemetryLoggerOptions {
   ignore_built_in_common_properties : Bool?
@@ -2468,6 +2484,7 @@ pub fn TelemetryTrustedValue::value(Self) -> Any
 
 pub type Terminal
 pub fn Terminal::creation_options(Self) -> TerminalCreationOptions?
+pub fn Terminal::dispose(Self) -> Unit
 pub fn Terminal::exit_status(Self) -> TerminalExitStatus?
 pub fn Terminal::hide(Self) -> Unit
 pub fn Terminal::name(Self) -> String
@@ -2476,7 +2493,7 @@ pub fn Terminal::send_text(Self, String, should_execute? : Bool) -> Unit
 pub fn Terminal::shell_integration(Self) -> TerminalShellIntegration?
 pub fn Terminal::show(Self, preserve_focus? : Bool) -> Unit
 pub fn Terminal::state(Self) -> TerminalState
-pub impl Disposable for Terminal
+pub impl AsDisposable for Terminal
 
 pub(all) enum TerminalCreationOptions {
   Terminal(TerminalOptions)
@@ -2708,7 +2725,8 @@ pub(all) enum TextEditorCursorStyle {
 pub struct TextEditorDecorationType {
   key : String
 }
-pub impl Disposable for TextEditorDecorationType
+pub fn TextEditorDecorationType::dispose(Self) -> Unit
+pub impl AsDisposable for TextEditorDecorationType
 
 pub type TextEditorEdit
 pub fn TextEditorEdit::delete_range(Self, Range) -> Unit
@@ -3043,6 +3061,7 @@ pub fn WebviewOptions::new(enable_scripts? : Bool, enable_forms? : Bool, enable_
 pub type WebviewPanel
 pub fn WebviewPanel::active(Self) -> Bool
 pub fn WebviewPanel::clear_icon_path(Self) -> Unit
+pub fn WebviewPanel::dispose(Self) -> Unit
 pub fn WebviewPanel::icon_path(Self) -> IconPath?
 pub fn WebviewPanel::on_did_change_view_state(Self) -> Event[WebviewPanelOnDidChangeViewStateEvent]
 pub fn WebviewPanel::on_did_dispose(Self) -> Event[Unit]
@@ -3055,7 +3074,7 @@ pub fn WebviewPanel::view_column(Self) -> ViewColumn?
 pub fn WebviewPanel::view_type(Self) -> String
 pub fn WebviewPanel::visible(Self) -> Bool
 pub fn WebviewPanel::webview(Self) -> Webview
-pub impl Disposable for WebviewPanel
+pub impl AsDisposable for WebviewPanel
 
 pub struct WebviewPanelOnDidChangeViewStateEvent {
   webviewPanel : WebviewPanel
@@ -3205,6 +3224,10 @@ pub fn WorkspaceFoldersChangeEvent::new(added? : Array[WorkspaceFolder], removed
 // Type aliases
 
 // Traits
+pub(open) trait AsDisposable {
+  as_disposable(Self) -> Disposable
+}
+
 pub(open) trait AuthenticationProvider {
   on_did_change_sessions(Self) -> Event[AuthenticationProviderAuthenticationSessionsChangeEvent]
   async get_sessions(Self, Array[String]?, AuthenticationProviderSessionOptions) -> Array[AuthenticationSession]
@@ -3265,10 +3288,6 @@ pub(open) trait DefinitionProvider {
   async provide_definition(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
 }
 
-pub(open) trait Disposable {
-  dispose(Self) -> Unit
-}
-
 pub(open) trait DocumentColorProvider {
   async provide_document_colors(Self, TextDocument, CancellationToken) -> Array[ColorInformation]?
   async provide_color_presentations(Self, Color, ColorPresentationContext, CancellationToken) -> Array[ColorPresentation]?
@@ -3322,7 +3341,7 @@ pub(open) trait FileDecorationProvider {
 
 pub(open) trait FileSystemProvider {
   on_did_change_file(Self) -> Event[Array[FileChangeEvent]]
-  watch(Self, Uri, Bool, Array[String]) -> &Disposable
+  watch(Self, Uri, Bool, Array[String]) -> Disposable
   async stat(Self, Uri) -> FileStat
   async read_directory(Self, Uri) -> Array[DirectoryEntry]
   async create_directory(Self, Uri) -> Unit

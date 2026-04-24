@@ -90,15 +90,15 @@ pub async fn open_text_document_untitled(language? : String, content? : String, 
 
 pub async fn open_text_document_uri(@vscode.Uri, encoding? : String) -> @vscode.TextDocument
 
-pub fn[T : @vscode.FileSystemProvider] register_file_system_provider(String, T, is_case_sensitive? : Bool, is_readonly? : Bool) -> &@vscode.Disposable
+pub fn[T : @vscode.FileSystemProvider] register_file_system_provider(String, T, is_case_sensitive? : Bool, is_readonly? : Bool) -> @vscode.Disposable
 
-pub fn[T : @vscode.FileSystemProvider] register_file_system_provider_readonly_reason(String, T, @vscode.MarkdownString, is_case_sensitive? : Bool) -> &@vscode.Disposable
+pub fn[T : @vscode.FileSystemProvider] register_file_system_provider_readonly_reason(String, T, @vscode.MarkdownString, is_case_sensitive? : Bool) -> @vscode.Disposable
 
-pub fn register_notebook_serializer(String, @vscode.NotebookSerializer, options? : @vscode.NotebookDocumentContentOptions) -> &@vscode.Disposable
+pub fn register_notebook_serializer(String, @vscode.NotebookSerializer, options? : @vscode.NotebookDocumentContentOptions) -> @vscode.Disposable
 
-pub fn[T : @vscode.TaskProvider] register_task_provider(String, T) -> &@vscode.Disposable
+pub fn[T : @vscode.TaskProvider] register_task_provider(String, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.TextDocumentContentProvider] register_text_document_content_provider(String, T) -> &@vscode.Disposable
+pub fn[T : @vscode.TextDocumentContentProvider] register_text_document_content_provider(String, T) -> @vscode.Disposable
 
 pub fn root_path() -> String?
 

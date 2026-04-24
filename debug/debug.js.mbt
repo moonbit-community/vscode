@@ -341,8 +341,13 @@ extern "js" fn debug_adapter_dispose_raw(adapter : DebugAdapter) -> Unit =
   #| (adapter) => adapter.dispose()
 
 ///|
-pub impl @vscode.Disposable for DebugAdapter with dispose(self) {
+pub fn DebugAdapter::dispose(self : DebugAdapter) -> Unit {
   debug_adapter_dispose_raw(self)
+}
+
+///|
+pub impl @vscode.AsDisposable for DebugAdapter with as_disposable(self) {
+  @v.JsValue::make(self).cast()
 }
 
 ///|
@@ -602,7 +607,7 @@ pub fn register_debug_configuration_provider(
   debug_type : String,
   provider : DebugConfigurationProvider,
   trigger_kind? : DebugConfigurationProviderTriggerKind,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   debug_register_debug_configuration_provider_ffi(
     debug_type,
     provider,
@@ -621,7 +626,7 @@ pub fn register_debug_configuration_provider(
 pub fn register_debug_adapter_descriptor_factory(
   debug_type : String,
   factory : DebugAdapterDescriptorFactory,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   debug_register_debug_adapter_descriptor_factory_ffi(debug_type, factory)
 }
 
@@ -634,7 +639,7 @@ pub fn register_debug_adapter_descriptor_factory(
 pub fn register_debug_adapter_tracker_factory(
   debug_type : String,
   factory : DebugAdapterTrackerFactory,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   debug_register_debug_adapter_tracker_factory_ffi(debug_type, factory)
 }
 

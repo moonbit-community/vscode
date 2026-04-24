@@ -1626,7 +1626,7 @@ pub fn create_webview_panel_show_options(
 /// @param text The message to show, supports icon substitution as in status bar {@link StatusBarItem.text items}.
 /// @param hideAfterTimeout Timeout in milliseconds after which the message will be disposed.
 /// @returns A disposable which hides the status bar message.
-pub fn set_status_bar_message(text : String) -> &@vscode.Disposable {
+pub fn set_status_bar_message(text : String) -> @vscode.Disposable {
   window_set_status_bar_message_ffi(text, @v.JsValue::make(()))
 }
 
@@ -1640,7 +1640,7 @@ pub fn set_status_bar_message(text : String) -> &@vscode.Disposable {
 pub fn set_status_bar_message_timeout(
   text : String,
   timeout_ms : Int,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_set_status_bar_message_ffi(text, @v.JsValue::make(timeout_ms))
 }
 
@@ -1654,7 +1654,7 @@ pub fn set_status_bar_message_timeout(
 pub fn[X] set_status_bar_message_until(
   text : String,
   wait_until : async () -> X,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   let promise = @js_async.Promise::from_async(() => wait_until())
   window_set_status_bar_message_ffi(text, @v.JsValue::make(promise))
 }
@@ -1891,7 +1891,7 @@ pub fn[T] register_tree_data_provider(
   on_did_change_tree_data? : Event[T?],
   get_parent? : async (T) -> T?,
   resolve_tree_item? : async (TreeItem, T, CancellationToken) -> TreeItem?,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   let raw : @providers.TreeDataProviderObject[@v.JsValue] = @v.JsValue::make(
     tree_data_provider_object(
       get_tree_item, get_children, on_did_change_tree_data, get_parent, resolve_tree_item,
@@ -1937,7 +1937,7 @@ pub fn[T] create_tree_view(
 /// @returns A {@link Disposable disposable} that unregisters the handler.
 pub fn register_uri_handler(
   handler : @vscode.UriHandler,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_uri_handler_ffi(handler)
 }
 
@@ -1955,7 +1955,7 @@ pub fn register_uri_handler(
 pub fn register_webview_panel_serializer(
   view_type : String,
   serializer : @vscode.WebviewPanelSerializer,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_webview_panel_serializer_ffi(view_type, serializer)
 }
 
@@ -1971,7 +1971,7 @@ pub fn[T : @vscode.WebviewViewProvider] register_webview_view_provider(
   view_id : String,
   provider : T,
   options? : WebviewViewOptions,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_webview_view_provider_ffi(
     view_id,
     webview_view_provider_object(provider),
@@ -1996,7 +1996,7 @@ pub fn[T : @vscode.CustomEditorProvider] register_custom_editor_provider(
   view_type : String,
   provider : T,
   options? : CustomEditorProviderOptions,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_custom_editor_provider_ffi(
     view_type,
     custom_editor_provider_object(provider),
@@ -2009,7 +2009,7 @@ pub fn[T : @vscode.CustomTextEditorProvider] register_custom_text_editor_provide
   view_type : String,
   provider : T,
   options? : CustomEditorProviderOptions,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_custom_editor_provider_ffi(
     view_type,
     custom_text_editor_provider_object(provider),
@@ -2022,7 +2022,7 @@ pub fn[T : @vscode.CustomReadonlyEditorProvider] register_custom_readonly_editor
   view_type : String,
   provider : T,
   options? : CustomEditorProviderOptions,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_custom_editor_provider_ffi(
     view_type,
     custom_readonly_editor_provider_object(provider),
@@ -2036,7 +2036,7 @@ pub fn[T : @vscode.CustomReadonlyEditorProvider] register_custom_readonly_editor
 /// @returns Disposable that unregisters the provider.
 pub fn[T : @vscode.TerminalLinkProvider] register_terminal_link_provider(
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_terminal_link_provider_ffi(
     terminal_link_provider_object(provider),
   )
@@ -2051,7 +2051,7 @@ pub fn[T : @vscode.TerminalLinkProvider] register_terminal_link_provider(
 pub fn[T : @vscode.TerminalProfileProvider] register_terminal_profile_provider(
   id : String,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_terminal_profile_provider_ffi(
     id,
     terminal_profile_provider_object(provider),
@@ -2065,7 +2065,7 @@ pub fn[T : @vscode.TerminalProfileProvider] register_terminal_profile_provider(
 /// @returns A {@link Disposable} that unregisters the provider.
 pub fn[T : @vscode.FileDecorationProvider] register_file_decoration_provider(
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   window_register_file_decoration_provider_ffi(
     file_decoration_provider_object(provider),
   )

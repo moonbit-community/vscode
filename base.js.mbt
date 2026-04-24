@@ -6,55 +6,41 @@
 type JsValue = @v.JsValue
 
 ///|
-/// A disposable resource contract returned by VS Code APIs.
-pub(open) trait Disposable {
-  dispose(Self) -> Unit
+/// A disposable resource handle returned by VS Code APIs.
+pub type Disposable
+
+///|
+/// A value that can expose a VS Code disposable handle.
+pub(open) trait AsDisposable {
+  as_disposable(Self) -> Disposable
 }
 
 ///|
-/// Dispose a resource returned by VS Code or implemented as a MoonBit trait object.
-pub fn disposable_dispose(disposable : &Disposable) -> Unit {
-  disposable_dispose_ffi(disposable_to_js_ffi(disposable))
+pub impl AsDisposable for Disposable with as_disposable(self) {
+  self
 }
 
 ///|
 /// Create a disposable that invokes a callback when disposed.
-pub fn disposable_new(call_on_dispose : () -> Unit) -> &Disposable {
-  disposable_new_ffi(call_on_dispose)
-}
-
-///|
-/// Combine many disposables into one disposable.
-pub fn disposable_from(disposables : Array[&Disposable]) -> &Disposable {
-  disposable_from_ffi(disposables.map(disposable_to_js_ffi))
-}
-
-///|
-extern "js" fn disposable_new_ffi(call_on_dispose : () -> Unit) -> &Disposable =
+pub extern "js" fn Disposable::new(call_on_dispose : () -> Unit) -> Disposable =
   #| (callOnDispose) => new (require("vscode").Disposable)(() => callOnDispose())
 
 ///|
-extern "js" fn disposable_from_ffi(disposables : Array[JsValue]) -> &Disposable =
+/// Combine many disposables into one disposable.
+pub extern "js" fn Disposable::from(
+  disposables : Array[Disposable],
+) -> Disposable =
   #| (disposables) => require("vscode").Disposable.from(...disposables)
 
 ///|
-extern "js" fn disposable_dispose_ffi(disposable : JsValue) -> Unit =
+/// Dispose this object.
+pub extern "js" fn Disposable::dispose(self : Disposable) -> Unit =
   #| (disposable) => disposable.dispose()
 
 ///|
-extern "js" fn disposable_to_js_ffi(disposable : &Disposable) -> JsValue =
-  #| (disposable) => {
-  #|   const value =
-  #|     disposable && typeof disposable.dispose === "function"
-  #|       ? disposable
-  #|       : disposable &&
-  #|           disposable.self !== undefined &&
-  #|           disposable.method_table &&
-  #|           typeof disposable.method_table.method_0 === "function"
-  #|         ? { dispose: () => disposable.method_table.method_0(disposable.self) }
-  #|         : disposable;
-  #|   return value;
-  #| }
+fn[T] disposable_from_js(value : T) -> Disposable {
+  JsValue::make(value).cast()
+}
 
 ///|
 /// VS Code extension host version.

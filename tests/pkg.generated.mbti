@@ -46,6 +46,7 @@ pub fn TestController::clear_resolve_handler(Self) -> Unit
 pub fn TestController::create_run_profile(Self, String, TestRunProfileKind, (TestRunRequest, @vscode.CancellationToken) -> Unit, is_default? : Bool, tag? : TestTag, supports_continuous_run? : Bool) -> TestRunProfile
 pub fn TestController::create_test_item(Self, String, String, uri? : @vscode.Uri) -> TestItem
 pub fn TestController::create_test_run(Self, TestRunRequest, name? : String, persist? : Bool) -> TestRun
+pub fn TestController::dispose(Self) -> Unit
 pub fn TestController::id(Self) -> String
 pub fn TestController::invalidate_test_results(Self, items? : TestItemOrMany) -> Unit
 pub fn TestController::label(Self) -> String
@@ -53,7 +54,7 @@ pub fn TestController::remove_root_item(Self, String) -> Unit
 pub fn TestController::root_items_size(Self) -> Int
 pub fn TestController::set_refresh_handler(Self, (@vscode.CancellationToken) -> Unit) -> Unit
 pub fn TestController::set_resolve_handler(Self, (TestItem?) -> Unit) -> Unit
-pub impl @vscode.Disposable for TestController
+pub impl @vscode.AsDisposable for TestController
 
 pub type TestCoverageCount
 pub fn TestCoverageCount::covered(Self) -> Int
@@ -130,11 +131,12 @@ pub fn TestRun::token(Self) -> @vscode.CancellationToken
 
 pub type TestRunProfile
 pub fn TestRunProfile::clear_configure_handler(Self) -> Unit
+pub fn TestRunProfile::dispose(Self) -> Unit
 pub fn TestRunProfile::kind(Self) -> TestRunProfileKind
 pub fn TestRunProfile::on_did_change_default(Self) -> @vscode.Event[Bool]
 pub fn TestRunProfile::set_configure_handler(Self, () -> Unit) -> Unit
 pub fn TestRunProfile::tag(Self) -> TestTag?
-pub impl @vscode.Disposable for TestRunProfile
+pub impl @vscode.AsDisposable for TestRunProfile
 
 pub(all) enum TestRunProfileKind {
   Run

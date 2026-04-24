@@ -237,7 +237,7 @@ extern "js" fn debug_register_debug_configuration_provider_ffi(
   debug_type : String,
   provider : DebugConfigurationProvider,
   trigger_kind : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (debugType, provider, triggerKind) =>
   #|   require("vscode").debug.registerDebugConfigurationProvider(
   #|     debugType,
@@ -249,7 +249,7 @@ extern "js" fn debug_register_debug_configuration_provider_ffi(
 extern "js" fn debug_register_debug_adapter_descriptor_factory_ffi(
   debug_type : String,
   factory : DebugAdapterDescriptorFactory,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (debugType, factory) =>
   #|   require("vscode").debug.registerDebugAdapterDescriptorFactory(debugType, factory)
 
@@ -257,7 +257,7 @@ extern "js" fn debug_register_debug_adapter_descriptor_factory_ffi(
 extern "js" fn debug_register_debug_adapter_tracker_factory_ffi(
   debug_type : String,
   factory : DebugAdapterTrackerFactory,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (debugType, factory) =>
   #|   require("vscode").debug.registerDebugAdapterTrackerFactory(debugType, factory)
 

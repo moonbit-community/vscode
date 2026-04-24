@@ -90,31 +90,31 @@ pub fn progress_options(@vscode.ProgressLocationValue, title? : String, cancella
 
 pub fn[T] progress_report_message_increment(@vscode.Progress[T], String, increment? : Int) -> Unit
 
-pub fn[T : @vscode.CustomEditorProvider] register_custom_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> &@vscode.Disposable
+pub fn[T : @vscode.CustomEditorProvider] register_custom_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> @vscode.Disposable
 
-pub fn[T : @vscode.CustomReadonlyEditorProvider] register_custom_readonly_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> &@vscode.Disposable
+pub fn[T : @vscode.CustomReadonlyEditorProvider] register_custom_readonly_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> @vscode.Disposable
 
-pub fn[T : @vscode.CustomTextEditorProvider] register_custom_text_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> &@vscode.Disposable
+pub fn[T : @vscode.CustomTextEditorProvider] register_custom_text_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> @vscode.Disposable
 
-pub fn[T : @vscode.FileDecorationProvider] register_file_decoration_provider(T) -> &@vscode.Disposable
+pub fn[T : @vscode.FileDecorationProvider] register_file_decoration_provider(T) -> @vscode.Disposable
 
-pub fn[T : @vscode.TerminalLinkProvider] register_terminal_link_provider(T) -> &@vscode.Disposable
+pub fn[T : @vscode.TerminalLinkProvider] register_terminal_link_provider(T) -> @vscode.Disposable
 
-pub fn[T : @vscode.TerminalProfileProvider] register_terminal_profile_provider(String, T) -> &@vscode.Disposable
+pub fn[T : @vscode.TerminalProfileProvider] register_terminal_profile_provider(String, T) -> @vscode.Disposable
 
-pub fn[T] register_tree_data_provider(String, async (T) -> @vscode.TreeItem, async (T?) -> Array[T]?, on_did_change_tree_data? : @vscode.Event[T?], get_parent? : async (T) -> T?, resolve_tree_item? : async (@vscode.TreeItem, T, @vscode.CancellationToken) -> @vscode.TreeItem?) -> &@vscode.Disposable
+pub fn[T] register_tree_data_provider(String, async (T) -> @vscode.TreeItem, async (T?) -> Array[T]?, on_did_change_tree_data? : @vscode.Event[T?], get_parent? : async (T) -> T?, resolve_tree_item? : async (@vscode.TreeItem, T, @vscode.CancellationToken) -> @vscode.TreeItem?) -> @vscode.Disposable
 
-pub fn register_uri_handler(@vscode.UriHandler) -> &@vscode.Disposable
+pub fn register_uri_handler(@vscode.UriHandler) -> @vscode.Disposable
 
-pub fn register_webview_panel_serializer(String, @vscode.WebviewPanelSerializer) -> &@vscode.Disposable
+pub fn register_webview_panel_serializer(String, @vscode.WebviewPanelSerializer) -> @vscode.Disposable
 
-pub fn[T : @vscode.WebviewViewProvider] register_webview_view_provider(String, T, options? : @vscode.WebviewViewOptions) -> &@vscode.Disposable
+pub fn[T : @vscode.WebviewViewProvider] register_webview_view_provider(String, T, options? : @vscode.WebviewViewOptions) -> @vscode.Disposable
 
-pub fn set_status_bar_message(String) -> &@vscode.Disposable
+pub fn set_status_bar_message(String) -> @vscode.Disposable
 
-pub fn set_status_bar_message_timeout(String, Int) -> &@vscode.Disposable
+pub fn set_status_bar_message_timeout(String, Int) -> @vscode.Disposable
 
-pub fn[X] set_status_bar_message_until(String, async () -> X) -> &@vscode.Disposable
+pub fn[X] set_status_bar_message_until(String, async () -> X) -> @vscode.Disposable
 
 pub async fn show_error_message(String, options? : @vscode.MessageOptions) -> Unit
 

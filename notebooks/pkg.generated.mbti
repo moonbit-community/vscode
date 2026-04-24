@@ -12,7 +12,7 @@ pub fn create_notebook_controller_with_handler(String, String, String, async (Ar
 
 pub fn create_renderer_messaging(String) -> NotebookRendererMessaging
 
-pub fn register_notebook_cell_status_bar_item_provider(String, NotebookCellStatusBarItemProvider) -> &@vscode.Disposable
+pub fn register_notebook_cell_status_bar_item_provider(String, NotebookCellStatusBarItemProvider) -> @vscode.Disposable
 
 pub fn try_create_renderer_messaging(String) -> NotebookRendererMessaging?
 
@@ -65,11 +65,12 @@ pub fn NotebookCellStatusBarItemProvider::new(async (@vscode.NotebookCell, @vsco
 
 pub type NotebookController
 pub fn NotebookController::create_notebook_cell_execution(Self, @vscode.NotebookCell) -> NotebookCellExecution
+pub fn NotebookController::dispose(Self) -> Unit
 pub fn NotebookController::id(Self) -> String
 pub fn NotebookController::label(Self) -> String
 pub fn NotebookController::notebook_type(Self) -> String
 pub fn NotebookController::update_notebook_affinity(Self, @vscode.NotebookDocument, NotebookControllerAffinity) -> Unit
-pub impl @vscode.Disposable for NotebookController
+pub impl @vscode.AsDisposable for NotebookController
 
 pub(all) enum NotebookControllerAffinity {
   Default

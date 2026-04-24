@@ -330,7 +330,7 @@ pub fn[T : @vscode.AuthenticationProvider] register_authentication_provider(
   label : String,
   provider : T,
   options? : AuthenticationProviderOptions,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   let options_js = match options {
     None => @v.JsValue::make(())
     Some(value) => authentication_provider_options_to_js(value)

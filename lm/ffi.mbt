@@ -46,7 +46,7 @@ extern "js" fn lm_try_select_chat_models_ffi(
 extern "js" fn lm_register_tool_ffi(
   name : String,
   tool : LanguageModelTool,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (name, tool) => require("vscode").lm.registerTool(name, tool)
 
 ///|
@@ -73,14 +73,14 @@ extern "js" fn lm_invoke_tool_ffi(
 extern "js" fn lm_register_mcp_server_definition_provider_ffi(
   id : String,
   provider : McpServerDefinitionProvider,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (id, provider) => require("vscode").lm.registerMcpServerDefinitionProvider(id, provider)
 
 ///|
 extern "js" fn lm_register_language_model_chat_provider_ffi(
   vendor : String,
   provider : LanguageModelChatProvider,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (vendor, provider) => require("vscode").lm.registerLanguageModelChatProvider(vendor, provider)
 
 ///|

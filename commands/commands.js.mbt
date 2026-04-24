@@ -96,7 +96,7 @@ pub fn[X] CommandArgs::get(self : CommandArgs, index : Int) -> X? {
 pub fn[X] register_command(
   command : String,
   handler : (CommandArgs) -> X,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   register_command_ffi(command, args => {
     to_json_value(handler(command_args_from_js(args)))
   })
@@ -116,7 +116,7 @@ pub fn[X] register_command(
 pub fn[X] register_command_async(
   command : String,
   handler : async (CommandArgs) -> X,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   register_command_ffi(command, args => {
     let promise = @js_async.Promise::from_async(() => {
       handler(command_args_from_js(args))
@@ -142,7 +142,7 @@ pub fn[X] register_command_async(
 pub fn register_text_editor_command(
   command : String,
   handler : (TextEditor, TextEditorEdit, CommandArgs) -> Unit,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   register_text_editor_command_ffi(command, (editor, edit, args) => {
     handler(editor, edit, command_args_from_js(args))
     to_json_value(())
@@ -166,7 +166,7 @@ pub fn register_text_editor_command(
 pub fn register_text_editor_command_async(
   command : String,
   handler : async (TextEditor, TextEditorEdit, CommandArgs) -> Unit,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   register_text_editor_command_ffi(command, (editor, edit, args) => {
     let promise = @js_async.Promise::from_async(() => {
       handler(editor, edit, command_args_from_js(args))

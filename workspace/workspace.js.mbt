@@ -871,7 +871,7 @@ pub async fn open_text_document_untitled(
 pub fn[T : @vscode.TextDocumentContentProvider] register_text_document_content_provider(
   scheme : String,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   workspace_register_text_document_content_provider_ffi(
     scheme,
     text_document_content_provider_object(provider),
@@ -1055,7 +1055,7 @@ pub fn register_notebook_serializer(
   notebook_type : String,
   serializer : @vscode.NotebookSerializer,
   options? : NotebookDocumentContentOptions,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   workspace_register_notebook_serializer_ffi(
     notebook_type,
     serializer,
@@ -1178,7 +1178,7 @@ pub fn on_did_change_configuration() -> Event[ConfigurationChangeEvent] {
 pub fn[T : @vscode.TaskProvider] register_task_provider(
   task_type : String,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   workspace_register_task_provider_ffi(
     task_type,
     task_provider_object(provider),
@@ -1200,7 +1200,7 @@ pub fn[T : @vscode.FileSystemProvider] register_file_system_provider(
   provider : T,
   is_case_sensitive? : Bool,
   is_readonly? : Bool,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   workspace_register_file_system_provider_ffi(
     scheme,
     file_system_provider_object(provider),
@@ -1225,7 +1225,7 @@ pub fn[T : @vscode.FileSystemProvider] register_file_system_provider_readonly_re
   provider : T,
   reason : MarkdownString,
   is_case_sensitive? : Bool,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   workspace_register_file_system_provider_ffi(
     scheme,
     file_system_provider_object(provider),

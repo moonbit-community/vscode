@@ -34,11 +34,11 @@ pub fn on_did_start_debug_session() -> @vscode.Event[@vscode.DebugSession]
 
 pub fn on_did_terminate_debug_session() -> @vscode.Event[@vscode.DebugSession]
 
-pub fn register_debug_adapter_descriptor_factory(String, DebugAdapterDescriptorFactory) -> &@vscode.Disposable
+pub fn register_debug_adapter_descriptor_factory(String, DebugAdapterDescriptorFactory) -> @vscode.Disposable
 
-pub fn register_debug_adapter_tracker_factory(String, DebugAdapterTrackerFactory) -> &@vscode.Disposable
+pub fn register_debug_adapter_tracker_factory(String, DebugAdapterTrackerFactory) -> @vscode.Disposable
 
-pub fn register_debug_configuration_provider(String, DebugConfigurationProvider, trigger_kind? : DebugConfigurationProviderTriggerKind) -> &@vscode.Disposable
+pub fn register_debug_configuration_provider(String, DebugConfigurationProvider, trigger_kind? : DebugConfigurationProviderTriggerKind) -> @vscode.Disposable
 
 pub fn remove_breakpoints(Array[@vscode.Breakpoint]) -> Unit
 
@@ -62,9 +62,10 @@ pub async fn stop_debugging(session? : @vscode.DebugSession) -> Unit
 pub struct DebugAdapter {
   on_did_send_message : @vscode.Event[DebugProtocolMessage]
 }
+pub fn DebugAdapter::dispose(Self) -> Unit
 pub fn DebugAdapter::handle_message(Self, DebugProtocolMessage) -> Unit
 pub fn DebugAdapter::new(@vscode.Event[DebugProtocolMessage], (DebugProtocolMessage) -> Unit, dispose? : () -> Unit) -> Self
-pub impl @vscode.Disposable for DebugAdapter
+pub impl @vscode.AsDisposable for DebugAdapter
 
 pub type DebugAdapterDescriptor
 pub fn DebugAdapterDescriptor::from_executable(DebugAdapterExecutable) -> Self

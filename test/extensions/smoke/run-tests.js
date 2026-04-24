@@ -37,10 +37,10 @@ function assertDisposablesWereDisposed(disposeMarker) {
   }
   const entries = fs.readFileSync(disposeMarker, 'utf8').split(/\r?\n/);
   const expectedEntries = [
-    'trait-disposable',
+    'as-disposable',
     'callback-disposable',
     'combined-callback-disposable',
-    'combined-trait-disposable'
+    'combined-as-disposable'
   ];
   const missingEntries = expectedEntries.filter(entry => !entries.includes(entry));
   if (missingEntries.length > 0) {

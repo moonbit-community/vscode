@@ -20,73 +20,73 @@ pub fn match_document(@vscode.DocumentSelector, @vscode.TextDocument) -> Int
 
 pub fn on_did_change_diagnostics() -> @vscode.Event[@vscode.DiagnosticChangeEvent]
 
-pub fn[T : @vscode.CallHierarchyProvider] register_call_hierarchy_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.CallHierarchyProvider] register_call_hierarchy_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.CodeActionProvider] register_code_actions_provider(@vscode.DocumentSelector, T, metadata? : @vscode.CodeActionProviderMetadata) -> &@vscode.Disposable
+pub fn[T : @vscode.CodeActionProvider] register_code_actions_provider(@vscode.DocumentSelector, T, metadata? : @vscode.CodeActionProviderMetadata) -> @vscode.Disposable
 
-pub fn[T : @vscode.CodeLensProvider] register_code_lens_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.CodeLensProvider] register_code_lens_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentColorProvider] register_color_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentColorProvider] register_color_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.CompletionItemProvider] register_completion_item_provider(@vscode.DocumentSelector, T, trigger_characters? : Array[String]) -> &@vscode.Disposable
+pub fn[T : @vscode.CompletionItemProvider] register_completion_item_provider(@vscode.DocumentSelector, T, trigger_characters? : Array[String]) -> @vscode.Disposable
 
-pub fn[T : @vscode.DeclarationProvider] register_declaration_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.DeclarationProvider] register_declaration_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.DefinitionProvider] register_definition_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.DefinitionProvider] register_definition_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentDropEditProvider] register_document_drop_edit_provider(@vscode.DocumentSelector, T, metadata? : @vscode.DocumentDropEditProviderMetadata) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentDropEditProvider] register_document_drop_edit_provider(@vscode.DocumentSelector, T, metadata? : @vscode.DocumentDropEditProviderMetadata) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentFormattingEditProvider] register_document_formatting_edit_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentFormattingEditProvider] register_document_formatting_edit_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentHighlightProvider] register_document_highlight_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentHighlightProvider] register_document_highlight_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentLinkProvider] register_document_link_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentLinkProvider] register_document_link_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentPasteEditProvider] register_document_paste_edit_provider(@vscode.DocumentSelector, T, @vscode.DocumentPasteProviderMetadata) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentPasteEditProvider] register_document_paste_edit_provider(@vscode.DocumentSelector, T, @vscode.DocumentPasteProviderMetadata) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentRangeFormattingEditProvider] register_document_range_formatting_edit_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentRangeFormattingEditProvider] register_document_range_formatting_edit_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentRangeSemanticTokensProvider] register_document_range_semantic_tokens_provider(@vscode.DocumentSelector, T, @vscode.SemanticTokensLegend) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentRangeSemanticTokensProvider] register_document_range_semantic_tokens_provider(@vscode.DocumentSelector, T, @vscode.SemanticTokensLegend) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentSemanticTokensProvider] register_document_semantic_tokens_provider(@vscode.DocumentSelector, T, @vscode.SemanticTokensLegend) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentSemanticTokensProvider] register_document_semantic_tokens_provider(@vscode.DocumentSelector, T, @vscode.SemanticTokensLegend) -> @vscode.Disposable
 
-pub fn[T : @vscode.DocumentSymbolProvider] register_document_symbol_provider(@vscode.DocumentSelector, T, metadata? : @vscode.DocumentSymbolProviderMetadata) -> &@vscode.Disposable
+pub fn[T : @vscode.DocumentSymbolProvider] register_document_symbol_provider(@vscode.DocumentSelector, T, metadata? : @vscode.DocumentSymbolProviderMetadata) -> @vscode.Disposable
 
-pub fn register_evaluatable_expression_provider(@vscode.DocumentSelector, EvaluatableExpressionProvider) -> &@vscode.Disposable
+pub fn register_evaluatable_expression_provider(@vscode.DocumentSelector, EvaluatableExpressionProvider) -> @vscode.Disposable
 
-pub fn[T : @vscode.FoldingRangeProvider] register_folding_range_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.FoldingRangeProvider] register_folding_range_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.HoverProvider] register_hover_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.HoverProvider] register_hover_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.ImplementationProvider] register_implementation_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.ImplementationProvider] register_implementation_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.InlayHintsProvider] register_inlay_hints_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.InlayHintsProvider] register_inlay_hints_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.InlineCompletionItemProvider] register_inline_completion_item_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.InlineCompletionItemProvider] register_inline_completion_item_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.InlineValuesProvider] register_inline_values_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.InlineValuesProvider] register_inline_values_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.LinkedEditingRangeProvider] register_linked_editing_range_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.LinkedEditingRangeProvider] register_linked_editing_range_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.OnTypeFormattingEditProvider] register_on_type_formatting_edit_provider(@vscode.DocumentSelector, T, String, more_trigger_characters? : Array[String]) -> &@vscode.Disposable
+pub fn[T : @vscode.OnTypeFormattingEditProvider] register_on_type_formatting_edit_provider(@vscode.DocumentSelector, T, String, more_trigger_characters? : Array[String]) -> @vscode.Disposable
 
-pub fn[T : @vscode.ReferenceProvider] register_reference_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.ReferenceProvider] register_reference_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.RenameProvider] register_rename_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.RenameProvider] register_rename_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.SelectionRangeProvider] register_selection_range_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.SelectionRangeProvider] register_selection_range_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider(@vscode.DocumentSelector, T, trigger_characters? : Array[String]) -> &@vscode.Disposable
+pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider(@vscode.DocumentSelector, T, trigger_characters? : Array[String]) -> @vscode.Disposable
 
-pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider_metadata(@vscode.DocumentSelector, T, @vscode.SignatureHelpProviderMetadata) -> &@vscode.Disposable
+pub fn[T : @vscode.SignatureHelpProvider] register_signature_help_provider_metadata(@vscode.DocumentSelector, T, @vscode.SignatureHelpProviderMetadata) -> @vscode.Disposable
 
-pub fn[T : @vscode.TypeDefinitionProvider] register_type_definition_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.TypeDefinitionProvider] register_type_definition_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.TypeHierarchyProvider] register_type_hierarchy_provider(@vscode.DocumentSelector, T) -> &@vscode.Disposable
+pub fn[T : @vscode.TypeHierarchyProvider] register_type_hierarchy_provider(@vscode.DocumentSelector, T) -> @vscode.Disposable
 
-pub fn[T : @vscode.WorkspaceSymbolProvider] register_workspace_symbol_provider(T) -> &@vscode.Disposable
+pub fn[T : @vscode.WorkspaceSymbolProvider] register_workspace_symbol_provider(T) -> @vscode.Disposable
 
-pub fn set_language_configuration(String, LanguageConfiguration) -> &@vscode.Disposable
+pub fn set_language_configuration(String, LanguageConfiguration) -> @vscode.Disposable
 
 pub async fn set_text_document_language(@vscode.TextDocument, String) -> @vscode.TextDocument
 

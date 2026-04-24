@@ -16,7 +16,7 @@ pub fn on_did_change_sessions() -> @vscode.Event[@vscode.AuthenticationSessionsC
 
 pub fn providers() -> Array[@vscode.AuthenticationProviderInformation]
 
-pub fn[T : @vscode.AuthenticationProvider] register_authentication_provider(String, String, T, options? : @vscode.AuthenticationProviderOptions) -> &@vscode.Disposable
+pub fn[T : @vscode.AuthenticationProvider] register_authentication_provider(String, String, T, options? : @vscode.AuthenticationProviderOptions) -> @vscode.Disposable
 
 // Errors
 

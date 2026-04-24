@@ -30,7 +30,7 @@ fn[T : @vscode.TaskProvider] task_provider_object(
 pub fn[T : @vscode.TaskProvider] register_task_provider(
   type_ : String,
   provider : T,
-) -> &@vscode.Disposable {
+) -> @vscode.Disposable {
   tasks_register_task_provider_ffi(type_, task_provider_object(provider))
 }
 

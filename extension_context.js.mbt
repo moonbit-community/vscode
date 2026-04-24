@@ -68,17 +68,17 @@ fn[T] extension_js_to_option(value : JsValue) -> T? {
 
 ///|
 /// Add a disposable resource to this extension context.
-pub fn ExtensionContext::subscribe(
+pub fn[T : AsDisposable] ExtensionContext::subscribe(
   self : ExtensionContext,
-  disposable : &Disposable,
+  disposable : T,
 ) -> Unit {
-  extension_context_subscribe_ffi(self, disposable_to_js_ffi(disposable))
+  extension_context_subscribe_ffi(self, disposable.as_disposable())
 }
 
 ///|
 extern "js" fn extension_context_subscribe_ffi(
   ctx : ExtensionContext,
-  disposable : JsValue,
+  disposable : Disposable,
 ) -> Unit =
   #| (ctx, disposable) => {
   #|   ctx.subscriptions.push(disposable);

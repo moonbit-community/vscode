@@ -5,7 +5,7 @@
 extern "js" fn tasks_register_task_provider_ffi(
   type_ : String,
   provider : @providers.TaskProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (type, provider) => require("vscode").tasks.registerTaskProvider(type, provider)
 
 ///|

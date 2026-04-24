@@ -3489,7 +3489,7 @@ pub extern "js" fn FileSystemProviderObject::watch(
   uri : @vscode.Uri,
   recursive : Bool,
   excludes : Array[String],
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (provider, uri, recursive, excludes) =>
   #|   provider.watch(uri, { recursive, excludes })
 
@@ -3698,7 +3698,7 @@ extern "js" fn file_change_event_array_event_to_js_ffi(
 ///|
 pub fn FileSystemProviderObject::new(
   on_did_change_file : @vscode.Event[Array[@vscode.FileChangeEvent]],
-  watch : (@vscode.Uri, Bool, Array[String]) -> &@vscode.Disposable,
+  watch : (@vscode.Uri, Bool, Array[String]) -> @vscode.Disposable,
   stat : async (@vscode.Uri) -> @vscode.FileStat,
   read_directory : async (@vscode.Uri) -> Array[@vscode.DirectoryEntry],
   create_directory : async (@vscode.Uri) -> Unit,
@@ -3748,7 +3748,7 @@ pub fn FileSystemProviderObject::new(
 ///|
 extern "js" fn file_system_provider_ffi(
   on_did_change_file : @v.JsValue,
-  watch : (@vscode.Uri, Bool, Array[String]) -> &@vscode.Disposable,
+  watch : (@vscode.Uri, Bool, Array[String]) -> @vscode.Disposable,
   stat : (@vscode.Uri) -> @js_async.Promise[@v.JsValue],
   read_directory : (@vscode.Uri) -> @js_async.Promise[
     Array[@vscode.DirectoryEntry],

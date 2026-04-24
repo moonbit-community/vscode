@@ -42,7 +42,7 @@ extern "js" fn chat_register_chat_context_provider_ffi(
   provider_id : String,
   provide_chat_context_for_resource : (Uri, CancellationToken) -> @v.JsValue,
   resolve_chat_context : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, providerId, provideChatContextForResource, resolveChatContext) => {
   #|   const provider = {
   #|     provideChatContextForResource: (options, token) =>

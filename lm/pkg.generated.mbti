@@ -14,11 +14,11 @@ pub async fn invoke_tool(String, LanguageModelToolInvocationOptions, token? : @v
 
 pub fn on_did_change_chat_models() -> @vscode.Event[Unit]
 
-pub fn register_language_model_chat_provider(String, LanguageModelChatProvider) -> &@vscode.Disposable
+pub fn register_language_model_chat_provider(String, LanguageModelChatProvider) -> @vscode.Disposable
 
-pub fn register_mcp_server_definition_provider(String, McpServerDefinitionProvider) -> &@vscode.Disposable
+pub fn register_mcp_server_definition_provider(String, McpServerDefinitionProvider) -> @vscode.Disposable
 
-pub fn register_tool(String, LanguageModelTool) -> &@vscode.Disposable
+pub fn register_tool(String, LanguageModelTool) -> @vscode.Disposable
 
 pub async fn select_chat_models(selector? : LanguageModelChatSelector) -> Array[LanguageModelChat]
 

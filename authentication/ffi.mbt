@@ -57,7 +57,7 @@ extern "js" fn authentication_register_authentication_provider_ffi(
   label : String,
   provider : @providers.AuthenticationProviderObject,
   options : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (id, label, provider, options) => {
   #|   const authentication = require("vscode").authentication;
   #|   return options === undefined || options === null

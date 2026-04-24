@@ -15,8 +15,13 @@ extern "js" fn custom_document_dispose_raw(doc : CustomDocument) -> Unit =
   #| (doc) => doc.dispose()
 
 ///|
-pub impl Disposable for CustomDocument with dispose(self) {
+pub fn CustomDocument::dispose(self : CustomDocument) -> Unit {
   custom_document_dispose_raw(self)
+}
+
+///|
+pub impl AsDisposable for CustomDocument with as_disposable(self) {
+  disposable_from_js(self)
 }
 
 ///|

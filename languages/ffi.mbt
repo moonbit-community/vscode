@@ -204,7 +204,7 @@ extern "js" fn languages_register_completion_item_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.CompletionItemProviderObject[@vscode.CompletionItem],
   trigger_characters : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, triggerCharacters) => {
   #|   const chars = triggerCharacters === undefined || triggerCharacters === null
   #|     ? []
@@ -220,7 +220,7 @@ extern "js" fn languages_register_completion_item_provider_ffi(
 extern "js" fn languages_register_inline_completion_item_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.InlineCompletionItemProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) =>
   #|   require("vscode").languages.registerInlineCompletionItemProvider(selector, provider)
 
@@ -229,7 +229,7 @@ extern "js" fn languages_register_code_actions_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.CodeActionProviderObject[@vscode.CodeAction],
   metadata : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, metadata) =>
   #|   require("vscode").languages.registerCodeActionsProvider(
   #|     selector,
@@ -241,49 +241,49 @@ extern "js" fn languages_register_code_actions_provider_ffi(
 extern "js" fn languages_register_code_lens_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.CodeLensProviderObject[@vscode.CodeLens],
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerCodeLensProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_definition_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DefinitionProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerDefinitionProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_implementation_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.ImplementationProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerImplementationProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_type_definition_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.TypeDefinitionProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerTypeDefinitionProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_declaration_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DeclarationProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerDeclarationProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_hover_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.HoverProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerHoverProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_evaluatable_expression_provider_ffi(
   selector : @v.JsValue,
   provider : EvaluatableExpressionProvider,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) =>
   #|   require("vscode").languages.registerEvaluatableExpressionProvider(selector, provider)
 
@@ -291,14 +291,14 @@ extern "js" fn languages_register_evaluatable_expression_provider_ffi(
 extern "js" fn languages_register_inline_values_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.InlineValuesProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerInlineValuesProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_document_highlight_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentHighlightProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerDocumentHighlightProvider(selector, provider)
 
 ///|
@@ -306,7 +306,7 @@ extern "js" fn languages_register_document_symbol_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentSymbolProviderObject,
   metadata : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, metadata) =>
   #|   require("vscode").languages.registerDocumentSymbolProvider(
   #|     selector,
@@ -317,21 +317,21 @@ extern "js" fn languages_register_document_symbol_provider_ffi(
 ///|
 extern "js" fn languages_register_workspace_symbol_provider_ffi(
   provider : @providers.WorkspaceSymbolProviderObject[@vscode.SymbolInformation],
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (provider) => require("vscode").languages.registerWorkspaceSymbolProvider(provider)
 
 ///|
 extern "js" fn languages_register_reference_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.ReferenceProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerReferenceProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_rename_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.RenameProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerRenameProvider(selector, provider)
 
 ///|
@@ -339,7 +339,7 @@ extern "js" fn languages_register_document_semantic_tokens_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentSemanticTokensProviderObject,
   legend : SemanticTokensLegend,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, legend) =>
   #|   require("vscode").languages.registerDocumentSemanticTokensProvider(selector, provider, legend)
 
@@ -348,7 +348,7 @@ extern "js" fn languages_register_document_range_semantic_tokens_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentRangeSemanticTokensProviderObject,
   legend : SemanticTokensLegend,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, legend) =>
   #|   require("vscode").languages.registerDocumentRangeSemanticTokensProvider(selector, provider, legend)
 
@@ -356,7 +356,7 @@ extern "js" fn languages_register_document_range_semantic_tokens_provider_ffi(
 extern "js" fn languages_register_document_formatting_edit_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentFormattingEditProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) =>
   #|   require("vscode").languages.registerDocumentFormattingEditProvider(selector, provider)
 
@@ -364,7 +364,7 @@ extern "js" fn languages_register_document_formatting_edit_provider_ffi(
 extern "js" fn languages_register_document_range_formatting_edit_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentRangeFormattingEditProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) =>
   #|   require("vscode").languages.registerDocumentRangeFormattingEditProvider(selector, provider)
 
@@ -374,7 +374,7 @@ extern "js" fn languages_register_on_type_formatting_edit_provider_ffi(
   provider : @providers.OnTypeFormattingEditProviderObject,
   first_trigger_character : String,
   more_trigger_characters : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, firstTriggerCharacter, moreTriggerCharacters) => {
   #|   const rest = moreTriggerCharacters === undefined || moreTriggerCharacters === null
   #|     ? []
@@ -392,7 +392,7 @@ extern "js" fn languages_register_signature_help_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.SignatureHelpProviderObject,
   trigger_characters : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, triggerCharacters) => {
   #|   const chars = triggerCharacters === undefined || triggerCharacters === null
   #|     ? []
@@ -409,7 +409,7 @@ extern "js" fn languages_register_signature_help_provider_metadata_ffi(
   selector : @v.JsValue,
   provider : @providers.SignatureHelpProviderObject,
   metadata : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, metadata) =>
   #|   require("vscode").languages.registerSignatureHelpProvider(
   #|     selector,
@@ -421,56 +421,56 @@ extern "js" fn languages_register_signature_help_provider_metadata_ffi(
 extern "js" fn languages_register_document_link_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentLinkProviderObject[@vscode.DocumentLink],
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerDocumentLinkProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_color_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentColorProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerColorProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_inlay_hints_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.InlayHintsProviderObject[@vscode.InlayHint],
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerInlayHintsProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_folding_range_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.FoldingRangeProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerFoldingRangeProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_selection_range_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.SelectionRangeProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerSelectionRangeProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_call_hierarchy_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.CallHierarchyProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerCallHierarchyProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_type_hierarchy_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.TypeHierarchyProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerTypeHierarchyProvider(selector, provider)
 
 ///|
 extern "js" fn languages_register_linked_editing_range_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.LinkedEditingRangeProviderObject,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider) => require("vscode").languages.registerLinkedEditingRangeProvider(selector, provider)
 
 ///|
@@ -478,7 +478,7 @@ extern "js" fn languages_register_document_drop_edit_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentDropEditProviderObject,
   metadata : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, metadata) =>
   #|   require("vscode").languages.registerDocumentDropEditProvider(
   #|     selector,
@@ -491,7 +491,7 @@ extern "js" fn languages_register_document_paste_edit_provider_ffi(
   selector : @v.JsValue,
   provider : @providers.DocumentPasteEditProviderObject,
   metadata : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (selector, provider, metadata) =>
   #|   require("vscode").languages.registerDocumentPasteEditProvider(
   #|     selector,
@@ -503,6 +503,6 @@ extern "js" fn languages_register_document_paste_edit_provider_ffi(
 extern "js" fn languages_set_language_configuration_ffi(
   language : String,
   configuration : @v.JsValue,
-) -> &@vscode.Disposable =
+) -> @vscode.Disposable =
   #| (language, configuration) =>
   #|   require("vscode").languages.setLanguageConfiguration(language, configuration)
