@@ -20,6 +20,9 @@ let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 let content_provider_scheme = "vscode-mbt-smoke"
 
 ///|
+let completion_language = "vscode-mbt-smoke-completion"
+
+///|
 let file_system_provider_uri_command = "vscode-mbt-tests.fileSystemProviderUri"
 
 ///|
@@ -44,6 +47,10 @@ priv struct SmokeDisposable {
 
 ///|
 priv struct SmokeTextDocumentContentProvider {
+}
+
+///|
+priv struct SmokeCompletionProvider {
 }
 
 ///|
@@ -78,6 +85,35 @@ impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider wi
   _token,
 ) {
   "moonbit-provider|\{uri.path()}|\{uri.query()}"
+}
+
+///|
+impl @vscode.CompletionItemProvider for SmokeCompletionProvider with provide_completion_items(
+  _self,
+  _document,
+  _position,
+  _token,
+  _context,
+) {
+  let item = @vscode.CompletionItem::from_text(
+    "moonbit-completion",
+    kind=@vscode.CompletionItemKind::Function,
+  )
+  item.set_insert_text(@vscode.StringOrSnippetString::Text("moonbitInserted"))
+  item.set_commit_characters([";"])
+  Some([item])
+}
+
+///|
+impl @vscode.CompletionItemProvider for SmokeCompletionProvider with resolve_completion_item(
+  _self,
+  item,
+  _token,
+) {
+  item.set_documentation(
+    @vscode.MarkdownStringValue::Text("resolved by MoonBit"),
+  )
+  Some(item)
 }
 
 ///|
@@ -373,6 +409,13 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @workspace.register_text_document_content_provider(
       content_provider_scheme,
       SmokeTextDocumentContentProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_completion_item_provider(
+      @vscode.DocumentSelector::Language(completion_language),
+      SmokeCompletionProvider::{},
+      trigger_characters=["."],
     ),
   )
   let file_system_provider = SmokeFileSystemProvider::new()

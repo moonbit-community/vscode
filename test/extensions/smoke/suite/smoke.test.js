@@ -61,6 +61,27 @@ async function run() {
     );
   });
 
+  await runCase('serves completions from a MoonBit CompletionItemProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-completion',
+      content: 'moon.'
+    });
+    const completions = await vscode.commands.executeCommand(
+      'vscode.executeCompletionItemProvider',
+      document.uri,
+      new vscode.Position(0, 5),
+      '.',
+      1
+    );
+
+    const item = completions.items.find(item => item.label === 'moonbit-completion');
+    assert.ok(item, 'completion item was not returned');
+    assert.strictEqual(item.kind, vscode.CompletionItemKind.Function);
+    assert.strictEqual(item.insertText, 'moonbitInserted');
+    assert.deepStrictEqual(item.commitCharacters, [';']);
+    assert.strictEqual(item.documentation, 'resolved by MoonBit');
+  });
+
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {
     const content = 'moonbit file system provider';
     const uriText = await vscode.commands.executeCommand('vscode-mbt-tests.fileSystemProviderUri');
