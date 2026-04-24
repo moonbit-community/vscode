@@ -50,6 +50,8 @@ extern "js" fn write_disposable_marker(name : String) -> Unit =
   #| }
 
 ///|
+// EventEmitter::fire does not wait for async listeners. Yield one JS turn so
+// the subscribe_async callback can finish before the smoke command reports.
 extern "js" fn wait_next_tick_ffi() -> @js_async.Promise[Unit] =
   #| () => new Promise(resolve => setTimeout(resolve, 0))
 
