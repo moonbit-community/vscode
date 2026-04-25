@@ -17,16 +17,25 @@ let event_command = "vscode-mbt-tests.event"
 let tree_view_command = "vscode-mbt-tests.treeView"
 
 ///|
+let tree_view_visual_command = "vscode-mbt-tests.uiTreeView"
+
+///|
 let tree_view_id = "vscode-mbt-smoke-tree"
 
 ///|
 let webview_view_command = "vscode-mbt-tests.webviewView"
 
 ///|
+let webview_view_visual_command = "vscode-mbt-tests.uiWebviewView"
+
+///|
 let webview_view_id = "vscode-mbt-smoke-webview"
 
 ///|
 let file_decoration_command = "vscode-mbt-tests.fileDecoration"
+
+///|
+let file_decoration_visual_command = "vscode-mbt-tests.uiFileDecoration"
 
 ///|
 let inline_completion_command = "vscode-mbt-tests.inlineCompletion"
@@ -1559,12 +1568,7 @@ async fn event_behavior(_args : @commands.CommandArgs) -> String {
 }
 
 ///|
-async fn tree_view_behavior(_args : @commands.CommandArgs) -> String {
-  let state = TreeState::{
-    get_tree_item_count: 0,
-    get_children_count: 0,
-    get_parent_count: 0,
-  }
+fn create_smoke_tree_view(state : TreeState) -> @vscode.TreeView[String] {
   let view = @window.create_tree_view(
     tree_view_id,
     @window.tree_view_options(
@@ -1604,6 +1608,17 @@ async fn tree_view_behavior(_args : @commands.CommandArgs) -> String {
   view.set_description("provider")
   view.set_message("ready")
   view.set_badge(@vscode.ViewBadge::new(1, "one item"))
+  view
+}
+
+///|
+async fn tree_view_behavior(_args : @commands.CommandArgs) -> String {
+  let state = TreeState::{
+    get_tree_item_count: 0,
+    get_children_count: 0,
+    get_parent_count: 0,
+  }
+  let view = create_smoke_tree_view(state)
   view.reveal("child", select=true, focus=false, expand=true)
   let selection = match view.selection().get(0) {
     None => "none"
@@ -1623,6 +1638,24 @@ async fn tree_view_behavior(_args : @commands.CommandArgs) -> String {
   }
   view.dispose()
   "\{state.get_children_count}|\{state.get_tree_item_count}|\{state.get_parent_count}|\{selection}|\{title}|\{description}|\{message}"
+}
+
+///|
+async fn tree_view_visual_behavior(
+  ctx : @vscode.ExtensionContext,
+  _args : @commands.CommandArgs,
+) -> String {
+  let state = TreeState::{
+    get_tree_item_count: 0,
+    get_children_count: 0,
+    get_parent_count: 0,
+  }
+  let view = create_smoke_tree_view(state)
+  ctx.subscribe(view)
+  view.reveal("child", select=true, focus=true, expand=true)
+  let result : Unit = @commands.execute_command("\{tree_view_id}.focus")
+  result
+  "\{state.get_children_count}|\{state.get_tree_item_count}|\{state.get_parent_count}"
 }
 
 ///|
@@ -1647,6 +1680,18 @@ fn webview_view_behavior(
 }
 
 ///|
+async fn webview_view_visual_behavior(
+  state : WebviewViewState,
+  _args : @commands.CommandArgs,
+) -> String {
+  ignore(webview_view_behavior(state, @commands.command_args1("reset")))
+  let result : Unit = @commands.execute_command("\{webview_view_id}.focus")
+  result
+  wait_next_tick()
+  webview_view_behavior(state, @commands.command_args())
+}
+
+///|
 fn file_decoration_behavior(
   state : FileDecorationState,
   args : @commands.CommandArgs,
@@ -1662,6 +1707,45 @@ fn file_decoration_behavior(
     state.changes.fire(@vscode.FileDecorationChange::all())
   }
   "\{state.provide_count}|\{state.saw_target}|\{state.last_uri}|\{state.badge}|\{state.tooltip}"
+}
+
+///|
+fn first_workspace_file_uri(file_name : String) -> @vscode.Uri? {
+  match @workspace.workspace_folders() {
+    None => None
+    Some(folders) =>
+      match folders.get(0) {
+        None => None
+        Some(folder) => Some(@vscode.Uri::join_path(folder.uri(), [file_name]))
+      }
+  }
+}
+
+///|
+async fn file_decoration_visual_behavior(
+  state : FileDecorationState,
+  _args : @commands.CommandArgs,
+) -> String {
+  match first_workspace_file_uri("file-decoration-visual.txt") {
+    None => "missing workspace"
+    Some(uri) => {
+      state.provide_count = 0
+      state.target_uri = uri.to_string()
+      state.saw_target = false
+      state.last_uri = ""
+      state.badge = ""
+      state.tooltip = ""
+      state.changes.fire(@vscode.FileDecorationChange::all())
+      let result : Unit = @commands.execute_command(
+        "revealInExplorer",
+        args=@commands.command_args1(uri),
+      )
+      result
+      wait_next_tick()
+      wait_next_tick()
+      file_decoration_behavior(state, @commands.command_args())
+    }
+  }
 }
 
 ///|
@@ -1782,6 +1866,11 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   )
   ctx.subscribe(@commands.register_command_async(event_command, event_behavior))
   ctx.subscribe(@commands.register_command_async(tree_view_command, tree_view_behavior))
+  ctx.subscribe(
+    @commands.register_command_async(tree_view_visual_command, args => {
+      tree_view_visual_behavior(ctx, args)
+    }),
+  )
   let webview_view_state = WebviewViewState::{
     resolve_count: 0,
     view_type: "",
@@ -1792,6 +1881,11 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   ctx.subscribe(
     @commands.register_command(webview_view_command, args => {
       webview_view_behavior(webview_view_state, args)
+    }),
+  )
+  ctx.subscribe(
+    @commands.register_command_async(webview_view_visual_command, args => {
+      webview_view_visual_behavior(webview_view_state, args)
     }),
   )
   let file_decoration_state = FileDecorationState::{
@@ -1806,6 +1900,11 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   ctx.subscribe(
     @commands.register_command(file_decoration_command, args => {
       file_decoration_behavior(file_decoration_state, args)
+    }),
+  )
+  ctx.subscribe(
+    @commands.register_command_async(file_decoration_visual_command, args => {
+      file_decoration_visual_behavior(file_decoration_state, args)
     }),
   )
   let inline_completion_state = InlineCompletionState::{

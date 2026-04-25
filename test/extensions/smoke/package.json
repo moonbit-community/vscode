@@ -15,8 +15,11 @@
     "onCommand:vscode-mbt-tests.workspaceEdit",
     "onCommand:vscode-mbt-tests.event",
     "onCommand:vscode-mbt-tests.treeView",
+    "onCommand:vscode-mbt-tests.uiTreeView",
     "onCommand:vscode-mbt-tests.webviewView",
+    "onCommand:vscode-mbt-tests.uiWebviewView",
     "onCommand:vscode-mbt-tests.fileDecoration",
+    "onCommand:vscode-mbt-tests.uiFileDecoration",
     "onCommand:vscode-mbt-tests.inlineCompletion",
     "onCommand:vscode-mbt-tests.documentPaste",
     "onCommand:vscode-mbt-tests.commentingRange",
@@ -98,12 +101,24 @@
         "title": "MoonBit Smoke: Tree View"
       },
       {
+        "command": "vscode-mbt-tests.uiTreeView",
+        "title": "MoonBit Smoke: Tree View Visual"
+      },
+      {
         "command": "vscode-mbt-tests.webviewView",
         "title": "MoonBit Smoke: Webview View"
       },
       {
+        "command": "vscode-mbt-tests.uiWebviewView",
+        "title": "MoonBit Smoke: Webview View Visual"
+      },
+      {
         "command": "vscode-mbt-tests.fileDecoration",
         "title": "MoonBit Smoke: File Decoration"
+      },
+      {
+        "command": "vscode-mbt-tests.uiFileDecoration",
+        "title": "MoonBit Smoke: File Decoration Visual"
       },
       {
         "command": "vscode-mbt-tests.inlineCompletion",
