@@ -54,6 +54,10 @@ priv struct SmokeCompletionProvider {
 }
 
 ///|
+priv struct SmokeCodeLensProvider {
+}
+
+///|
 priv struct SmokeDefinitionProvider {
 }
 
@@ -122,6 +126,45 @@ impl @vscode.CompletionItemProvider for SmokeCompletionProvider with resolve_com
     @vscode.MarkdownStringValue::Text("resolved by MoonBit"),
   )
   Some(item)
+}
+
+///|
+impl @vscode.CodeLensProvider for SmokeCodeLensProvider with on_did_change_code_lenses(
+  _self,
+) {
+  None
+}
+
+///|
+impl @vscode.CodeLensProvider for SmokeCodeLensProvider with provide_code_lenses(
+  _self,
+  _document,
+  _token,
+) {
+  Some([
+    @vscode.CodeLens::new(
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.CodeLensProvider for SmokeCodeLensProvider with resolve_code_lens(
+  _self,
+  lens,
+  _token,
+) {
+  lens.set_command(
+    @vscode.Command::new(
+      "MoonBit CodeLens",
+      echo_command,
+      tooltip="resolved by MoonBit",
+    ),
+  )
+  Some(lens)
 }
 
 ///|
@@ -462,6 +505,12 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeCompletionProvider::{},
       trigger_characters=["."],
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_code_lens_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeCodeLensProvider::{},
     ),
   )
   ctx.subscribe(

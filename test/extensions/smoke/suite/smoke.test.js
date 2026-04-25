@@ -82,6 +82,31 @@ async function run() {
     assert.strictEqual(item.documentation, 'resolved by MoonBit');
   });
 
+  await runCase('serves code lenses from a MoonBit CodeLensProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon lens'
+    });
+    const lenses = await vscode.commands.executeCommand(
+      'vscode.executeCodeLensProvider',
+      document.uri,
+      1
+    );
+
+    assert.strictEqual(lenses.length, 1);
+    assert.strictEqual(lenses[0].command.title, 'MoonBit CodeLens');
+    assert.strictEqual(lenses[0].command.command, 'vscode-mbt-tests.echo');
+    assert.deepStrictEqual(
+      [
+        lenses[0].range.start.line,
+        lenses[0].range.start.character,
+        lenses[0].range.end.line,
+        lenses[0].range.end.character
+      ],
+      [0, 0, 0, 4]
+    );
+  });
+
   await runCase('serves definitions from a MoonBit DefinitionProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',
