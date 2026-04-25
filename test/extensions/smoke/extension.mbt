@@ -70,6 +70,10 @@ priv struct SmokeDocumentHighlightProvider {
 }
 
 ///|
+priv struct SmokeDocumentLinkProvider {
+}
+
+///|
 priv struct SmokeDocumentSymbolProvider {
 }
 
@@ -247,6 +251,33 @@ impl @vscode.DocumentHighlightProvider for SmokeDocumentHighlightProvider with p
       kind=@vscode.DocumentHighlightKind::Write,
     ),
   ])
+}
+
+///|
+impl @vscode.DocumentLinkProvider for SmokeDocumentLinkProvider with provide_document_links(
+  _self,
+  _document,
+  _token,
+) {
+  Some([
+    @vscode.DocumentLink::new(
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.DocumentLinkProvider for SmokeDocumentLinkProvider with resolve_document_link(
+  _self,
+  link,
+  _token,
+) {
+  link.set_target(@vscode.Uri::parse("https://example.com/moonbit"))
+  link.set_tooltip("MoonBit link")
+  Some(link)
 }
 
 ///|
@@ -673,6 +704,12 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @languages.register_document_highlight_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeDocumentHighlightProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_link_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeDocumentLinkProvider::{},
     ),
   )
   ctx.subscribe(

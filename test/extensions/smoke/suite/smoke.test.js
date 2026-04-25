@@ -176,6 +176,31 @@ async function run() {
     );
   });
 
+  await runCase('serves document links from a MoonBit DocumentLinkProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon link'
+    });
+    const links = await vscode.commands.executeCommand(
+      'vscode.executeLinkProvider',
+      document.uri,
+      1
+    );
+
+    assert.strictEqual(links.length, 1);
+    assert.strictEqual(links[0].target.toString(), 'https://example.com/moonbit');
+    assert.strictEqual(links[0].tooltip, 'MoonBit link');
+    assert.deepStrictEqual(
+      [
+        links[0].range.start.line,
+        links[0].range.start.character,
+        links[0].range.end.line,
+        links[0].range.end.character
+      ],
+      [0, 0, 0, 4]
+    );
+  });
+
   await runCase('serves document symbols from a MoonBit DocumentSymbolProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',
