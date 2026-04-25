@@ -2947,6 +2947,7 @@ pub fn[T] TreeView::clear_description(Self[T]) -> Unit
 pub fn[T] TreeView::clear_message(Self[T]) -> Unit
 pub fn[T] TreeView::clear_title(Self[T]) -> Unit
 pub fn[T] TreeView::description(Self[T]) -> String?
+pub fn[T] TreeView::dispose(Self[T]) -> Unit
 pub fn[T] TreeView::message(Self[T]) -> String?
 pub fn[T] TreeView::on_did_change_checkbox_state(Self[T]) -> Event[TreeCheckboxChangeEvent[T]]
 pub fn[T] TreeView::on_did_change_selection(Self[T]) -> Event[TreeViewSelectionChangeEvent[T]]
@@ -2961,6 +2962,7 @@ pub fn[T] TreeView::set_message(Self[T], String) -> Unit
 pub fn[T] TreeView::set_title(Self[T], String) -> Unit
 pub fn[T] TreeView::title(Self[T]) -> String?
 pub fn[T] TreeView::visible(Self[T]) -> Bool
+pub impl[T] AsDisposable for TreeView[T]
 
 pub struct TreeViewExpansionEvent[T] {
   element : T

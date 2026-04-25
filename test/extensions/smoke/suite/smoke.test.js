@@ -79,6 +79,27 @@ async function run() {
     assert.strictEqual(value, '1|sync-1|1|async-1');
   });
 
+  await runCase('serves items from a MoonBit TreeDataProvider', async () => {
+    const value = await vscode.commands.executeCommand('vscode-mbt-tests.treeView');
+    const [
+      getChildrenCount,
+      getTreeItemCount,
+      getParentCount,
+      selection,
+      title,
+      description,
+      message
+    ] = value.split('|');
+
+    assert.ok(Number(getChildrenCount) >= 2, `getChildren count: ${getChildrenCount}`);
+    assert.ok(Number(getTreeItemCount) >= 1, `getTreeItem count: ${getTreeItemCount}`);
+    assert.ok(Number(getParentCount) >= 1, `getParent count: ${getParentCount}`);
+    assert.strictEqual(selection, 'child');
+    assert.strictEqual(title, 'MoonBit Smoke Tree');
+    assert.strictEqual(description, 'provider');
+    assert.strictEqual(message, 'ready');
+  });
+
   await runCase('opens content from a MoonBit TextDocumentContentProvider', async () => {
     const uriText = await vscode.commands.executeCommand('vscode-mbt-tests.contentProviderUri');
     const document = await vscode.workspace.openTextDocument(vscode.Uri.parse(uriText));

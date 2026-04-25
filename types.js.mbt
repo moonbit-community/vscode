@@ -7768,6 +7768,20 @@ fn[T] tree_view_cast(view : TreeView[T]) -> TreeView[JsValue] {
 }
 
 ///|
+extern "js" fn tree_view_dispose_raw(view : TreeView[JsValue]) -> Unit =
+  #| (view) => view.dispose()
+
+///|
+pub fn[T] TreeView::dispose(self : TreeView[T]) -> Unit {
+  tree_view_dispose_raw(tree_view_cast(self))
+}
+
+///|
+pub impl[T] AsDisposable for TreeView[T] with as_disposable(self) {
+  disposable_from_js(self)
+}
+
+///|
 /// Event that is fired when an element is expanded
 pub fn[T] TreeView::on_did_expand_element(
   self : TreeView[T],

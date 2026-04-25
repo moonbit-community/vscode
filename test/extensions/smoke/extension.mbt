@@ -14,6 +14,12 @@ let workspace_edit_command = "vscode-mbt-tests.workspaceEdit"
 let event_command = "vscode-mbt-tests.event"
 
 ///|
+let tree_view_command = "vscode-mbt-tests.treeView"
+
+///|
+let tree_view_id = "vscode-mbt-smoke-tree"
+
+///|
 let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 
 ///|
@@ -200,6 +206,13 @@ priv struct EventState {
   mut sync_count : Int
   mut async_value : String
   mut async_count : Int
+}
+
+///|
+priv struct TreeState {
+  mut get_tree_item_count : Int
+  mut get_children_count : Int
+  mut get_parent_count : Int
 }
 
 ///|
@@ -1241,6 +1254,73 @@ async fn event_behavior(_args : @commands.CommandArgs) -> String {
 }
 
 ///|
+async fn tree_view_behavior(_args : @commands.CommandArgs) -> String {
+  let state = TreeState::{
+    get_tree_item_count: 0,
+    get_children_count: 0,
+    get_parent_count: 0,
+  }
+  let view = @window.create_tree_view(
+    tree_view_id,
+    @window.tree_view_options(
+      fn(element : String) {
+        state.get_tree_item_count = state.get_tree_item_count + 1
+        let collapsible_state = if element == "root" {
+          @vscode.TreeItemCollapsibleState::Expanded
+        } else {
+          @vscode.TreeItemCollapsibleState::None
+        }
+        let item = @vscode.TreeItem::from_label(
+          @vscode.TreeItemLabelValue::Text(element),
+          collapsible_state~,
+        )
+        item.set_id(element)
+        item
+      },
+      fn(element : String?) {
+        state.get_children_count = state.get_children_count + 1
+        match element {
+          None => Some(["root"])
+          Some("root") => Some(["child"])
+          _ => Some([])
+        }
+      },
+      get_parent=fn(element : String) {
+        state.get_parent_count = state.get_parent_count + 1
+        if element == "child" {
+          Some("root")
+        } else {
+          None
+        }
+      },
+    ),
+  )
+  view.set_title("MoonBit Smoke Tree")
+  view.set_description("provider")
+  view.set_message("ready")
+  view.set_badge(@vscode.ViewBadge::new(1, "one item"))
+  view.reveal("child", select=true, focus=false, expand=true)
+  let selection = match view.selection().get(0) {
+    None => "none"
+    Some(value) => value
+  }
+  let title = match view.title() {
+    None => "none"
+    Some(value) => value
+  }
+  let description = match view.description() {
+    None => "none"
+    Some(value) => value
+  }
+  let message = match view.message() {
+    None => "none"
+    Some(value) => value
+  }
+  view.dispose()
+  "\{state.get_children_count}|\{state.get_tree_item_count}|\{state.get_parent_count}|\{selection}|\{title}|\{description}|\{message}"
+}
+
+///|
 fn content_provider_uri(_args : @commands.CommandArgs) -> String {
   "\{content_provider_scheme}:/provider-resource?source=moonbit"
 }
@@ -1299,6 +1379,7 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @commands.register_command_async(workspace_edit_command, apply_workspace_edit),
   )
   ctx.subscribe(@commands.register_command_async(event_command, event_behavior))
+  ctx.subscribe(@commands.register_command_async(tree_view_command, tree_view_behavior))
   ctx.subscribe(
     @commands.register_command(content_provider_uri_command, content_provider_uri),
   )

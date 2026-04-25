@@ -14,6 +14,7 @@
     "onCommand:vscode-mbt-tests.statusBar",
     "onCommand:vscode-mbt-tests.workspaceEdit",
     "onCommand:vscode-mbt-tests.event",
+    "onCommand:vscode-mbt-tests.treeView",
     "onCommand:vscode-mbt-tests.contentProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemReadDirectory",
@@ -52,6 +53,14 @@
         "id": "vscode-mbt-smoke-range-semantic-tokens"
       }
     ],
+    "views": {
+      "explorer": [
+        {
+          "id": "vscode-mbt-smoke-tree",
+          "name": "MoonBit Smoke Tree"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "vscode-mbt-tests.echo",
@@ -72,6 +81,10 @@
       {
         "command": "vscode-mbt-tests.event",
         "title": "MoonBit Smoke: Event"
+      },
+      {
+        "command": "vscode-mbt-tests.treeView",
+        "title": "MoonBit Smoke: Tree View"
       },
       {
         "command": "vscode-mbt-tests.contentProviderUri",
