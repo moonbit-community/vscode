@@ -153,6 +153,14 @@ priv struct SmokeDocumentRangeSemanticTokensProvider {
 }
 
 ///|
+priv struct SmokeCallHierarchyProvider {
+}
+
+///|
+priv struct SmokeTypeHierarchyProvider {
+}
+
+///|
 priv struct SmokeSelectionRangeProvider {
 }
 
@@ -696,6 +704,140 @@ impl @vscode.DocumentRangeSemanticTokensProvider for SmokeDocumentRangeSemanticT
 }
 
 ///|
+impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with prepare_call_hierarchy(
+  _self,
+  document,
+  _position,
+  _token,
+) {
+  Some([
+    @vscode.CallHierarchyItem::new(
+      @vscode.SymbolKind::Function,
+      "moonCall",
+      "MoonBit call detail",
+      document.uri(),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 8),
+      ),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with provide_call_hierarchy_incoming_calls(
+  _self,
+  item,
+  _token,
+) {
+  Some([
+    @vscode.CallHierarchyIncomingCall::new(
+      @vscode.CallHierarchyItem::new(
+        @vscode.SymbolKind::Function,
+        "incoming-\{item.name()}",
+        "MoonBit incoming detail",
+        item.uri(),
+        item.range(),
+        item.selection_range(),
+      ),
+      [@vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      )],
+    ),
+  ])
+}
+
+///|
+impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with provide_call_hierarchy_outgoing_calls(
+  _self,
+  item,
+  _token,
+) {
+  Some([
+    @vscode.CallHierarchyOutgoingCall::new(
+      @vscode.CallHierarchyItem::new(
+        @vscode.SymbolKind::Function,
+        "outgoing-\{item.name()}",
+        "MoonBit outgoing detail",
+        item.uri(),
+        item.range(),
+        item.selection_range(),
+      ),
+      [@vscode.Range::new(
+        @vscode.Position::new(0, 4),
+        @vscode.Position::new(0, 8),
+      )],
+    ),
+  ])
+}
+
+///|
+impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with prepare_type_hierarchy(
+  _self,
+  document,
+  _position,
+  _token,
+) {
+  Some([
+    @vscode.TypeHierarchyItem::new(
+      @vscode.SymbolKind::Class,
+      "MoonType",
+      "MoonBit type detail",
+      document.uri(),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 8),
+      ),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with provide_type_hierarchy_supertypes(
+  _self,
+  item,
+  _token,
+) {
+  Some([
+    @vscode.TypeHierarchyItem::new(
+      @vscode.SymbolKind::Class,
+      "Super\{item.name()}",
+      "MoonBit supertype detail",
+      item.uri(),
+      item.range(),
+      item.selection_range(),
+    ),
+  ])
+}
+
+///|
+impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with provide_type_hierarchy_subtypes(
+  _self,
+  item,
+  _token,
+) {
+  Some([
+    @vscode.TypeHierarchyItem::new(
+      @vscode.SymbolKind::Class,
+      "Sub\{item.name()}",
+      "MoonBit subtype detail",
+      item.uri(),
+      item.range(),
+      item.selection_range(),
+    ),
+  ])
+}
+
+///|
 impl @vscode.FoldingRangeProvider for SmokeFoldingRangeProvider with provide_folding_ranges(
   _self,
   _document,
@@ -1198,6 +1340,18 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       @vscode.DocumentSelector::Language(range_semantic_tokens_language),
       SmokeDocumentRangeSemanticTokensProvider::{},
       @vscode.SemanticTokensLegend::new(["function"]),
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_call_hierarchy_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeCallHierarchyProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_type_hierarchy_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeTypeHierarchyProvider::{},
     ),
   )
   ctx.subscribe(

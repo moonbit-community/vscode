@@ -612,6 +612,74 @@ async function run() {
     assert.deepStrictEqual([...tokens.data], [0, 1, 3, 0, 0]);
   });
 
+  await runCase('serves call hierarchy from a MoonBit CallHierarchyProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moonCall'
+    });
+    const items = await vscode.commands.executeCommand(
+      'vscode.prepareCallHierarchy',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(items.length, 1);
+    assert.strictEqual(items[0].name, 'moonCall');
+    assert.strictEqual(items[0].kind, vscode.SymbolKind.Function);
+    assert.strictEqual(items[0].detail, 'MoonBit call detail');
+    assert.deepStrictEqual(rangeTuple(items[0].range), [0, 0, 0, 8]);
+    assert.deepStrictEqual(rangeTuple(items[0].selectionRange), [0, 0, 0, 4]);
+
+    const incoming = await vscode.commands.executeCommand(
+      'vscode.provideIncomingCalls',
+      items[0]
+    );
+    assert.strictEqual(incoming.length, 1);
+    assert.strictEqual(incoming[0].from.name, 'incoming-moonCall');
+    assert.deepStrictEqual(rangeTuple(incoming[0].fromRanges[0]), [0, 0, 0, 4]);
+
+    const outgoing = await vscode.commands.executeCommand(
+      'vscode.provideOutgoingCalls',
+      items[0]
+    );
+    assert.strictEqual(outgoing.length, 1);
+    assert.strictEqual(outgoing[0].to.name, 'outgoing-moonCall');
+    assert.deepStrictEqual(rangeTuple(outgoing[0].fromRanges[0]), [0, 4, 0, 8]);
+  });
+
+  await runCase('serves type hierarchy from a MoonBit TypeHierarchyProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'MoonType'
+    });
+    const items = await vscode.commands.executeCommand(
+      'vscode.prepareTypeHierarchy',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(items.length, 1);
+    assert.strictEqual(items[0].name, 'MoonType');
+    assert.strictEqual(items[0].kind, vscode.SymbolKind.Class);
+    assert.strictEqual(items[0].detail, 'MoonBit type detail');
+    assert.deepStrictEqual(rangeTuple(items[0].range), [0, 0, 0, 8]);
+    assert.deepStrictEqual(rangeTuple(items[0].selectionRange), [0, 0, 0, 4]);
+
+    const supertypes = await vscode.commands.executeCommand(
+      'vscode.provideSupertypes',
+      items[0]
+    );
+    assert.strictEqual(supertypes.length, 1);
+    assert.strictEqual(supertypes[0].name, 'SuperMoonType');
+
+    const subtypes = await vscode.commands.executeCommand(
+      'vscode.provideSubtypes',
+      items[0]
+    );
+    assert.strictEqual(subtypes.length, 1);
+    assert.strictEqual(subtypes[0].name, 'SubMoonType');
+  });
+
   await runCase('serves folding ranges from a MoonBit FoldingRangeProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',
