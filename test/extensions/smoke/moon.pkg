@@ -3,6 +3,7 @@ import {
   "username/vscode",
   "username/vscode/commands",
   "username/vscode/languages",
+  "username/vscode/tasks",
   "username/vscode/window",
   "username/vscode/workspace",
 }

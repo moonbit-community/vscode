@@ -56,6 +56,9 @@ let file_system_file_path = "/hello.txt"
 let file_system_file_content = "moonbit file system provider"
 
 ///|
+let task_provider_type = "vscode-mbt-smoke-task"
+
+///|
 priv struct SmokeDisposable {
   disposable : @vscode.Disposable
 }
@@ -170,6 +173,10 @@ priv struct SmokeDocumentRangeFormattingProvider {
 
 ///|
 priv struct SmokeOnTypeFormattingProvider {
+}
+
+///|
+priv struct SmokeTaskProvider {
 }
 
 ///|
@@ -906,6 +913,42 @@ impl @vscode.OnTypeFormattingEditProvider for SmokeOnTypeFormattingProvider with
 }
 
 ///|
+impl @vscode.TaskProvider for SmokeTaskProvider with provide_tasks(
+  _self,
+  _token,
+) {
+  let task = @vscode.Task::new(
+    @vscode.TaskDefinition::new(
+      task_provider_type,
+      entries=[
+        ("script", @vscode.Any::from("smoke")),
+        ("fromMoonBit", @vscode.Any::from(true)),
+      ],
+    ),
+    @vscode.TaskScope::ScopeKind(@vscode.TaskScopeKind::Workspace),
+    "MoonBit smoke task",
+    "MoonBit",
+    execution=@vscode.TaskExecutionValue::ShellExecutionValue(
+      @vscode.ShellExecution::new_command_line("echo moonbit-task"),
+    ),
+    problem_matchers=[],
+  )
+  task.set_detail(Some("provided by MoonBit"))
+  task.set_group(Some(@vscode.TaskGroup::test_group()))
+  Some([task])
+}
+
+///|
+impl @vscode.TaskProvider for SmokeTaskProvider with resolve_task(
+  _self,
+  task,
+  _token,
+) {
+  task.set_detail(Some("resolved by MoonBit"))
+  Some(task)
+}
+
+///|
 fn SmokeFileSystemProvider::new() -> SmokeFileSystemProvider {
   SmokeFileSystemProvider::{ changes: @vscode.EventEmitter::new() }
 }
@@ -1374,6 +1417,7 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       more_trigger_characters=[";"],
     ),
   )
+  ctx.subscribe(@tasks.register_task_provider(task_provider_type, SmokeTaskProvider::{}))
   let file_system_provider = SmokeFileSystemProvider::new()
   ctx.subscribe(
     @workspace.register_file_system_provider(

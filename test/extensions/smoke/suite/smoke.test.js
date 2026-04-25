@@ -510,6 +510,20 @@ async function run() {
     assert.strictEqual(applyTextEdits(document, edits), 'typetype:}:3:spaces format');
   });
 
+  await runCase('serves tasks from a MoonBit TaskProvider', async () => {
+    const tasks = await vscode.tasks.fetchTasks({ type: 'vscode-mbt-smoke-task' });
+    const task = tasks.find(task => task.name === 'MoonBit smoke task');
+
+    assert.ok(task, 'task provider did not return the MoonBit smoke task');
+    assert.strictEqual(task.source, 'MoonBit');
+    assert.strictEqual(task.detail, 'provided by MoonBit');
+    assert.strictEqual(task.definition.type, 'vscode-mbt-smoke-task');
+    assert.strictEqual(task.definition.script, 'smoke');
+    assert.strictEqual(task.definition.fromMoonBit, true);
+    assert.strictEqual(task.group, vscode.TaskGroup.Test);
+    assert.strictEqual(task.execution.commandLine, 'echo moonbit-task');
+  });
+
   await runCase('serves document colors from a MoonBit DocumentColorProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',
