@@ -111,7 +111,23 @@ priv struct SmokeRenameProvider {
 }
 
 ///|
+priv struct SmokeSignatureHelpProvider {
+}
+
+///|
 priv struct SmokeDocumentFormattingProvider {
+}
+
+///|
+priv struct SmokeDocumentColorProvider {
+}
+
+///|
+priv struct SmokeFoldingRangeProvider {
+}
+
+///|
+priv struct SmokeSelectionRangeProvider {
 }
 
 ///|
@@ -465,6 +481,32 @@ impl @vscode.RenameProvider for SmokeRenameProvider with prepare_rename(
 }
 
 ///|
+impl @vscode.SignatureHelpProvider for SmokeSignatureHelpProvider with provide_signature_help(
+  _self,
+  _document,
+  _position,
+  _token,
+  _context,
+) {
+  let signature = @vscode.SignatureInformation::new(
+    "moon(value: String)",
+    documentation=@vscode.MarkdownStringValue::Text("signature from MoonBit"),
+  )
+  signature.set_parameters([
+    @vscode.ParameterInformation::new(
+      @vscode.ParameterLabel::Text("value"),
+      documentation=@vscode.MarkdownStringValue::Text("parameter from MoonBit"),
+    ),
+  ])
+  signature.set_active_parameter(0)
+  let help = @vscode.SignatureHelp::new()
+  help.set_signatures([signature])
+  help.set_active_signature(0)
+  help.set_active_parameter(0)
+  Some(help)
+}
+
+///|
 impl @vscode.DocumentFormattingEditProvider for SmokeDocumentFormattingProvider with provide_document_formatting_edits(
   _self,
   _document,
@@ -478,6 +520,76 @@ impl @vscode.DocumentFormattingEditProvider for SmokeDocumentFormattingProvider 
       "doc:\{options.tab_size}:\{indent}:",
     ),
   ])
+}
+
+///|
+impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with provide_document_colors(
+  _self,
+  _document,
+  _token,
+) {
+  Some([
+    @vscode.ColorInformation::new(
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 7),
+      ),
+      @vscode.Color::new(0.1, 0.2, 0.3, 0.4),
+    ),
+  ])
+}
+
+///|
+impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with provide_color_presentations(
+  _self,
+  _color,
+  context,
+  _token,
+) {
+  let presentation = @vscode.ColorPresentation::new("moon-color")
+  presentation.set_text_edit(@vscode.TextEdit::replace(context.range, "#123456"))
+  presentation.set_additional_text_edits([
+    @vscode.TextEdit::insert(@vscode.Position::new(0, 7), " from MoonBit"),
+  ])
+  Some([presentation])
+}
+
+///|
+impl @vscode.FoldingRangeProvider for SmokeFoldingRangeProvider with provide_folding_ranges(
+  _self,
+  _document,
+  _context,
+  _token,
+) {
+  Some([
+    @vscode.FoldingRange::new(0, 2, kind=@vscode.FoldingRangeKind::Region),
+  ])
+}
+
+///|
+impl @vscode.SelectionRangeProvider for SmokeSelectionRangeProvider with provide_selection_ranges(
+  _self,
+  _document,
+  positions,
+  _token,
+) {
+  match positions.get(0) {
+    None => Some([])
+    Some(position) => {
+      let parent = @vscode.SelectionRange::new(
+        @vscode.Range::new(
+          @vscode.Position::new(position.line(), 0),
+          @vscode.Position::new(position.line(), 9),
+        ),
+      )
+      Some([
+        @vscode.SelectionRange::new(
+          @vscode.Range::new(position, @vscode.Position::new(position.line(), 4)),
+          parent=parent,
+        ),
+      ])
+    }
+  }
 }
 
 ///|
@@ -891,9 +1003,37 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     ),
   )
   ctx.subscribe(
+    @languages.register_signature_help_provider_metadata(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeSignatureHelpProvider::{},
+      @vscode.SignatureHelpProviderMetadata::new(
+        ["("],
+        retrigger_characters=[","],
+      ),
+    ),
+  )
+  ctx.subscribe(
     @languages.register_document_formatting_edit_provider(
       @vscode.DocumentSelector::Language(document_formatting_language),
       SmokeDocumentFormattingProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_color_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeDocumentColorProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_folding_range_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeFoldingRangeProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_selection_range_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeSelectionRangeProvider::{},
     ),
   )
   ctx.subscribe(

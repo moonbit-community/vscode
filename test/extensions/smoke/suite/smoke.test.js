@@ -24,6 +24,23 @@ function applyTextEdits(document, edits) {
     }, document.getText());
 }
 
+function rangeTuple(range) {
+  return [
+    range.start.line,
+    range.start.character,
+    range.end.line,
+    range.end.character
+  ];
+}
+
+function documentationText(value) {
+  return value && typeof value === 'object' ? value.value : value;
+}
+
+function assertApproxEqual(actual, expected) {
+  assert.ok(Math.abs(actual - expected) < 0.000001, `${actual} !== ${expected}`);
+}
+
 async function run() {
   await runCase('registers and executes MoonBit command handlers', async () => {
     const value = await vscode.commands.executeCommand('vscode-mbt-tests.echo', 'api');
@@ -393,6 +410,31 @@ async function run() {
     );
   });
 
+  await runCase('serves signature help from a MoonBit SignatureHelpProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon('
+    });
+    const help = await vscode.commands.executeCommand(
+      'vscode.executeSignatureHelpProvider',
+      document.uri,
+      new vscode.Position(0, 5),
+      '('
+    );
+
+    assert.strictEqual(help.activeSignature, 0);
+    assert.strictEqual(help.activeParameter, 0);
+    assert.strictEqual(help.signatures.length, 1);
+    assert.strictEqual(help.signatures[0].label, 'moon(value: String)');
+    assert.strictEqual(documentationText(help.signatures[0].documentation), 'signature from MoonBit');
+    assert.strictEqual(help.signatures[0].parameters.length, 1);
+    assert.strictEqual(help.signatures[0].parameters[0].label, 'value');
+    assert.strictEqual(
+      documentationText(help.signatures[0].parameters[0].documentation),
+      'parameter from MoonBit'
+    );
+  });
+
   await runCase('serves document formatting edits from a MoonBit DocumentFormattingEditProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-document-formatting',
@@ -437,6 +479,78 @@ async function run() {
     );
 
     assert.strictEqual(applyTextEdits(document, edits), 'typetype:}:3:spaces format');
+  });
+
+  await runCase('serves document colors from a MoonBit DocumentColorProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: '#123456'
+    });
+    const colors = await vscode.commands.executeCommand(
+      'vscode.executeDocumentColorProvider',
+      document.uri
+    );
+
+    assert.strictEqual(colors.length, 1);
+    assert.deepStrictEqual(rangeTuple(colors[0].range), [0, 0, 0, 7]);
+    assertApproxEqual(colors[0].color.red, 0.1);
+    assertApproxEqual(colors[0].color.green, 0.2);
+    assertApproxEqual(colors[0].color.blue, 0.3);
+    assertApproxEqual(colors[0].color.alpha, 0.4);
+  });
+
+  await runCase('serves color presentations from a MoonBit DocumentColorProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: '#abcdef'
+    });
+    const presentations = await vscode.commands.executeCommand(
+      'vscode.executeColorPresentationProvider',
+      new vscode.Color(0.1, 0.2, 0.3, 0.4),
+      {
+        uri: document.uri,
+        range: new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 7))
+      }
+    );
+
+    assert.strictEqual(presentations.length, 1);
+    assert.strictEqual(presentations[0].label, 'moon-color');
+    assert.strictEqual(presentations[0].textEdit.newText, '#123456');
+    assert.deepStrictEqual(rangeTuple(presentations[0].textEdit.range), [0, 0, 0, 7]);
+    assert.strictEqual(presentations[0].additionalTextEdits.length, 1);
+    assert.strictEqual(presentations[0].additionalTextEdits[0].newText, ' from MoonBit');
+  });
+
+  await runCase('serves folding ranges from a MoonBit FoldingRangeProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'start\nmiddle\nend'
+    });
+    const ranges = await vscode.commands.executeCommand(
+      'vscode.executeFoldingRangeProvider',
+      document.uri
+    );
+
+    assert.strictEqual(ranges.length, 1);
+    assert.strictEqual(ranges[0].start, 0);
+    assert.strictEqual(ranges[0].end, 2);
+    assert.strictEqual(ranges[0].kind, vscode.FoldingRangeKind.Region);
+  });
+
+  await runCase('serves selection ranges from a MoonBit SelectionRangeProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'selection'
+    });
+    const ranges = await vscode.commands.executeCommand(
+      'vscode.executeSelectionRangeProvider',
+      document.uri,
+      [new vscode.Position(0, 2)]
+    );
+
+    assert.strictEqual(ranges.length, 1);
+    assert.deepStrictEqual(rangeTuple(ranges[0].range), [0, 2, 0, 4]);
+    assert.deepStrictEqual(rangeTuple(ranges[0].parent.range), [0, 0, 0, 9]);
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {

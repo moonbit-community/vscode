@@ -4064,9 +4064,9 @@ pub type FoldingRange
 /// `Fold all comments` or `Fold all regions`.
 /// If the kind is not set on the range, the range originated from a syntax element other than comments, imports or region markers.
 pub(all) enum FoldingRangeKind {
-  Comment
-  Imports
-  Region
+  Comment = 1
+  Imports = 2
+  Region = 3
 } derive(Eq)
 
 ///|
