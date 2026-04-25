@@ -42,7 +42,7 @@ Status keys:
 | `LinkedEditingRangeProvider` | covered-internal | `_executeLinkedEditingProvider` | Internal command returns Monaco range objects. |
 | `DocumentDropEditProvider` | pending-harness | none | Drop behavior is workbench/UI driven. |
 | `DocumentPasteEditProvider` | covered | `editor.action.pasteAs` | Verifies paste edit selection through clipboard/workbench flow. |
-| `QuickDiffProvider` | pending-harness | none | Needs SCM/quick-diff workbench trigger. |
+| `QuickDiffProvider` | covered | `editor.action.dirtydiff.next` | Uses `SourceControl.quickDiffProvider` and verifies original-resource resolution. |
 | `CommentingRangeProvider` | covered | `editor.action.nextCommentingRange` | Uses a comment controller and verifies provider state. |
 | `TextDocumentContentProvider` | covered | `workspace.openTextDocument` with custom scheme |  |
 | `FileSystemProvider` | covered | `workspace.fs` with custom scheme | Also validates provider disposables at shutdown. |

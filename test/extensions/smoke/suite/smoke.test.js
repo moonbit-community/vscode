@@ -102,6 +102,15 @@ function parseCommentingRangeState(value) {
   };
 }
 
+function parseQuickDiffState(value) {
+  const [provideCount, lastUri, originalUri] = value.split('|');
+  return {
+    provideCount: Number(provideCount),
+    lastUri,
+    originalUri
+  };
+}
+
 async function waitForFileDecorationState(predicate) {
   let state = parseFileDecorationState(
     await vscode.commands.executeCommand('vscode-mbt-tests.fileDecoration', 'read')
@@ -143,6 +152,22 @@ async function waitForCommentingRangeState(predicate) {
     );
   }
   assert.fail(`commenting range provider was not called: ${JSON.stringify(state)}`);
+}
+
+async function waitForQuickDiffState(predicate) {
+  let state = parseQuickDiffState(
+    await vscode.commands.executeCommand('vscode-mbt-tests.quickDiff', 'read')
+  );
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    if (predicate(state)) {
+      return state;
+    }
+    await new Promise(resolve => setTimeout(resolve, 50));
+    state = parseQuickDiffState(
+      await vscode.commands.executeCommand('vscode-mbt-tests.quickDiff', 'read')
+    );
+  }
+  assert.fail(`quick diff provider was not called: ${JSON.stringify(state)}`);
 }
 
 function documentationText(value) {
@@ -966,6 +991,24 @@ async function run() {
     assert.ok(state.provideCount >= 1, `provide count: ${state.provideCount}`);
     assert.strictEqual(state.rangeCount, 1);
     assert.strictEqual(state.enableFileComments, true);
+  });
+
+  await runCase('serves original resources from a MoonBit QuickDiffProvider', async () => {
+    const fixturePath = path.join(__dirname, '..', 'fixture', 'quick-diff.txt');
+    try {
+      fs.writeFileSync(fixturePath, 'modified quick diff', 'utf8');
+      const uri = vscode.Uri.file(fixturePath);
+      await vscode.commands.executeCommand('vscode-mbt-tests.quickDiff', 'reset');
+      const document = await vscode.workspace.openTextDocument(uri);
+      await vscode.window.showTextDocument(document);
+      await vscode.commands.executeCommand('editor.action.dirtydiff.next');
+
+      const state = await waitForQuickDiffState(({ lastUri }) => lastUri === uri.toString());
+      assert.ok(state.provideCount >= 1, `provide count: ${state.provideCount}`);
+      assert.strictEqual(state.originalUri, 'vscode-mbt-smoke:/quick-diff-original');
+    } finally {
+      fs.rmSync(fixturePath, { force: true });
+    }
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {

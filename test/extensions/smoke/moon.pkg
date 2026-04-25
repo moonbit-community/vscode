@@ -5,6 +5,7 @@ import {
   "username/vscode/comments",
   "username/vscode/commands",
   "username/vscode/languages",
+  "username/vscode/scm",
   "username/vscode/tasks",
   "username/vscode/window",
   "username/vscode/workspace",

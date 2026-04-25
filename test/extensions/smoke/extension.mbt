@@ -35,6 +35,9 @@ let document_paste_command = "vscode-mbt-tests.documentPaste"
 let commenting_range_command = "vscode-mbt-tests.commentingRange"
 
 ///|
+let quick_diff_command = "vscode-mbt-tests.quickDiff"
+
+///|
 let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 
 ///|
@@ -216,6 +219,11 @@ priv struct SmokeCommentingRangeProvider {
 }
 
 ///|
+priv struct SmokeQuickDiffProvider {
+  state : QuickDiffState
+}
+
+///|
 priv struct SmokeDocumentRangeFormattingProvider {
 }
 
@@ -290,6 +298,13 @@ priv struct CommentingRangeState {
   mut last_uri : String
   mut range_count : Int
   mut enable_file_comments : Bool
+}
+
+///|
+priv struct QuickDiffState {
+  mut provide_count : Int
+  mut last_uri : String
+  mut original_uri : String
 }
 
 ///|
@@ -1127,6 +1142,21 @@ impl @vscode.CommentingRangeProvider for SmokeCommentingRangeProvider with provi
 }
 
 ///|
+impl @vscode.QuickDiffProvider for SmokeQuickDiffProvider with provide_original_resource(
+  self,
+  uri,
+  _token,
+) {
+  self.state.provide_count = self.state.provide_count + 1
+  self.state.last_uri = uri.to_string()
+  let original = @vscode.Uri::parse(
+    "\{content_provider_scheme}:/quick-diff-original",
+  )
+  self.state.original_uri = original.to_string()
+  Some(original)
+}
+
+///|
 impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with provide_document_range_formatting_edits(
   _self,
   _document,
@@ -1613,6 +1643,20 @@ fn commenting_range_behavior(
 }
 
 ///|
+fn quick_diff_behavior(
+  state : QuickDiffState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.provide_count = 0
+    state.last_uri = ""
+    state.original_uri = ""
+  }
+  "\{state.provide_count}|\{state.last_uri}|\{state.original_uri}"
+}
+
+///|
 fn file_system_provider_uri(_args : @commands.CommandArgs) -> String {
   "\{file_system_provider_scheme}:\{file_system_file_path}"
 }
@@ -1717,6 +1761,16 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       commenting_range_behavior(commenting_range_state, args)
     }),
   )
+  let quick_diff_state = QuickDiffState::{
+    provide_count: 0,
+    last_uri: "",
+    original_uri: "",
+  }
+  ctx.subscribe(
+    @commands.register_command(quick_diff_command, args => {
+      quick_diff_behavior(quick_diff_state, args)
+    }),
+  )
   let comment_controller = @comments.create_comment_controller(
     "vscode-mbt-smoke-comments",
     "MoonBit Smoke Comments",
@@ -1725,6 +1779,14 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     SmokeCommentingRangeProvider::{ state: commenting_range_state },
   )
   ctx.subscribe(comment_controller)
+  let source_control = @scm.create_source_control(
+    "vscode-mbt-smoke-scm",
+    "MoonBit Smoke SCM",
+  )
+  source_control.set_quick_diff_provider(
+    SmokeQuickDiffProvider::{ state: quick_diff_state },
+  )
+  ctx.subscribe(source_control)
   ctx.subscribe(
     @commands.register_command(content_provider_uri_command, content_provider_uri),
   )
