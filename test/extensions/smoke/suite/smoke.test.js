@@ -424,6 +424,21 @@ async function run() {
     );
   });
 
+  await runCase('prepares rename ranges from a MoonBit RenameProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon rename'
+    });
+    const result = await vscode.commands.executeCommand(
+      'vscode.prepareRename',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.deepStrictEqual(rangeTuple(result.range), [0, 0, 0, 4]);
+    assert.strictEqual(result.placeholder, 'moon');
+  });
+
   await runCase('serves signature help from a MoonBit SignatureHelpProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',
