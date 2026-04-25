@@ -20,7 +20,9 @@
     "onLanguage:vscode-mbt-smoke-language",
     "onLanguage:vscode-mbt-smoke-document-formatting",
     "onLanguage:vscode-mbt-smoke-range-formatting",
-    "onLanguage:vscode-mbt-smoke-on-type-formatting"
+    "onLanguage:vscode-mbt-smoke-on-type-formatting",
+    "onLanguage:vscode-mbt-smoke-semantic-tokens",
+    "onLanguage:vscode-mbt-smoke-range-semantic-tokens"
   ],
   "main": "../../../_build/js/release/build/vscode_mbt_smoke_extension/vscode_mbt_smoke_extension.js",
   "contributes": {
@@ -36,6 +38,12 @@
       },
       {
         "id": "vscode-mbt-smoke-on-type-formatting"
+      },
+      {
+        "id": "vscode-mbt-smoke-semantic-tokens"
+      },
+      {
+        "id": "vscode-mbt-smoke-range-semantic-tokens"
       }
     ],
     "commands": [

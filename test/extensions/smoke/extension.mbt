@@ -32,6 +32,12 @@ let range_formatting_language = "vscode-mbt-smoke-range-formatting"
 let on_type_formatting_language = "vscode-mbt-smoke-on-type-formatting"
 
 ///|
+let semantic_tokens_language = "vscode-mbt-smoke-semantic-tokens"
+
+///|
+let range_semantic_tokens_language = "vscode-mbt-smoke-range-semantic-tokens"
+
+///|
 let file_system_provider_uri_command = "vscode-mbt-tests.fileSystemProviderUri"
 
 ///|
@@ -99,6 +105,10 @@ priv struct SmokeDocumentSymbolProvider {
 }
 
 ///|
+priv struct SmokeWorkspaceSymbolProvider {
+}
+
+///|
 priv struct SmokeHoverProvider {
 }
 
@@ -124,6 +134,22 @@ priv struct SmokeDocumentColorProvider {
 
 ///|
 priv struct SmokeFoldingRangeProvider {
+}
+
+///|
+priv struct SmokeInlayHintsProvider {
+}
+
+///|
+priv struct SmokeInlineValuesProvider {
+}
+
+///|
+priv struct SmokeDocumentSemanticTokensProvider {
+}
+
+///|
+priv struct SmokeDocumentRangeSemanticTokensProvider {
 }
 
 ///|
@@ -407,6 +433,41 @@ impl @vscode.DocumentSymbolProvider for SmokeDocumentSymbolProvider with provide
 }
 
 ///|
+impl @vscode.WorkspaceSymbolProvider for SmokeWorkspaceSymbolProvider with provide_workspace_symbols(
+  _self,
+  query,
+  _token,
+) {
+  if query == "moon" {
+    Some([
+      @vscode.SymbolInformation::new(
+        "moonWorkspaceSymbol",
+        @vscode.SymbolKind::Function,
+        "MoonBit container",
+        @vscode.Location::new(
+          @vscode.Uri::parse("file:///moonbit-workspace-symbol.mbt"),
+          @vscode.Range::new(
+            @vscode.Position::new(0, 0),
+            @vscode.Position::new(0, 4),
+          ),
+        ),
+      ),
+    ])
+  } else {
+    Some([])
+  }
+}
+
+///|
+impl @vscode.WorkspaceSymbolProvider for SmokeWorkspaceSymbolProvider with resolve_workspace_symbol(
+  _self,
+  symbol,
+  _token,
+) {
+  Some(symbol)
+}
+
+///|
 impl @vscode.HoverProvider for SmokeHoverProvider with provide_hover(
   _self,
   _document,
@@ -552,6 +613,86 @@ impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with provide_c
     @vscode.TextEdit::insert(@vscode.Position::new(0, 7), " from MoonBit"),
   ])
   Some([presentation])
+}
+
+///|
+impl @vscode.InlayHintsProvider for SmokeInlayHintsProvider with provide_inlay_hints(
+  _self,
+  _document,
+  range,
+  _token,
+) {
+  Some([
+    @vscode.InlayHint::new(
+      range.start(),
+      @vscode.InlayHintLabelValue::Text(": MoonBit"),
+      kind=@vscode.InlayHintKind::Type,
+    ),
+  ])
+}
+
+///|
+impl @vscode.InlayHintsProvider for SmokeInlayHintsProvider with resolve_inlay_hint(
+  _self,
+  hint,
+  _token,
+) {
+  hint.set_label(@vscode.InlayHintLabelValue::Text(": ResolvedMoonBit"))
+  Some(hint)
+}
+
+///|
+impl @vscode.InlineValuesProvider for SmokeInlineValuesProvider with provide_inline_values(
+  _self,
+  _document,
+  _range,
+  context,
+  _token,
+) {
+  Some([
+    @vscode.InlineValue::Text(
+      @vscode.InlineValueText::new(
+        @vscode.Range::new(
+          @vscode.Position::new(0, 0),
+          @vscode.Position::new(0, 5),
+        ),
+        "frame:\{context.frame_id}",
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with provide_document_semantic_tokens(
+  _self,
+  _document,
+  _token,
+) {
+  @vscode.SemanticTokens::new([0, 0, 4, 0, 0], result_id="moon-full")
+}
+
+///|
+impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with provide_document_semantic_tokens_edits(
+  _self,
+) {
+  None
+}
+
+///|
+impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with on_did_change_semantic_tokens(
+  _self,
+) {
+  None
+}
+
+///|
+impl @vscode.DocumentRangeSemanticTokensProvider for SmokeDocumentRangeSemanticTokensProvider with provide_document_range_semantic_tokens(
+  _self,
+  _document,
+  _range,
+  _token,
+) {
+  @vscode.SemanticTokens::new([0, 1, 3, 0, 0], result_id="moon-range")
 }
 
 ///|
@@ -985,6 +1126,9 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     ),
   )
   ctx.subscribe(
+    @languages.register_workspace_symbol_provider(SmokeWorkspaceSymbolProvider::{}),
+  )
+  ctx.subscribe(
     @languages.register_hover_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeHoverProvider::{},
@@ -1028,6 +1172,32 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @languages.register_folding_range_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeFoldingRangeProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_inlay_hints_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeInlayHintsProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_inline_values_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeInlineValuesProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_semantic_tokens_provider(
+      @vscode.DocumentSelector::Language(semantic_tokens_language),
+      SmokeDocumentSemanticTokensProvider::{},
+      @vscode.SemanticTokensLegend::new(["function"]),
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_range_semantic_tokens_provider(
+      @vscode.DocumentSelector::Language(range_semantic_tokens_language),
+      SmokeDocumentRangeSemanticTokensProvider::{},
+      @vscode.SemanticTokensLegend::new(["function"]),
     ),
   )
   ctx.subscribe(

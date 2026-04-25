@@ -334,6 +334,20 @@ async function run() {
     );
   });
 
+  await runCase('serves workspace symbols from a MoonBit WorkspaceSymbolProvider', async () => {
+    const symbols = await vscode.commands.executeCommand(
+      'vscode.executeWorkspaceSymbolProvider',
+      'moon'
+    );
+    const symbol = symbols.find(symbol => symbol.name === 'moonWorkspaceSymbol');
+
+    assert.ok(symbol, 'workspace symbol was not returned');
+    assert.strictEqual(symbol.kind, vscode.SymbolKind.Function);
+    assert.strictEqual(symbol.containerName, 'MoonBit container');
+    assert.strictEqual(symbol.location.uri.toString(), 'file:///moonbit-workspace-symbol.mbt');
+    assert.deepStrictEqual(rangeTuple(symbol.location.range), [0, 0, 0, 4]);
+  });
+
   await runCase('serves hovers from a MoonBit HoverProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',
@@ -519,6 +533,83 @@ async function run() {
     assert.deepStrictEqual(rangeTuple(presentations[0].textEdit.range), [0, 0, 0, 7]);
     assert.strictEqual(presentations[0].additionalTextEdits.length, 1);
     assert.strictEqual(presentations[0].additionalTextEdits[0].newText, ' from MoonBit');
+  });
+
+  await runCase('serves inlay hints from a MoonBit InlayHintsProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'hint'
+    });
+    const hints = await vscode.commands.executeCommand(
+      'vscode.executeInlayHintProvider',
+      document.uri,
+      new vscode.Range(new vscode.Position(0, 1), new vscode.Position(0, 4))
+    );
+
+    assert.strictEqual(hints.length, 1);
+    assert.deepStrictEqual(
+      [hints[0].position.line, hints[0].position.character],
+      [0, 1]
+    );
+    assert.strictEqual(hints[0].label, ': MoonBit');
+    assert.strictEqual(hints[0].kind, vscode.InlayHintKind.Type);
+  });
+
+  await runCase('serves inline values from a MoonBit InlineValuesProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'value'
+    });
+    const stoppedLocation = new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 5));
+    const values = await vscode.commands.executeCommand(
+      'vscode.executeInlineValueProvider',
+      document.uri,
+      stoppedLocation,
+      { frameId: 42, stoppedLocation }
+    );
+
+    assert.strictEqual(values.length, 1);
+    assert.strictEqual(values[0].text, 'frame:42');
+    assert.deepStrictEqual(rangeTuple(values[0].range), [0, 0, 0, 5]);
+  });
+
+  await runCase('serves semantic tokens from a MoonBit DocumentSemanticTokensProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-semantic-tokens',
+      content: 'moon'
+    });
+    const legend = await vscode.commands.executeCommand(
+      'vscode.provideDocumentSemanticTokensLegend',
+      document.uri
+    );
+    const tokens = await vscode.commands.executeCommand(
+      'vscode.provideDocumentSemanticTokens',
+      document.uri
+    );
+
+    assert.deepStrictEqual(legend.tokenTypes, ['function']);
+    assert.deepStrictEqual([...tokens.data], [0, 0, 4, 0, 0]);
+  });
+
+  await runCase('serves range semantic tokens from a MoonBit DocumentRangeSemanticTokensProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-range-semantic-tokens',
+      content: 'moon'
+    });
+    const range = new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 4));
+    const legend = await vscode.commands.executeCommand(
+      'vscode.provideDocumentRangeSemanticTokensLegend',
+      document.uri,
+      range
+    );
+    const tokens = await vscode.commands.executeCommand(
+      'vscode.provideDocumentRangeSemanticTokens',
+      document.uri,
+      range
+    );
+
+    assert.deepStrictEqual(legend.tokenTypes, ['function']);
+    assert.deepStrictEqual([...tokens.data], [0, 1, 3, 0, 0]);
   });
 
   await runCase('serves folding ranges from a MoonBit FoldingRangeProvider', async () => {
