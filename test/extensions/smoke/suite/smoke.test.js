@@ -234,6 +234,58 @@ async function run() {
     );
   });
 
+  await runCase('serves references from a MoonBit ReferenceProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon reference'
+    });
+    const locations = await vscode.commands.executeCommand(
+      'vscode.executeReferenceProvider',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(locations.length, 1);
+    assert.strictEqual(locations[0].uri.toString(), document.uri.toString());
+    assert.deepStrictEqual(
+      [
+        locations[0].range.start.line,
+        locations[0].range.start.character,
+        locations[0].range.end.line,
+        locations[0].range.end.character
+      ],
+      [0, 0, 0, 4]
+    );
+  });
+
+  await runCase('serves rename edits from a MoonBit RenameProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon rename'
+    });
+    const edit = await vscode.commands.executeCommand(
+      'vscode.executeDocumentRenameProvider',
+      document.uri,
+      new vscode.Position(0, 1),
+      'renamedMoon'
+    );
+    const entries = edit.entries();
+
+    assert.strictEqual(entries.length, 1);
+    assert.strictEqual(entries[0][0].toString(), document.uri.toString());
+    assert.strictEqual(entries[0][1].length, 1);
+    assert.strictEqual(entries[0][1][0].newText, 'renamedMoon');
+    assert.deepStrictEqual(
+      [
+        entries[0][1][0].range.start.line,
+        entries[0][1][0].range.start.character,
+        entries[0][1][0].range.end.line,
+        entries[0][1][0].range.end.character
+      ],
+      [0, 0, 0, 4]
+    );
+  });
+
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {
     const content = 'moonbit file system provider';
     const uriText = await vscode.commands.executeCommand('vscode-mbt-tests.fileSystemProviderUri');

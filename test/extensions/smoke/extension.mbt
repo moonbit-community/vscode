@@ -78,6 +78,14 @@ priv struct SmokeHoverProvider {
 }
 
 ///|
+priv struct SmokeReferenceProvider {
+}
+
+///|
+priv struct SmokeRenameProvider {
+}
+
+///|
 priv struct SmokeFileSystemProvider {
   changes : @vscode.EventEmitter[Array[@vscode.FileChangeEvent]]
 }
@@ -280,6 +288,60 @@ impl @vscode.HoverProvider for SmokeHoverProvider with provide_hover(
         @vscode.Position::new(0, 0),
         @vscode.Position::new(0, 4),
       ),
+    ),
+  )
+}
+
+///|
+impl @vscode.ReferenceProvider for SmokeReferenceProvider with provide_references(
+  _self,
+  document,
+  _position,
+  _context,
+  _token,
+) {
+  Some([
+    @vscode.Location::new(
+      document.uri(),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.RenameProvider for SmokeRenameProvider with provide_rename_edits(
+  _self,
+  document,
+  _position,
+  new_name,
+  _token,
+) {
+  let edit = @vscode.WorkspaceEdit::new()
+  edit.replace(
+    document.uri(),
+    @vscode.Range::new(
+      @vscode.Position::new(0, 0),
+      @vscode.Position::new(0, 4),
+    ),
+    new_name,
+  )
+  Some(edit)
+}
+
+///|
+impl @vscode.RenameProvider for SmokeRenameProvider with prepare_rename(
+  _self,
+  _document,
+  _position,
+  _token,
+) {
+  Some(
+    @vscode.Range::new(
+      @vscode.Position::new(0, 0),
+      @vscode.Position::new(0, 4),
     ),
   )
 }
@@ -626,6 +688,18 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @languages.register_hover_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeHoverProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_reference_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeReferenceProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_rename_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeRenameProvider::{},
     ),
   )
   let file_system_provider = SmokeFileSystemProvider::new()
