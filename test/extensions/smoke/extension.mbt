@@ -177,6 +177,10 @@ priv struct SmokeSelectionRangeProvider {
 }
 
 ///|
+priv struct SmokeLinkedEditingRangeProvider {
+}
+
+///|
 priv struct SmokeDocumentRangeFormattingProvider {
 }
 
@@ -906,6 +910,27 @@ impl @vscode.SelectionRangeProvider for SmokeSelectionRangeProvider with provide
 }
 
 ///|
+impl @vscode.LinkedEditingRangeProvider for SmokeLinkedEditingRangeProvider with provide_linked_editing_ranges(
+  _self,
+  _document,
+  position,
+  _token,
+) {
+  Some(
+    @vscode.LinkedEditingRanges::new([
+      @vscode.Range::new(
+        @vscode.Position::new(position.line(), 0),
+        @vscode.Position::new(position.line(), 4),
+      ),
+      @vscode.Range::new(
+        @vscode.Position::new(position.line(), 7),
+        @vscode.Position::new(position.line(), 11),
+      ),
+    ]),
+  )
+}
+
+///|
 impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with provide_document_range_formatting_edits(
   _self,
   _document,
@@ -1547,6 +1572,12 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @languages.register_selection_range_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeSelectionRangeProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_linked_editing_range_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeLinkedEditingRangeProvider::{},
     ),
   )
   ctx.subscribe(

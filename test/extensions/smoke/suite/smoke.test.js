@@ -33,6 +33,15 @@ function rangeTuple(range) {
   ];
 }
 
+function monacoRangeTuple(range) {
+  return [
+    range.startLineNumber - 1,
+    range.startColumn - 1,
+    range.endLineNumber - 1,
+    range.endColumn - 1
+  ];
+}
+
 function documentationText(value) {
   return value && typeof value === 'object' ? value.value : value;
 }
@@ -768,6 +777,22 @@ async function run() {
     assert.strictEqual(ranges.length, 1);
     assert.deepStrictEqual(rangeTuple(ranges[0].range), [0, 2, 0, 4]);
     assert.deepStrictEqual(rangeTuple(ranges[0].parent.range), [0, 0, 0, 9]);
+  });
+
+  await runCase('serves linked editing ranges from a MoonBit LinkedEditingRangeProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon x moon'
+    });
+    const result = await vscode.commands.executeCommand(
+      '_executeLinkedEditingProvider',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(result.ranges.length, 2);
+    assert.deepStrictEqual(monacoRangeTuple(result.ranges[0]), [0, 0, 0, 4]);
+    assert.deepStrictEqual(monacoRangeTuple(result.ranges[1]), [0, 7, 0, 11]);
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {
