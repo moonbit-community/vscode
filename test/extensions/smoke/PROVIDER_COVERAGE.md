@@ -49,4 +49,4 @@ Status keys:
 | `WebviewViewProvider` | covered | `vscode-mbt-smoke-webview.focus` | Verifies resolve state and webview HTML through a state command. |
 | `TerminalLinkProvider` | ui-backed | none | Needs terminal UI link detection. |
 | `TerminalProfileProvider` | ui-backed | none | Public registration works, but provider invocation is workbench profile/UI driven. |
-| `FileDecorationProvider` | ui-backed | none | Decoration result is rendered by the workbench explorer/UI. |
+| `FileDecorationProvider` | covered | `revealInExplorer` | Reveals a fixture file and verifies provider state. |

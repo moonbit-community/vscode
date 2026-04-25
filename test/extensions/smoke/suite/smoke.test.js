@@ -69,6 +69,33 @@ async function waitForWebviewViewState(predicate) {
   assert.fail(`webview view provider was not called: ${JSON.stringify(state)}`);
 }
 
+function parseFileDecorationState(value) {
+  const [provideCount, sawTarget, lastUri, badge, tooltip] = value.split('|');
+  return {
+    provideCount: Number(provideCount),
+    sawTarget: sawTarget === 'true',
+    lastUri,
+    badge,
+    tooltip
+  };
+}
+
+async function waitForFileDecorationState(predicate) {
+  let state = parseFileDecorationState(
+    await vscode.commands.executeCommand('vscode-mbt-tests.fileDecoration', 'read')
+  );
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    if (predicate(state)) {
+      return state;
+    }
+    await new Promise(resolve => setTimeout(resolve, 50));
+    state = parseFileDecorationState(
+      await vscode.commands.executeCommand('vscode-mbt-tests.fileDecoration', 'read')
+    );
+  }
+  assert.fail(`file decoration provider was not called: ${JSON.stringify(state)}`);
+}
+
 function documentationText(value) {
   return value && typeof value === 'object' ? value.value : value;
 }
@@ -831,6 +858,22 @@ async function run() {
     assert.strictEqual(state.title, 'MoonBit Smoke Webview');
     assert.strictEqual(state.description, 'resolved');
     assert.ok(state.html.includes('MoonBit WebviewView'));
+  });
+
+  await runCase('serves decorations from a MoonBit FileDecorationProvider', async () => {
+    const fixturePath = path.join(__dirname, '..', 'fixture', 'file-decoration.txt');
+    try {
+      fs.writeFileSync(fixturePath, 'decorated', 'utf8');
+      const uri = vscode.Uri.file(fixturePath);
+      await vscode.commands.executeCommand('vscode-mbt-tests.fileDecoration', 'reset', uri.toString());
+      await vscode.commands.executeCommand('revealInExplorer', uri);
+
+      const state = await waitForFileDecorationState(({ sawTarget }) => sawTarget);
+      assert.strictEqual(state.badge, 'M');
+      assert.strictEqual(state.tooltip, 'MoonBit decoration');
+    } finally {
+      fs.rmSync(fixturePath, { force: true });
+    }
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {

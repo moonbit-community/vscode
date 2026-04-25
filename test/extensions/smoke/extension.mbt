@@ -26,6 +26,9 @@ let webview_view_command = "vscode-mbt-tests.webviewView"
 let webview_view_id = "vscode-mbt-smoke-webview"
 
 ///|
+let file_decoration_command = "vscode-mbt-tests.fileDecoration"
+
+///|
 let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 
 ///|
@@ -192,6 +195,11 @@ priv struct SmokeWebviewViewProvider {
 }
 
 ///|
+priv struct SmokeFileDecorationProvider {
+  state : FileDecorationState
+}
+
+///|
 priv struct SmokeDocumentRangeFormattingProvider {
 }
 
@@ -237,6 +245,17 @@ priv struct WebviewViewState {
   mut title : String
   mut description : String
   mut html : String
+}
+
+///|
+priv struct FileDecorationState {
+  changes : @vscode.EventEmitter[@vscode.FileDecorationChange]
+  mut provide_count : Int
+  mut target_uri : String
+  mut saw_target : Bool
+  mut last_uri : String
+  mut badge : String
+  mut tooltip : String
 }
 
 ///|
@@ -969,6 +988,33 @@ impl @vscode.WebviewViewProvider for SmokeWebviewViewProvider with resolve_webvi
 }
 
 ///|
+impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with on_did_change_file_decorations(
+  self,
+) {
+  Some(self.state.changes.event())
+}
+
+///|
+impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with provide_file_decoration(
+  self,
+  uri,
+  _token,
+) {
+  self.state.provide_count = self.state.provide_count + 1
+  self.state.last_uri = uri.to_string()
+  if self.state.last_uri == self.state.target_uri {
+    self.state.saw_target = true
+  }
+  let decoration = @vscode.FileDecoration::new(
+    badge="M",
+    tooltip="MoonBit decoration",
+  )
+  self.state.badge = decoration.badge().unwrap_or("")
+  self.state.tooltip = decoration.tooltip().unwrap_or("")
+  Some(decoration)
+}
+
+///|
 impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with provide_document_range_formatting_edits(
   _self,
   _document,
@@ -1405,6 +1451,24 @@ fn webview_view_behavior(
 }
 
 ///|
+fn file_decoration_behavior(
+  state : FileDecorationState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.provide_count = 0
+    state.target_uri = args.get(1).unwrap_or("")
+    state.saw_target = false
+    state.last_uri = ""
+    state.badge = ""
+    state.tooltip = ""
+    state.changes.fire(@vscode.FileDecorationChange::all())
+  }
+  "\{state.provide_count}|\{state.saw_target}|\{state.last_uri}|\{state.badge}|\{state.tooltip}"
+}
+
+///|
 fn file_system_provider_uri(_args : @commands.CommandArgs) -> String {
   "\{file_system_provider_scheme}:\{file_system_file_path}"
 }
@@ -1469,6 +1533,20 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   ctx.subscribe(
     @commands.register_command(webview_view_command, args => {
       webview_view_behavior(webview_view_state, args)
+    }),
+  )
+  let file_decoration_state = FileDecorationState::{
+    changes: @vscode.EventEmitter::new(),
+    provide_count: 0,
+    target_uri: "",
+    saw_target: false,
+    last_uri: "",
+    badge: "",
+    tooltip: "",
+  }
+  ctx.subscribe(
+    @commands.register_command(file_decoration_command, args => {
+      file_decoration_behavior(file_decoration_state, args)
     }),
   )
   ctx.subscribe(
@@ -1657,6 +1735,11 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       webview_view_id,
       SmokeWebviewViewProvider::{ state: webview_view_state },
       options=@vscode.WebviewViewOptions::new(retain_context_when_hidden=true),
+    ),
+  )
+  ctx.subscribe(
+    @window.register_file_decoration_provider(
+      SmokeFileDecorationProvider::{ state: file_decoration_state },
     ),
   )
   ctx.subscribe(
