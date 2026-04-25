@@ -524,6 +524,14 @@ async function run() {
     assert.strictEqual(task.execution.commandLine, 'echo moonbit-task');
   });
 
+  await runCase('serves accounts from a MoonBit AuthenticationProvider', async () => {
+    const accounts = await vscode.authentication.getAccounts('vscode-mbt-smoke-auth');
+
+    assert.strictEqual(accounts.length, 1);
+    assert.strictEqual(accounts[0].id, 'moonbit-account');
+    assert.strictEqual(accounts[0].label, 'MoonBit Account');
+  });
+
   await runCase('serves document colors from a MoonBit DocumentColorProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',

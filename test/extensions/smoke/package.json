@@ -26,6 +26,12 @@
   ],
   "main": "../../../_build/js/release/build/vscode_mbt_smoke_extension/vscode_mbt_smoke_extension.js",
   "contributes": {
+    "authentication": [
+      {
+        "id": "vscode-mbt-smoke-auth",
+        "label": "MoonBit Smoke Auth"
+      }
+    ],
     "languages": [
       {
         "id": "vscode-mbt-smoke-language"

@@ -59,6 +59,9 @@ let file_system_file_content = "moonbit file system provider"
 let task_provider_type = "vscode-mbt-smoke-task"
 
 ///|
+let authentication_provider_id = "vscode-mbt-smoke-auth"
+
+///|
 priv struct SmokeDisposable {
   disposable : @vscode.Disposable
 }
@@ -177,6 +180,13 @@ priv struct SmokeOnTypeFormattingProvider {
 
 ///|
 priv struct SmokeTaskProvider {
+}
+
+///|
+priv struct SmokeAuthenticationProvider {
+  changes : @vscode.EventEmitter[
+    @vscode.AuthenticationProviderAuthenticationSessionsChangeEvent
+  ]
 }
 
 ///|
@@ -949,6 +959,61 @@ impl @vscode.TaskProvider for SmokeTaskProvider with resolve_task(
 }
 
 ///|
+fn SmokeAuthenticationProvider::new() -> SmokeAuthenticationProvider {
+  SmokeAuthenticationProvider::{ changes: @vscode.EventEmitter::new() }
+}
+
+///|
+fn smoke_authentication_session(scopes : Array[String]) -> @vscode.AuthenticationSession {
+  @vscode.AuthenticationSession::new(
+    "moonbit-auth-session",
+    "moonbit-auth-token",
+    @vscode.AuthenticationSessionAccountInformation::new(
+      "moonbit-account",
+      "MoonBit Account",
+    ),
+    scopes,
+  )
+}
+
+///|
+impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with on_did_change_sessions(
+  self,
+) {
+  self.changes.event()
+}
+
+///|
+impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with get_sessions(
+  _self,
+  scopes,
+  _options,
+) {
+  let resolved_scopes = match scopes {
+    None => ["read"]
+    Some(scopes) => scopes
+  }
+  [smoke_authentication_session(resolved_scopes)]
+}
+
+///|
+impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with create_session(
+  _self,
+  scopes,
+  _options,
+) {
+  smoke_authentication_session(scopes)
+}
+
+///|
+impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with remove_session(
+  _self,
+  _session_id,
+) {
+  ()
+}
+
+///|
 fn SmokeFileSystemProvider::new() -> SmokeFileSystemProvider {
   SmokeFileSystemProvider::{ changes: @vscode.EventEmitter::new() }
 }
@@ -1418,6 +1483,16 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     ),
   )
   ctx.subscribe(@tasks.register_task_provider(task_provider_type, SmokeTaskProvider::{}))
+  ctx.subscribe(
+    @authentication.register_authentication_provider(
+      authentication_provider_id,
+      "MoonBit Smoke Auth",
+      SmokeAuthenticationProvider::new(),
+      options=@vscode.AuthenticationProviderOptions::new(
+        supports_multiple_accounts=false,
+      ),
+    ),
+  )
   let file_system_provider = SmokeFileSystemProvider::new()
   ctx.subscribe(
     @workspace.register_file_system_provider(

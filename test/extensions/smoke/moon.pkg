@@ -1,6 +1,7 @@
 import {
   "moonbitlang/async/js_async",
   "username/vscode",
+  "username/vscode/authentication",
   "username/vscode/commands",
   "username/vscode/languages",
   "username/vscode/tasks",
