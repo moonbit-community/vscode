@@ -17,6 +17,7 @@
     "onCommand:vscode-mbt-tests.treeView",
     "onCommand:vscode-mbt-tests.webviewView",
     "onCommand:vscode-mbt-tests.fileDecoration",
+    "onCommand:vscode-mbt-tests.documentPaste",
     "onCommand:vscode-mbt-tests.contentProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemReadDirectory",
@@ -100,6 +101,10 @@
       {
         "command": "vscode-mbt-tests.fileDecoration",
         "title": "MoonBit Smoke: File Decoration"
+      },
+      {
+        "command": "vscode-mbt-tests.documentPaste",
+        "title": "MoonBit Smoke: Document Paste"
       },
       {
         "command": "vscode-mbt-tests.contentProviderUri",

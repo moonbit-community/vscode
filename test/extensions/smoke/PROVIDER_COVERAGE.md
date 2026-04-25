@@ -41,7 +41,7 @@ Status keys:
 | `TypeHierarchyProvider` | covered | `vscode.prepareTypeHierarchy`, `vscode.provideSupertypes`, `vscode.provideSubtypes` |  |
 | `LinkedEditingRangeProvider` | covered-internal | `_executeLinkedEditingProvider` | Internal command returns Monaco range objects. |
 | `DocumentDropEditProvider` | pending-harness | none | Drop behavior is workbench/UI driven. |
-| `DocumentPasteEditProvider` | pending-harness | none | Paste behavior is clipboard/workbench driven. |
+| `DocumentPasteEditProvider` | covered | `editor.action.pasteAs` | Verifies paste edit selection through clipboard/workbench flow. |
 | `QuickDiffProvider` | pending-harness | none | Needs SCM/quick-diff workbench trigger. |
 | `CommentingRangeProvider` | pending-harness | none | Needs comments controller/workbench trigger. |
 | `TextDocumentContentProvider` | covered | `workspace.openTextDocument` with custom scheme |  |

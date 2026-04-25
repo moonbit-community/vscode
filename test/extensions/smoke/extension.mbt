@@ -29,6 +29,9 @@ let webview_view_id = "vscode-mbt-smoke-webview"
 let file_decoration_command = "vscode-mbt-tests.fileDecoration"
 
 ///|
+let document_paste_command = "vscode-mbt-tests.documentPaste"
+
+///|
 let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 
 ///|
@@ -200,6 +203,11 @@ priv struct SmokeFileDecorationProvider {
 }
 
 ///|
+priv struct SmokeDocumentPasteProvider {
+  state : DocumentPasteState
+}
+
+///|
 priv struct SmokeDocumentRangeFormattingProvider {
 }
 
@@ -256,6 +264,16 @@ priv struct FileDecorationState {
   mut last_uri : String
   mut badge : String
   mut tooltip : String
+}
+
+///|
+priv struct DocumentPasteState {
+  mut provide_count : Int
+  mut range_count : Int
+  mut clipboard_text : String
+  mut trigger_kind : String
+  mut only_kind : String
+  mut edit_title : String
 }
 
 ///|
@@ -1015,6 +1033,65 @@ impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with provide
 }
 
 ///|
+fn paste_kind() -> @vscode.DocumentDropOrPasteEditKind {
+  @vscode.DocumentDropOrPasteEditKind::Text.append("moonbit")
+}
+
+///|
+fn paste_trigger_kind_name(kind : @vscode.DocumentPasteTriggerKind) -> String {
+  if kind == @vscode.DocumentPasteTriggerKind::PasteAs {
+    "pasteAs"
+  } else {
+    "automatic"
+  }
+}
+
+///|
+impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with provide_document_paste_edits(
+  self,
+  _document,
+  ranges,
+  data_transfer,
+  context,
+  _token,
+) {
+  self.state.provide_count = self.state.provide_count + 1
+  self.state.range_count = ranges.length()
+  self.state.trigger_kind = paste_trigger_kind_name(context.trigger_kind)
+  self.state.only_kind = match context.only {
+    None => ""
+    Some(kind) => kind.value()
+  }
+  self.state.clipboard_text = match data_transfer.get("text/plain") {
+    None => ""
+    Some(item) => item.as_string()
+  }
+  let title = "MoonBit paste edit"
+  self.state.edit_title = title
+  Some([
+    @vscode.DocumentPasteEdit::new(
+      @vscode.StringOrSnippetString::Text(
+        "moonbit-pasted:\{self.state.clipboard_text}",
+      ),
+      title,
+      paste_kind(),
+    ),
+  ])
+}
+
+///|
+impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with metadata(
+  _self,
+) {
+  Some(
+    @vscode.DocumentPasteProviderMetadata::new(
+      [paste_kind()],
+      paste_mime_types=["text/plain"],
+    ),
+  )
+}
+
+///|
 impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with provide_document_range_formatting_edits(
   _self,
   _document,
@@ -1469,6 +1546,23 @@ fn file_decoration_behavior(
 }
 
 ///|
+fn document_paste_behavior(
+  state : DocumentPasteState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.provide_count = 0
+    state.range_count = 0
+    state.clipboard_text = ""
+    state.trigger_kind = ""
+    state.only_kind = ""
+    state.edit_title = ""
+  }
+  "\{state.provide_count}|\{state.range_count}|\{state.clipboard_text}|\{state.trigger_kind}|\{state.only_kind}|\{state.edit_title}"
+}
+
+///|
 fn file_system_provider_uri(_args : @commands.CommandArgs) -> String {
   "\{file_system_provider_scheme}:\{file_system_file_path}"
 }
@@ -1547,6 +1641,19 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   ctx.subscribe(
     @commands.register_command(file_decoration_command, args => {
       file_decoration_behavior(file_decoration_state, args)
+    }),
+  )
+  let document_paste_state = DocumentPasteState::{
+    provide_count: 0,
+    range_count: 0,
+    clipboard_text: "",
+    trigger_kind: "",
+    only_kind: "",
+    edit_title: "",
+  }
+  ctx.subscribe(
+    @commands.register_command(document_paste_command, args => {
+      document_paste_behavior(document_paste_state, args)
     }),
   )
   ctx.subscribe(
@@ -1740,6 +1847,16 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   ctx.subscribe(
     @window.register_file_decoration_provider(
       SmokeFileDecorationProvider::{ state: file_decoration_state },
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_paste_edit_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeDocumentPasteProvider::{ state: document_paste_state },
+      @vscode.DocumentPasteProviderMetadata::new(
+        [paste_kind()],
+        paste_mime_types=["text/plain"],
+      ),
     ),
   )
   ctx.subscribe(

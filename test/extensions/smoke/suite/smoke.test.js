@@ -80,6 +80,18 @@ function parseFileDecorationState(value) {
   };
 }
 
+function parseDocumentPasteState(value) {
+  const [provideCount, rangeCount, clipboardText, triggerKind, onlyKind, editTitle] = value.split('|');
+  return {
+    provideCount: Number(provideCount),
+    rangeCount: Number(rangeCount),
+    clipboardText,
+    triggerKind,
+    onlyKind,
+    editTitle
+  };
+}
+
 async function waitForFileDecorationState(predicate) {
   let state = parseFileDecorationState(
     await vscode.commands.executeCommand('vscode-mbt-tests.fileDecoration', 'read')
@@ -94,6 +106,17 @@ async function waitForFileDecorationState(predicate) {
     );
   }
   assert.fail(`file decoration provider was not called: ${JSON.stringify(state)}`);
+}
+
+async function waitForDocumentText(document, predicate) {
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const text = document.getText();
+    if (predicate(text)) {
+      return text;
+    }
+    await new Promise(resolve => setTimeout(resolve, 50));
+  }
+  assert.fail(`document text did not match: ${document.getText()}`);
 }
 
 function documentationText(value) {
@@ -874,6 +897,34 @@ async function run() {
     } finally {
       fs.rmSync(fixturePath, { force: true });
     }
+  });
+
+  await runCase('serves paste edits from a MoonBit DocumentPasteEditProvider', async () => {
+    await vscode.commands.executeCommand('vscode-mbt-tests.documentPaste', 'reset');
+    await vscode.env.clipboard.writeText('clipboard-source');
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'before after'
+    });
+    const editor = await vscode.window.showTextDocument(document);
+    editor.selection = new vscode.Selection(0, 7, 0, 7);
+
+    await vscode.commands.executeCommand('editor.action.pasteAs', { kind: 'text.moonbit' });
+    const text = await waitForDocumentText(
+      document,
+      value => value === 'before moonbit-pasted:clipboard-sourceafter'
+    );
+    assert.strictEqual(text, 'before moonbit-pasted:clipboard-sourceafter');
+
+    const state = parseDocumentPasteState(
+      await vscode.commands.executeCommand('vscode-mbt-tests.documentPaste', 'read')
+    );
+    assert.strictEqual(state.provideCount, 1);
+    assert.strictEqual(state.rangeCount, 1);
+    assert.strictEqual(state.clipboardText, 'clipboard-source');
+    assert.strictEqual(state.triggerKind, 'pasteAs');
+    assert.strictEqual(state.onlyKind, 'text.moonbit');
+    assert.strictEqual(state.editTitle, 'MoonBit paste edit');
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {

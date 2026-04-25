@@ -1370,7 +1370,7 @@ pub fn DocumentPasteEditProviderObject::new(
     DataTransfer,
     DocumentPasteEditContext,
     CancellationToken,
-  ) -> DocumentPasteEdit?,
+  ) -> Array[DocumentPasteEdit]?,
   metadata? : DocumentPasteProviderMetadata,
 ) -> DocumentPasteEditProviderObject {
   let metadata_js = match metadata {

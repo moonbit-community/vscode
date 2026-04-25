@@ -316,7 +316,7 @@ pub(open) trait DocumentPasteEditProvider {
     DataTransfer,
     DocumentPasteEditContext,
     CancellationToken,
-  ) -> DocumentPasteEdit?
+  ) -> Array[DocumentPasteEdit]?
   metadata(Self) -> DocumentPasteProviderMetadata?
 }
 

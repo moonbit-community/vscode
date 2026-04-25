@@ -3315,7 +3315,7 @@ pub(open) trait DocumentLinkProvider {
 }
 
 pub(open) trait DocumentPasteEditProvider {
-  async provide_document_paste_edits(Self, TextDocument, Array[Range], DataTransfer, DocumentPasteEditContext, CancellationToken) -> DocumentPasteEdit?
+  async provide_document_paste_edits(Self, TextDocument, Array[Range], DataTransfer, DocumentPasteEditContext, CancellationToken) -> Array[DocumentPasteEdit]?
   metadata(Self) -> DocumentPasteProviderMetadata?
 }
 

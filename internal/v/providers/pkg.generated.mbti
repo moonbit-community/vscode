@@ -80,7 +80,7 @@ pub type DocumentLinkProviderObject[T]
 pub fn DocumentLinkProviderObject::new(async (@vscode.TextDocument, @vscode.CancellationToken) -> Array[@vscode.DocumentLink]?, resolve_link? : async (@vscode.DocumentLink, @vscode.CancellationToken) -> @vscode.DocumentLink?) -> Self[@vscode.DocumentLink]
 
 pub type DocumentPasteEditProviderObject
-pub fn DocumentPasteEditProviderObject::new(async (@vscode.TextDocument, Array[@vscode.Range], @vscode.DataTransfer, @vscode.DocumentPasteEditContext, @vscode.CancellationToken) -> @vscode.DocumentPasteEdit?, metadata? : @vscode.DocumentPasteProviderMetadata) -> Self
+pub fn DocumentPasteEditProviderObject::new(async (@vscode.TextDocument, Array[@vscode.Range], @vscode.DataTransfer, @vscode.DocumentPasteEditContext, @vscode.CancellationToken) -> Array[@vscode.DocumentPasteEdit]?, metadata? : @vscode.DocumentPasteProviderMetadata) -> Self
 
 pub type DocumentRangeFormattingEditProviderObject
 pub fn DocumentRangeFormattingEditProviderObject::new(async (@vscode.TextDocument, @vscode.Range, @vscode.FormattingOptions, @vscode.CancellationToken) -> Array[@vscode.TextEdit]?) -> Self
