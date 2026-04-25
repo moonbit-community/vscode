@@ -23,6 +23,15 @@ let content_provider_scheme = "vscode-mbt-smoke"
 let language_provider_language = "vscode-mbt-smoke-language"
 
 ///|
+let document_formatting_language = "vscode-mbt-smoke-document-formatting"
+
+///|
+let range_formatting_language = "vscode-mbt-smoke-range-formatting"
+
+///|
+let on_type_formatting_language = "vscode-mbt-smoke-on-type-formatting"
+
+///|
 let file_system_provider_uri_command = "vscode-mbt-tests.fileSystemProviderUri"
 
 ///|
@@ -99,6 +108,18 @@ priv struct SmokeReferenceProvider {
 
 ///|
 priv struct SmokeRenameProvider {
+}
+
+///|
+priv struct SmokeDocumentFormattingProvider {
+}
+
+///|
+priv struct SmokeDocumentRangeFormattingProvider {
+}
+
+///|
+priv struct SmokeOnTypeFormattingProvider {
 }
 
 ///|
@@ -441,6 +462,52 @@ impl @vscode.RenameProvider for SmokeRenameProvider with prepare_rename(
       @vscode.Position::new(0, 4),
     ),
   )
+}
+
+///|
+impl @vscode.DocumentFormattingEditProvider for SmokeDocumentFormattingProvider with provide_document_formatting_edits(
+  _self,
+  _document,
+  options,
+  _token,
+) {
+  let indent = if options.insert_spaces { "spaces" } else { "tabs" }
+  Some([
+    @vscode.TextEdit::insert(
+      @vscode.Position::new(0, 0),
+      "doc:\{options.tab_size}:\{indent}:",
+    ),
+  ])
+}
+
+///|
+impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with provide_document_range_formatting_edits(
+  _self,
+  _document,
+  range,
+  options,
+  _token,
+) {
+  let indent = if options.insert_spaces { "spaces" } else { "tabs" }
+  Some([@vscode.TextEdit::replace(range, "range:\{options.tab_size}:\{indent}")])
+}
+
+///|
+impl @vscode.OnTypeFormattingEditProvider for SmokeOnTypeFormattingProvider with provide_on_type_formatting_edits(
+  _self,
+  _document,
+  position,
+  ch,
+  options,
+  _token,
+) {
+  let indent = if options.insert_spaces { "spaces" } else { "tabs" }
+  Some([
+    @vscode.TextEdit::insert(
+      position,
+      "type:\{ch}:\{options.tab_size}:\{indent}",
+    ),
+  ])
 }
 
 ///|
@@ -821,6 +888,26 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @languages.register_rename_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeRenameProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_formatting_edit_provider(
+      @vscode.DocumentSelector::Language(document_formatting_language),
+      SmokeDocumentFormattingProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_range_formatting_edit_provider(
+      @vscode.DocumentSelector::Language(range_formatting_language),
+      SmokeDocumentRangeFormattingProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_on_type_formatting_edit_provider(
+      @vscode.DocumentSelector::Language(on_type_formatting_language),
+      SmokeOnTypeFormattingProvider::{},
+      "}",
+      more_trigger_characters=[";"],
     ),
   )
   let file_system_provider = SmokeFileSystemProvider::new()

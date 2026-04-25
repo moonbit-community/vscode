@@ -807,7 +807,9 @@ pub fn DocumentFormattingEditProviderObject::new(
 ) -> DocumentFormattingEditProviderObject {
   document_formatting_provider_ffi((document, options, token) => {
     @js_async.Promise::from_async(async fn() {
-      @v.option_to_js(provide_edits(document, options, token))
+      @v.option_to_js(
+        provide_edits(document, formatting_options_from_js(options), token),
+      )
     })
   })
 }
@@ -823,7 +825,11 @@ pub fn DocumentRangeFormattingEditProviderObject::new(
 ) -> DocumentRangeFormattingEditProviderObject {
   document_range_formatting_provider_ffi((document, range, options, token) => {
     @js_async.Promise::from_async(async fn() {
-      @v.option_to_js(provide_edits(document, range, options, token))
+      @v.option_to_js(
+        provide_edits(
+          document, range, formatting_options_from_js(options), token,
+        ),
+      )
     })
   })
 }
@@ -840,7 +846,15 @@ pub fn OnTypeFormattingEditProviderObject::new(
 ) -> OnTypeFormattingEditProviderObject {
   on_type_formatting_provider_ffi((document, position, ch, options, token) => {
     @js_async.Promise::from_async(async fn() {
-      @v.option_to_js(provide_edits(document, position, ch, options, token))
+      @v.option_to_js(
+        provide_edits(
+          document,
+          position,
+          ch,
+          formatting_options_from_js(options),
+          token,
+        ),
+      )
     })
   })
 }
@@ -1426,6 +1440,15 @@ fn code_action_context_from_js(value : @v.JsValue) -> CodeActionContext {
 }
 
 ///|
+fn formatting_options_from_js(value : FormattingOptions) -> FormattingOptions {
+  let raw = @v.JsValue::make(value)
+  FormattingOptions::new(
+    formatting_options_tab_size_raw(raw).cast(),
+    formatting_options_insert_spaces_raw(raw).cast(),
+  )
+}
+
+///|
 fn code_action_kind_from_value(value : String) -> CodeActionKind {
   match value {
     "" => CodeActionKind::Empty
@@ -1460,6 +1483,18 @@ extern "js" fn code_action_kind_value_from_js(value : @v.JsValue) -> String =
   #|   }
   #|   return "";
   #| }
+
+///|
+extern "js" fn formatting_options_tab_size_raw(
+  value : @v.JsValue,
+) -> @v.JsValue =
+  #| (value) => value === undefined || value === null ? undefined : value.tabSize ?? value.tab_size
+
+///|
+extern "js" fn formatting_options_insert_spaces_raw(
+  value : @v.JsValue,
+) -> @v.JsValue =
+  #| (value) => value === undefined || value === null ? undefined : value.insertSpaces ?? value.insert_spaces
 
 ///|
 fn call_hierarchy_item_from_js(value : @v.JsValue) -> CallHierarchyItem {

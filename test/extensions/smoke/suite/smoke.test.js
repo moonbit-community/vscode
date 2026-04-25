@@ -14,6 +14,16 @@ async function runCase(name, fn) {
   }
 }
 
+function applyTextEdits(document, edits) {
+  return [...edits]
+    .sort((left, right) => document.offsetAt(right.range.start) - document.offsetAt(left.range.start))
+    .reduce((text, edit) => {
+      const start = document.offsetAt(edit.range.start);
+      const end = document.offsetAt(edit.range.end);
+      return `${text.slice(0, start)}${edit.newText}${text.slice(end)}`;
+    }, document.getText());
+}
+
 async function run() {
   await runCase('registers and executes MoonBit command handlers', async () => {
     const value = await vscode.commands.executeCommand('vscode-mbt-tests.echo', 'api');
@@ -381,6 +391,52 @@ async function run() {
       ],
       [0, 0, 0, 4]
     );
+  });
+
+  await runCase('serves document formatting edits from a MoonBit DocumentFormattingEditProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-document-formatting',
+      content: 'format me'
+    });
+    const edits = await vscode.commands.executeCommand(
+      'vscode.executeFormatDocumentProvider',
+      document.uri,
+      { tabSize: 2, insertSpaces: true }
+    );
+
+    assert.strictEqual(applyTextEdits(document, edits), 'doc:2:spaces:format me');
+  });
+
+  await runCase('serves range formatting edits from a MoonBit DocumentRangeFormattingEditProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-range-formatting',
+      content: 'abcde format'
+    });
+    const range = new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 5));
+    const edits = await vscode.commands.executeCommand(
+      'vscode.executeFormatRangeProvider',
+      document.uri,
+      range,
+      { tabSize: 4, insertSpaces: false }
+    );
+
+    assert.strictEqual(applyTextEdits(document, edits), 'range:4:tabs format');
+  });
+
+  await runCase('serves on-type formatting edits from a MoonBit OnTypeFormattingEditProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-on-type-formatting',
+      content: 'type format'
+    });
+    const edits = await vscode.commands.executeCommand(
+      'vscode.executeFormatOnTypeProvider',
+      document.uri,
+      new vscode.Position(0, 4),
+      '}',
+      { tabSize: 3, insertSpaces: true }
+    );
+
+    assert.strictEqual(applyTextEdits(document, edits), 'typetype:}:3:spaces format');
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {
