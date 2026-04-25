@@ -80,6 +80,18 @@ function parseFileDecorationState(value) {
   };
 }
 
+function parseInlineCompletionState(value) {
+  const [provideCount, lastUri, lastLine, lastCharacter, triggerKind, itemText] = value.split('|');
+  return {
+    provideCount: Number(provideCount),
+    lastUri,
+    lastLine: Number(lastLine),
+    lastCharacter: Number(lastCharacter),
+    triggerKind,
+    itemText
+  };
+}
+
 function parseDocumentPasteState(value) {
   const [provideCount, rangeCount, clipboardText, triggerKind, onlyKind, editTitle] = value.split('|');
   return {
@@ -125,6 +137,22 @@ async function waitForFileDecorationState(predicate) {
     );
   }
   assert.fail(`file decoration provider was not called: ${JSON.stringify(state)}`);
+}
+
+async function waitForInlineCompletionState(predicate) {
+  let state = parseInlineCompletionState(
+    await vscode.commands.executeCommand('vscode-mbt-tests.inlineCompletion', 'read')
+  );
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    if (predicate(state)) {
+      return state;
+    }
+    await new Promise(resolve => setTimeout(resolve, 50));
+    state = parseInlineCompletionState(
+      await vscode.commands.executeCommand('vscode-mbt-tests.inlineCompletion', 'read')
+    );
+  }
+  assert.fail(`inline completion provider was not called: ${JSON.stringify(state)}`);
 }
 
 async function waitForDocumentText(document, predicate) {
@@ -265,6 +293,29 @@ async function run() {
     assert.strictEqual(item.insertText, 'moonbitInserted');
     assert.deepStrictEqual(item.commitCharacters, [';']);
     assert.strictEqual(item.documentation, 'resolved by MoonBit');
+  });
+
+  await runCase('serves inline completions from a MoonBit InlineCompletionItemProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon'
+    });
+    const editor = await vscode.window.showTextDocument(document);
+    editor.selection = new vscode.Selection(0, 4, 0, 4);
+    await vscode.commands.executeCommand('vscode-mbt-tests.inlineCompletion', 'reset');
+    await vscode.commands.executeCommand('editor.action.inlineSuggest.trigger', { explicit: true });
+
+    const state = await waitForInlineCompletionState(({ lastUri, triggerKind }) =>
+      lastUri === document.uri.toString() && triggerKind === 'invoke'
+    );
+    assert.ok(state.provideCount >= 1, `provide count: ${state.provideCount}`);
+    assert.strictEqual(state.lastLine, 0);
+    assert.strictEqual(state.lastCharacter, 4);
+    assert.strictEqual(state.itemText, 'bit-inline');
+
+    await vscode.commands.executeCommand('editor.action.inlineSuggest.commit');
+    const text = await waitForDocumentText(document, value => value === 'moonbit-inline');
+    assert.strictEqual(text, 'moonbit-inline');
   });
 
   await runCase('serves code actions from a MoonBit CodeActionProvider', async () => {

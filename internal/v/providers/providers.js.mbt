@@ -1345,7 +1345,9 @@ fn document_paste_provider_metadata_to_js(
 
 ///|
 pub fn DocumentDropEditProviderObject::new(
-  provide_edit : async (TextDocument, Position, DataTransfer, CancellationToken) -> DocumentDropEdit?,
+  provide_edit : async (TextDocument, Position, DataTransfer, CancellationToken) -> Array[
+    DocumentDropEdit,
+  ]?,
   metadata? : DocumentDropEditProviderMetadata,
 ) -> DocumentDropEditProviderObject {
   let metadata_js = match metadata {

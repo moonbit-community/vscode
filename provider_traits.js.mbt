@@ -303,7 +303,7 @@ pub(open) trait DocumentDropEditProvider {
     Position,
     DataTransfer,
     CancellationToken,
-  ) -> DocumentDropEdit?
+  ) -> Array[DocumentDropEdit]?
   metadata(Self) -> DocumentDropEditProviderMetadata?
 }
 

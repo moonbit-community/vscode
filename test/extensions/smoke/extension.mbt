@@ -29,6 +29,9 @@ let webview_view_id = "vscode-mbt-smoke-webview"
 let file_decoration_command = "vscode-mbt-tests.fileDecoration"
 
 ///|
+let inline_completion_command = "vscode-mbt-tests.inlineCompletion"
+
+///|
 let document_paste_command = "vscode-mbt-tests.documentPaste"
 
 ///|
@@ -209,6 +212,11 @@ priv struct SmokeFileDecorationProvider {
 }
 
 ///|
+priv struct SmokeInlineCompletionProvider {
+  state : InlineCompletionState
+}
+
+///|
 priv struct SmokeDocumentPasteProvider {
   state : DocumentPasteState
 }
@@ -280,6 +288,16 @@ priv struct FileDecorationState {
   mut last_uri : String
   mut badge : String
   mut tooltip : String
+}
+
+///|
+priv struct InlineCompletionState {
+  mut provide_count : Int
+  mut last_uri : String
+  mut last_line : Int
+  mut last_character : Int
+  mut trigger_kind : String
+  mut item_text : String
 }
 
 ///|
@@ -1064,6 +1082,42 @@ impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with provide
 }
 
 ///|
+fn inline_completion_trigger_kind_name(
+  kind : @vscode.InlineCompletionTriggerKind,
+) -> String {
+  if kind == @vscode.InlineCompletionTriggerKind::Invoke {
+    "invoke"
+  } else {
+    "automatic"
+  }
+}
+
+///|
+impl @vscode.InlineCompletionItemProvider for SmokeInlineCompletionProvider with provide_inline_completion_items(
+  self,
+  document,
+  position,
+  context,
+  _token,
+) {
+  let item_text = "bit-inline"
+  self.state.provide_count = self.state.provide_count + 1
+  self.state.last_uri = document.uri().to_string()
+  self.state.last_line = position.line()
+  self.state.last_character = position.character()
+  self.state.trigger_kind = inline_completion_trigger_kind_name(
+    context.trigger_kind,
+  )
+  self.state.item_text = item_text
+  Some([
+    @vscode.InlineCompletionItem::new(
+      @vscode.StringOrSnippetString::Text(item_text),
+      range=@vscode.Range::new(position, position),
+    ),
+  ])
+}
+
+///|
 fn paste_kind() -> @vscode.DocumentDropOrPasteEditKind {
   @vscode.DocumentDropOrPasteEditKind::Text.append("moonbit")
 }
@@ -1611,6 +1665,23 @@ fn file_decoration_behavior(
 }
 
 ///|
+fn inline_completion_behavior(
+  state : InlineCompletionState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.provide_count = 0
+    state.last_uri = ""
+    state.last_line = -1
+    state.last_character = -1
+    state.trigger_kind = ""
+    state.item_text = ""
+  }
+  "\{state.provide_count}|\{state.last_uri}|\{state.last_line}|\{state.last_character}|\{state.trigger_kind}|\{state.item_text}"
+}
+
+///|
 fn document_paste_behavior(
   state : DocumentPasteState,
   args : @commands.CommandArgs,
@@ -1737,6 +1808,19 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       file_decoration_behavior(file_decoration_state, args)
     }),
   )
+  let inline_completion_state = InlineCompletionState::{
+    provide_count: 0,
+    last_uri: "",
+    last_line: -1,
+    last_character: -1,
+    trigger_kind: "",
+    item_text: "",
+  }
+  ctx.subscribe(
+    @commands.register_command(inline_completion_command, args => {
+      inline_completion_behavior(inline_completion_state, args)
+    }),
+  )
   let document_paste_state = DocumentPasteState::{
     provide_count: 0,
     range_count: 0,
@@ -1801,6 +1885,12 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeCompletionProvider::{},
       trigger_characters=["."],
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_inline_completion_item_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeInlineCompletionProvider::{ state: inline_completion_state },
     ),
   )
   ctx.subscribe(

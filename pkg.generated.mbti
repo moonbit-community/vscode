@@ -3297,7 +3297,7 @@ pub(open) trait DocumentColorProvider {
 }
 
 pub(open) trait DocumentDropEditProvider {
-  async provide_document_drop_edits(Self, TextDocument, Position, DataTransfer, CancellationToken) -> DocumentDropEdit?
+  async provide_document_drop_edits(Self, TextDocument, Position, DataTransfer, CancellationToken) -> Array[DocumentDropEdit]?
   metadata(Self) -> DocumentDropEditProviderMetadata?
 }
 

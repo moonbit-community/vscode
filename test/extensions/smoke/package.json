@@ -17,6 +17,7 @@
     "onCommand:vscode-mbt-tests.treeView",
     "onCommand:vscode-mbt-tests.webviewView",
     "onCommand:vscode-mbt-tests.fileDecoration",
+    "onCommand:vscode-mbt-tests.inlineCompletion",
     "onCommand:vscode-mbt-tests.documentPaste",
     "onCommand:vscode-mbt-tests.commentingRange",
     "onCommand:vscode-mbt-tests.quickDiff",
@@ -103,6 +104,10 @@
       {
         "command": "vscode-mbt-tests.fileDecoration",
         "title": "MoonBit Smoke: File Decoration"
+      },
+      {
+        "command": "vscode-mbt-tests.inlineCompletion",
+        "title": "MoonBit Smoke: Inline Completion"
       },
       {
         "command": "vscode-mbt-tests.documentPaste",

@@ -12,7 +12,7 @@ Status keys:
 | Provider trait | Status | Smoke trigger | Notes |
 | --- | --- | --- | --- |
 | `CompletionItemProvider` | covered | `vscode.executeCompletionItemProvider` | Includes resolve path. |
-| `InlineCompletionItemProvider` | pending-harness | none | No stable command found in the current extension-host harness. |
+| `InlineCompletionItemProvider` | covered | `editor.action.inlineSuggest.trigger` | Verifies provider state and commits the returned inline suggestion. |
 | `CodeActionProvider` | covered | `vscode.executeCodeActionProvider` | Includes resolve path. |
 | `CodeLensProvider` | covered | `vscode.executeCodeLensProvider` | Includes resolve path. |
 | `DefinitionProvider` | covered | `vscode.executeDefinitionProvider` |  |

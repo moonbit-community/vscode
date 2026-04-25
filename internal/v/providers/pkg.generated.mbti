@@ -68,7 +68,7 @@ pub type DocumentColorProviderObject
 pub fn DocumentColorProviderObject::new(async (@vscode.TextDocument, @vscode.CancellationToken) -> Array[@vscode.ColorInformation]?, async (@vscode.Color, @vscode.ColorPresentationContext, @vscode.CancellationToken) -> Array[@vscode.ColorPresentation]?) -> Self
 
 pub type DocumentDropEditProviderObject
-pub fn DocumentDropEditProviderObject::new(async (@vscode.TextDocument, @vscode.Position, @vscode.DataTransfer, @vscode.CancellationToken) -> @vscode.DocumentDropEdit?, metadata? : @vscode.DocumentDropEditProviderMetadata) -> Self
+pub fn DocumentDropEditProviderObject::new(async (@vscode.TextDocument, @vscode.Position, @vscode.DataTransfer, @vscode.CancellationToken) -> Array[@vscode.DocumentDropEdit]?, metadata? : @vscode.DocumentDropEditProviderMetadata) -> Self
 
 pub type DocumentFormattingEditProviderObject
 pub fn DocumentFormattingEditProviderObject::new(async (@vscode.TextDocument, @vscode.FormattingOptions, @vscode.CancellationToken) -> Array[@vscode.TextEdit]?) -> Self
