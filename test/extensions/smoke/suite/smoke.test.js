@@ -92,6 +92,16 @@ function parseDocumentPasteState(value) {
   };
 }
 
+function parseCommentingRangeState(value) {
+  const [provideCount, lastUri, rangeCount, enableFileComments] = value.split('|');
+  return {
+    provideCount: Number(provideCount),
+    lastUri,
+    rangeCount: Number(rangeCount),
+    enableFileComments: enableFileComments === 'true'
+  };
+}
+
 async function waitForFileDecorationState(predicate) {
   let state = parseFileDecorationState(
     await vscode.commands.executeCommand('vscode-mbt-tests.fileDecoration', 'read')
@@ -117,6 +127,22 @@ async function waitForDocumentText(document, predicate) {
     await new Promise(resolve => setTimeout(resolve, 50));
   }
   assert.fail(`document text did not match: ${document.getText()}`);
+}
+
+async function waitForCommentingRangeState(predicate) {
+  let state = parseCommentingRangeState(
+    await vscode.commands.executeCommand('vscode-mbt-tests.commentingRange', 'read')
+  );
+  for (let attempt = 0; attempt < 30; attempt += 1) {
+    if (predicate(state)) {
+      return state;
+    }
+    await new Promise(resolve => setTimeout(resolve, 50));
+    state = parseCommentingRangeState(
+      await vscode.commands.executeCommand('vscode-mbt-tests.commentingRange', 'read')
+    );
+  }
+  assert.fail(`commenting range provider was not called: ${JSON.stringify(state)}`);
 }
 
 function documentationText(value) {
@@ -925,6 +951,21 @@ async function run() {
     assert.strictEqual(state.triggerKind, 'pasteAs');
     assert.strictEqual(state.onlyKind, 'text.moonbit');
     assert.strictEqual(state.editTitle, 'MoonBit paste edit');
+  });
+
+  await runCase('serves ranges from a MoonBit CommentingRangeProvider', async () => {
+    await vscode.commands.executeCommand('vscode-mbt-tests.commentingRange', 'reset');
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'commentable\nline'
+    });
+    await vscode.window.showTextDocument(document);
+    await vscode.commands.executeCommand('editor.action.nextCommentingRange');
+
+    const state = await waitForCommentingRangeState(({ lastUri }) => lastUri === document.uri.toString());
+    assert.ok(state.provideCount >= 1, `provide count: ${state.provideCount}`);
+    assert.strictEqual(state.rangeCount, 1);
+    assert.strictEqual(state.enableFileComments, true);
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {

@@ -43,7 +43,7 @@ Status keys:
 | `DocumentDropEditProvider` | pending-harness | none | Drop behavior is workbench/UI driven. |
 | `DocumentPasteEditProvider` | covered | `editor.action.pasteAs` | Verifies paste edit selection through clipboard/workbench flow. |
 | `QuickDiffProvider` | pending-harness | none | Needs SCM/quick-diff workbench trigger. |
-| `CommentingRangeProvider` | pending-harness | none | Needs comments controller/workbench trigger. |
+| `CommentingRangeProvider` | covered | `editor.action.nextCommentingRange` | Uses a comment controller and verifies provider state. |
 | `TextDocumentContentProvider` | covered | `workspace.openTextDocument` with custom scheme |  |
 | `FileSystemProvider` | covered | `workspace.fs` with custom scheme | Also validates provider disposables at shutdown. |
 | `WebviewViewProvider` | covered | `vscode-mbt-smoke-webview.focus` | Verifies resolve state and webview HTML through a state command. |

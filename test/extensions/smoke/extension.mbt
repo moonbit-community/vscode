@@ -32,6 +32,9 @@ let file_decoration_command = "vscode-mbt-tests.fileDecoration"
 let document_paste_command = "vscode-mbt-tests.documentPaste"
 
 ///|
+let commenting_range_command = "vscode-mbt-tests.commentingRange"
+
+///|
 let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 
 ///|
@@ -208,6 +211,11 @@ priv struct SmokeDocumentPasteProvider {
 }
 
 ///|
+priv struct SmokeCommentingRangeProvider {
+  state : CommentingRangeState
+}
+
+///|
 priv struct SmokeDocumentRangeFormattingProvider {
 }
 
@@ -274,6 +282,14 @@ priv struct DocumentPasteState {
   mut trigger_kind : String
   mut only_kind : String
   mut edit_title : String
+}
+
+///|
+priv struct CommentingRangeState {
+  mut provide_count : Int
+  mut last_uri : String
+  mut range_count : Int
+  mut enable_file_comments : Bool
 }
 
 ///|
@@ -1092,6 +1108,25 @@ impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with metad
 }
 
 ///|
+impl @vscode.CommentingRangeProvider for SmokeCommentingRangeProvider with provide_commenting_ranges(
+  self,
+  document,
+  _token,
+) {
+  self.state.provide_count = self.state.provide_count + 1
+  self.state.last_uri = document.uri().to_string()
+  let ranges = [
+    @vscode.Range::new(
+      @vscode.Position::new(0, 0),
+      @vscode.Position::new(1, 0),
+    ),
+  ]
+  self.state.range_count = ranges.length()
+  self.state.enable_file_comments = true
+  Some(@vscode.CommentingRanges::new(true, ranges~))
+}
+
+///|
 impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with provide_document_range_formatting_edits(
   _self,
   _document,
@@ -1563,6 +1598,21 @@ fn document_paste_behavior(
 }
 
 ///|
+fn commenting_range_behavior(
+  state : CommentingRangeState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.provide_count = 0
+    state.last_uri = ""
+    state.range_count = 0
+    state.enable_file_comments = false
+  }
+  "\{state.provide_count}|\{state.last_uri}|\{state.range_count}|\{state.enable_file_comments}"
+}
+
+///|
 fn file_system_provider_uri(_args : @commands.CommandArgs) -> String {
   "\{file_system_provider_scheme}:\{file_system_file_path}"
 }
@@ -1656,6 +1706,25 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       document_paste_behavior(document_paste_state, args)
     }),
   )
+  let commenting_range_state = CommentingRangeState::{
+    provide_count: 0,
+    last_uri: "",
+    range_count: 0,
+    enable_file_comments: false,
+  }
+  ctx.subscribe(
+    @commands.register_command(commenting_range_command, args => {
+      commenting_range_behavior(commenting_range_state, args)
+    }),
+  )
+  let comment_controller = @comments.create_comment_controller(
+    "vscode-mbt-smoke-comments",
+    "MoonBit Smoke Comments",
+  )
+  comment_controller.set_commenting_range_provider(
+    SmokeCommentingRangeProvider::{ state: commenting_range_state },
+  )
+  ctx.subscribe(comment_controller)
   ctx.subscribe(
     @commands.register_command(content_provider_uri_command, content_provider_uri),
   )
