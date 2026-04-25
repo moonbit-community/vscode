@@ -54,6 +54,10 @@ priv struct SmokeCompletionProvider {
 }
 
 ///|
+priv struct SmokeCodeActionProvider {
+}
+
+///|
 priv struct SmokeCodeLensProvider {
 }
 
@@ -126,6 +130,32 @@ impl @vscode.CompletionItemProvider for SmokeCompletionProvider with resolve_com
     @vscode.MarkdownStringValue::Text("resolved by MoonBit"),
   )
   Some(item)
+}
+
+///|
+impl @vscode.CodeActionProvider for SmokeCodeActionProvider with provide_code_actions(
+  _self,
+  _document,
+  _range,
+  _context,
+  _token,
+) {
+  let action = @vscode.CodeAction::new(
+    "MoonBit quick fix",
+    kind=@vscode.CodeActionKind::QuickFix,
+  )
+  action.set_is_preferred(true)
+  Some([action])
+}
+
+///|
+impl @vscode.CodeActionProvider for SmokeCodeActionProvider with resolve_code_action(
+  _self,
+  action,
+  _token,
+) {
+  action.set_command(@vscode.Command::new("Apply MoonBit fix", echo_command))
+  Some(action)
 }
 
 ///|
@@ -505,6 +535,15 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeCompletionProvider::{},
       trigger_characters=["."],
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_code_actions_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeCodeActionProvider::{},
+      metadata=@vscode.CodeActionProviderMetadata::new(
+        provided_kinds=[@vscode.CodeActionKind::QuickFix],
+      ),
     ),
   )
   ctx.subscribe(

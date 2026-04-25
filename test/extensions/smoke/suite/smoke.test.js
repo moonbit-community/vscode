@@ -82,6 +82,27 @@ async function run() {
     assert.strictEqual(item.documentation, 'resolved by MoonBit');
   });
 
+  await runCase('serves code actions from a MoonBit CodeActionProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon action'
+    });
+    const actions = await vscode.commands.executeCommand(
+      'vscode.executeCodeActionProvider',
+      document.uri,
+      new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 4)),
+      vscode.CodeActionKind.QuickFix.value,
+      1
+    );
+
+    assert.strictEqual(actions.length, 1);
+    assert.strictEqual(actions[0].title, 'MoonBit quick fix');
+    assert.strictEqual(actions[0].kind.value, vscode.CodeActionKind.QuickFix.value);
+    assert.strictEqual(actions[0].isPreferred, true);
+    assert.strictEqual(actions[0].command.title, 'Apply MoonBit fix');
+    assert.strictEqual(actions[0].command.command, 'vscode-mbt-tests.echo');
+  });
+
   await runCase('serves code lenses from a MoonBit CodeLensProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',

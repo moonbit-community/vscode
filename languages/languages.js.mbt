@@ -1,6 +1,7 @@
 ///|
 /// VS Code languages namespace bindings for the JS backend.
 using @vscode {
+  type CodeActionKind,
   type CancellationToken,
   type CodeActionProviderMetadata,
   type Diagnostic,
@@ -229,9 +230,50 @@ fn code_action_provider_metadata_to_js(
   metadata : CodeActionProviderMetadata,
 ) -> @v.JsValue {
   languages_code_action_provider_metadata_to_js_ffi(
-    @v.option_to_js(metadata.provided_kinds),
+    option_code_action_kind_array_to_js(metadata.provided_kinds),
   )
 }
+
+///|
+fn option_code_action_kind_array_to_js(
+  values : Array[CodeActionKind]?,
+) -> @v.JsValue {
+  match values {
+    None => @v.JsValue::make(())
+    Some(values) => @v.JsValue::make(code_action_kind_array_to_js(values))
+  }
+}
+
+///|
+fn code_action_kind_array_to_js(
+  values : Array[CodeActionKind],
+) -> Array[@v.JsValue] {
+  let encoded : Array[@v.JsValue] = []
+  for value in values {
+    encoded.push(code_action_kind_to_js(value))
+  }
+  encoded
+}
+
+///|
+fn code_action_kind_to_js(value : CodeActionKind) -> @v.JsValue {
+  languages_code_action_kind_to_js_ffi(value.value())
+}
+
+///|
+extern "js" fn languages_code_action_kind_to_js_ffi(
+  value : String,
+) -> @v.JsValue =
+  #| (value) => {
+  #|   const kind = require("vscode").CodeActionKind;
+  #|   if (value === "") return kind.Empty;
+  #|   let result = kind.Empty;
+  #|   for (const part of value.split(".")) {
+  #|     if (part.length === 0) continue;
+  #|     result = result.append(part);
+  #|   }
+  #|   return result;
+  #| }
 
 ///|
 extern "js" fn languages_code_action_provider_metadata_to_js_ffi(
