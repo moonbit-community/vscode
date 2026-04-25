@@ -152,6 +152,64 @@ async function run() {
     );
   });
 
+  await runCase('serves document highlights from a MoonBit DocumentHighlightProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon highlight'
+    });
+    const highlights = await vscode.commands.executeCommand(
+      'vscode.executeDocumentHighlights',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(highlights.length, 1);
+    assert.strictEqual(highlights[0].kind, vscode.DocumentHighlightKind.Write);
+    assert.deepStrictEqual(
+      [
+        highlights[0].range.start.line,
+        highlights[0].range.start.character,
+        highlights[0].range.end.line,
+        highlights[0].range.end.character
+      ],
+      [0, 0, 0, 4]
+    );
+  });
+
+  await runCase('serves document symbols from a MoonBit DocumentSymbolProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon symbol'
+    });
+    const symbols = await vscode.commands.executeCommand(
+      'vscode.executeDocumentSymbolProvider',
+      document.uri
+    );
+
+    assert.strictEqual(symbols.length, 1);
+    assert.strictEqual(symbols[0].name, 'moonSymbol');
+    assert.strictEqual(symbols[0].detail, 'MoonBit symbol detail');
+    assert.strictEqual(symbols[0].kind, vscode.SymbolKind.Function);
+    assert.deepStrictEqual(
+      [
+        symbols[0].range.start.line,
+        symbols[0].range.start.character,
+        symbols[0].range.end.line,
+        symbols[0].range.end.character
+      ],
+      [0, 0, 0, 10]
+    );
+    assert.deepStrictEqual(
+      [
+        symbols[0].selectionRange.start.line,
+        symbols[0].selectionRange.start.character,
+        symbols[0].selectionRange.end.line,
+        symbols[0].selectionRange.end.character
+      ],
+      [0, 0, 0, 4]
+    );
+  });
+
   await runCase('serves hovers from a MoonBit HoverProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',

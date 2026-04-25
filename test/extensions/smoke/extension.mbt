@@ -66,6 +66,14 @@ priv struct SmokeDefinitionProvider {
 }
 
 ///|
+priv struct SmokeDocumentHighlightProvider {
+}
+
+///|
+priv struct SmokeDocumentSymbolProvider {
+}
+
+///|
 priv struct SmokeHoverProvider {
 }
 
@@ -207,6 +215,47 @@ impl @vscode.DefinitionProvider for SmokeDefinitionProvider with provide_definit
   Some([
     @vscode.Location::new(
       document.uri(),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.DocumentHighlightProvider for SmokeDocumentHighlightProvider with provide_document_highlights(
+  _self,
+  _document,
+  _position,
+  _token,
+) {
+  Some([
+    @vscode.DocumentHighlight::new(
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+      kind=@vscode.DocumentHighlightKind::Write,
+    ),
+  ])
+}
+
+///|
+impl @vscode.DocumentSymbolProvider for SmokeDocumentSymbolProvider with provide_document_symbols(
+  _self,
+  _document,
+  _token,
+) {
+  Some([
+    @vscode.DocumentSymbol::new(
+      "moonSymbol",
+      "MoonBit symbol detail",
+      @vscode.SymbolKind::Function,
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 10),
+      ),
       @vscode.Range::new(
         @vscode.Position::new(0, 0),
         @vscode.Position::new(0, 4),
@@ -556,6 +605,21 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @languages.register_definition_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeDefinitionProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_highlight_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeDocumentHighlightProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_symbol_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeDocumentSymbolProvider::{},
+      metadata=@vscode.DocumentSymbolProviderMetadata::new(
+        label="MoonBit Symbols",
+      ),
     ),
   )
   ctx.subscribe(
