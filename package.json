@@ -6,7 +6,7 @@
     "@vscode/test-electron": "^2.5.2"
   },
   "scripts": {
-    "build:test-extension:smoke": "moon -C test/extensions/smoke build --target js --release",
+    "build:test-extension:smoke": "moon -C test/extensions/smoke build --target js --release && node test/extensions/smoke/copy-build.js",
     "check:test-extension:smoke": "moon -C test/extensions/smoke check --target js",
     "test:integration": "npm run build:test-extension:smoke && node test/extensions/smoke/run-tests.js",
     "test:ui": "npm run build:test-extension:smoke && node test/extensions/smoke/ui/run-ui-tests.js",

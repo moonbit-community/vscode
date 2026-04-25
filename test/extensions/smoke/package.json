@@ -22,8 +22,15 @@
     "onCommand:vscode-mbt-tests.uiFileDecoration",
     "onCommand:vscode-mbt-tests.inlineCompletion",
     "onCommand:vscode-mbt-tests.documentPaste",
+    "onCommand:vscode-mbt-tests.documentDrop",
+    "onCommand:vscode-mbt-tests.uiDocumentDrop",
     "onCommand:vscode-mbt-tests.commentingRange",
     "onCommand:vscode-mbt-tests.quickDiff",
+    "onCommand:vscode-mbt-tests.terminalLink",
+    "onCommand:vscode-mbt-tests.uiTerminalLink",
+    "onCommand:vscode-mbt-tests.terminalProfile",
+    "onCommand:vscode-mbt-tests.uiTerminalProfile",
+    "onTerminalProfile:vscode-mbt-smoke-terminal-profile",
     "onCommand:vscode-mbt-tests.contentProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemReadDirectory",
@@ -34,7 +41,7 @@
     "onLanguage:vscode-mbt-smoke-semantic-tokens",
     "onLanguage:vscode-mbt-smoke-range-semantic-tokens"
   ],
-  "main": "../../../_build/js/release/build/vscode_mbt_smoke_extension/vscode_mbt_smoke_extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "authentication": [
       {
@@ -42,6 +49,32 @@
         "label": "MoonBit Smoke Auth"
       }
     ],
+    "taskDefinitions": [
+      {
+        "type": "vscode-mbt-smoke-task",
+        "required": [
+          "script"
+        ],
+        "properties": {
+          "script": {
+            "type": "string"
+          },
+          "fromMoonBit": {
+            "type": "boolean"
+          }
+        }
+      }
+    ],
+    "terminal": {
+      "profiles": [
+        {
+          "id": "vscode-mbt-smoke-terminal-profile",
+          "title": "MoonBit Smoke Profile",
+          "icon": "terminal",
+          "titleTemplate": "${sequence}"
+        }
+      ]
+    },
     "languages": [
       {
         "id": "vscode-mbt-smoke-language"
@@ -129,12 +162,36 @@
         "title": "MoonBit Smoke: Document Paste"
       },
       {
+        "command": "vscode-mbt-tests.documentDrop",
+        "title": "MoonBit Smoke: Document Drop"
+      },
+      {
+        "command": "vscode-mbt-tests.uiDocumentDrop",
+        "title": "MoonBit Smoke: Document Drop Visual"
+      },
+      {
         "command": "vscode-mbt-tests.commentingRange",
         "title": "MoonBit Smoke: Commenting Range"
       },
       {
         "command": "vscode-mbt-tests.quickDiff",
         "title": "MoonBit Smoke: Quick Diff"
+      },
+      {
+        "command": "vscode-mbt-tests.terminalLink",
+        "title": "MoonBit Smoke: Terminal Link"
+      },
+      {
+        "command": "vscode-mbt-tests.uiTerminalLink",
+        "title": "MoonBit Smoke: Terminal Link Visual"
+      },
+      {
+        "command": "vscode-mbt-tests.terminalProfile",
+        "title": "MoonBit Smoke: Terminal Profile"
+      },
+      {
+        "command": "vscode-mbt-tests.uiTerminalProfile",
+        "title": "MoonBit Smoke: Terminal Profile Visual"
       },
       {
         "command": "vscode-mbt-tests.contentProviderUri",
@@ -151,7 +208,7 @@
     ]
   },
   "scripts": {
-    "build:moonbit": "moon build --target js --release",
+    "build:moonbit": "moon build --target js --release && node copy-build.js",
     "check:moonbit": "moon check --target js"
   }
 }

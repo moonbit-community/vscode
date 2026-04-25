@@ -40,13 +40,13 @@ Status keys:
 | `CallHierarchyProvider` | covered | `vscode.prepareCallHierarchy`, `vscode.provideIncomingCalls`, `vscode.provideOutgoingCalls` |  |
 | `TypeHierarchyProvider` | covered | `vscode.prepareTypeHierarchy`, `vscode.provideSupertypes`, `vscode.provideSubtypes` |  |
 | `LinkedEditingRangeProvider` | covered-internal | `_executeLinkedEditingProvider` | Internal command returns Monaco range objects. |
-| `DocumentDropEditProvider` | pending-harness | none | Drop behavior is workbench/UI driven. |
+| `DocumentDropEditProvider` | covered | `npm run test:ui` document drop | Dispatches an editor drop with `text/plain`, waits for the provided drop edit, and captures a screenshot. |
 | `DocumentPasteEditProvider` | covered | `editor.action.pasteAs` | Verifies paste edit selection through clipboard/workbench flow. |
 | `QuickDiffProvider` | covered | `editor.action.dirtydiff.next` | Uses `SourceControl.quickDiffProvider` and verifies original-resource resolution. |
 | `CommentingRangeProvider` | covered | `editor.action.nextCommentingRange` | Uses a comment controller and verifies provider state. |
 | `TextDocumentContentProvider` | covered | `workspace.openTextDocument` with custom scheme |  |
 | `FileSystemProvider` | covered | `workspace.fs` with custom scheme | Also validates provider disposables at shutdown. |
-| `WebviewViewProvider` | covered | `vscode-mbt-smoke-webview.focus` | Verifies resolve state and webview HTML through a state command. |
-| `TerminalLinkProvider` | ui-backed | none | Needs terminal UI link detection. |
-| `TerminalProfileProvider` | ui-backed | none | Public registration works, but provider invocation is workbench profile/UI driven. |
-| `FileDecorationProvider` | covered | `revealInExplorer` | Reveals a fixture file and verifies provider state. |
+| `WebviewViewProvider` | covered | `vscode-mbt-smoke-webview.focus`, `npm run test:ui` | Verifies resolve state and webview HTML through a state command, then captures the rendered webview view. |
+| `TerminalLinkProvider` | covered | `npm run test:ui` terminal link | Uses an extension-owned pseudoterminal, hovers the provided link, clicks it, and verifies the handler notification before screenshot capture. |
+| `TerminalProfileProvider` | covered | `npm run test:ui` terminal profile | Registers a contributed terminal profile, triggers workbench profile creation, and captures the extension-owned terminal output. |
+| `FileDecorationProvider` | covered | `revealInExplorer`, `npm run test:ui` | Reveals a fixture file, verifies provider state, and captures the rendered file decoration. |

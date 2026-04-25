@@ -271,13 +271,13 @@ pub fn TerminalProfile::from_extension(
 extern "js" fn terminal_profile_from_terminal_ffi(
   options : TerminalOptions,
 ) -> TerminalProfile =
-  #| (options) => ({ options })
+  #| (options) => new (require("vscode").TerminalProfile)(options)
 
 ///|
 extern "js" fn terminal_profile_from_extension_ffi(
   options : ExtensionTerminalOptions,
 ) -> TerminalProfile =
-  #| (options) => ({ options })
+  #| (options) => new (require("vscode").TerminalProfile)(options)
 
 ///|
 /// The options that the terminal will launch with.

@@ -11,6 +11,7 @@ package-lock.json
 test/extensions/window/out/
 test/extensions/window/*.vsix
 test/extensions/smoke/out/
+test/extensions/smoke/dist/
 test/extensions/smoke/*.vsix
 test/extensions/authentication/out/
 test/extensions/authentication/*.vsix

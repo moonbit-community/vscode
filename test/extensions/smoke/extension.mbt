@@ -44,10 +44,40 @@ let inline_completion_command = "vscode-mbt-tests.inlineCompletion"
 let document_paste_command = "vscode-mbt-tests.documentPaste"
 
 ///|
+let document_drop_command = "vscode-mbt-tests.documentDrop"
+
+///|
+let document_drop_visual_command = "vscode-mbt-tests.uiDocumentDrop"
+
+///|
 let commenting_range_command = "vscode-mbt-tests.commentingRange"
 
 ///|
 let quick_diff_command = "vscode-mbt-tests.quickDiff"
+
+///|
+let terminal_link_command = "vscode-mbt-tests.terminalLink"
+
+///|
+let terminal_link_visual_command = "vscode-mbt-tests.uiTerminalLink"
+
+///|
+let terminal_link_text = "moonbit-terminal-link"
+
+///|
+let terminal_profile_command = "vscode-mbt-tests.terminalProfile"
+
+///|
+let terminal_profile_visual_command = "vscode-mbt-tests.uiTerminalProfile"
+
+///|
+let terminal_profile_id = "vscode-mbt-smoke-terminal-profile"
+
+///|
+let terminal_profile_title = "MoonBit Smoke Profile"
+
+///|
+let terminal_profile_text = "moonbit-profile-terminal"
 
 ///|
 let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
@@ -103,112 +133,85 @@ priv struct SmokeDisposable {
 }
 
 ///|
-priv struct SmokeTextDocumentContentProvider {
-}
+priv struct SmokeTextDocumentContentProvider {}
 
 ///|
-priv struct SmokeCompletionProvider {
-}
+priv struct SmokeCompletionProvider {}
 
 ///|
-priv struct SmokeCodeActionProvider {
-}
+priv struct SmokeCodeActionProvider {}
 
 ///|
-priv struct SmokeCodeLensProvider {
-}
+priv struct SmokeCodeLensProvider {}
 
 ///|
-priv struct SmokeDefinitionProvider {
-}
+priv struct SmokeDefinitionProvider {}
 
 ///|
-priv struct SmokeImplementationProvider {
-}
+priv struct SmokeImplementationProvider {}
 
 ///|
-priv struct SmokeTypeDefinitionProvider {
-}
+priv struct SmokeTypeDefinitionProvider {}
 
 ///|
-priv struct SmokeDeclarationProvider {
-}
+priv struct SmokeDeclarationProvider {}
 
 ///|
-priv struct SmokeDocumentHighlightProvider {
-}
+priv struct SmokeDocumentHighlightProvider {}
 
 ///|
-priv struct SmokeDocumentLinkProvider {
-}
+priv struct SmokeDocumentLinkProvider {}
 
 ///|
-priv struct SmokeDocumentSymbolProvider {
-}
+priv struct SmokeDocumentSymbolProvider {}
 
 ///|
-priv struct SmokeWorkspaceSymbolProvider {
-}
+priv struct SmokeWorkspaceSymbolProvider {}
 
 ///|
-priv struct SmokeHoverProvider {
-}
+priv struct SmokeHoverProvider {}
 
 ///|
-priv struct SmokeReferenceProvider {
-}
+priv struct SmokeReferenceProvider {}
 
 ///|
-priv struct SmokeRenameProvider {
-}
+priv struct SmokeRenameProvider {}
 
 ///|
-priv struct SmokeSignatureHelpProvider {
-}
+priv struct SmokeSignatureHelpProvider {}
 
 ///|
-priv struct SmokeDocumentFormattingProvider {
-}
+priv struct SmokeDocumentFormattingProvider {}
 
 ///|
-priv struct SmokeDocumentColorProvider {
-}
+priv struct SmokeDocumentColorProvider {}
 
 ///|
-priv struct SmokeFoldingRangeProvider {
-}
+priv struct SmokeFoldingRangeProvider {}
 
 ///|
-priv struct SmokeInlayHintsProvider {
-}
+priv struct SmokeInlayHintsProvider {}
 
 ///|
-priv struct SmokeInlineValuesProvider {
-}
+priv struct SmokeInlineValuesProvider {}
 
 ///|
-priv struct SmokeDocumentSemanticTokensProvider {
-}
+priv struct SmokeDocumentSemanticTokensProvider {}
 
 ///|
-priv struct SmokeDocumentRangeSemanticTokensProvider {
-}
+priv struct SmokeDocumentRangeSemanticTokensProvider {}
 
 ///|
-priv struct SmokeCallHierarchyProvider {
-}
+priv struct SmokeCallHierarchyProvider {}
 
 ///|
-priv struct SmokeTypeHierarchyProvider {
-}
+priv struct SmokeTypeHierarchyProvider {}
 
 ///|
-priv struct SmokeSelectionRangeProvider {
-}
+priv struct SmokeSelectionRangeProvider {}
 
 ///|
-priv struct SmokeLinkedEditingRangeProvider {
-}
+priv struct SmokeLinkedEditingRangeProvider {}
 
 ///|
 priv struct SmokeWebviewViewProvider {
@@ -231,6 +234,11 @@ priv struct SmokeDocumentPasteProvider {
 }
 
 ///|
+priv struct SmokeDocumentDropProvider {
+  state : DocumentDropState
+}
+
+///|
 priv struct SmokeCommentingRangeProvider {
   state : CommentingRangeState
 }
@@ -241,21 +249,28 @@ priv struct SmokeQuickDiffProvider {
 }
 
 ///|
-priv struct SmokeDocumentRangeFormattingProvider {
+priv struct SmokeTerminalLinkProvider {
+  state : TerminalLinkState
 }
 
 ///|
-priv struct SmokeOnTypeFormattingProvider {
+priv struct SmokeTerminalProfileProvider {
+  state : TerminalProfileState
 }
 
 ///|
-priv struct SmokeTaskProvider {
-}
+priv struct SmokeDocumentRangeFormattingProvider {}
+
+///|
+priv struct SmokeOnTypeFormattingProvider {}
+
+///|
+priv struct SmokeTaskProvider {}
 
 ///|
 priv struct SmokeAuthenticationProvider {
   changes : @vscode.EventEmitter[
-    @vscode.AuthenticationProviderAuthenticationSessionsChangeEvent
+    @vscode.AuthenticationProviderAuthenticationSessionsChangeEvent,
   ]
 }
 
@@ -320,6 +335,16 @@ priv struct DocumentPasteState {
 }
 
 ///|
+priv struct DocumentDropState {
+  mut provide_count : Int
+  mut last_uri : String
+  mut last_line : Int
+  mut last_character : Int
+  mut transfer_text : String
+  mut edit_title : String
+}
+
+///|
 priv struct CommentingRangeState {
   mut provide_count : Int
   mut last_uri : String
@@ -332,6 +357,19 @@ priv struct QuickDiffState {
   mut provide_count : Int
   mut last_uri : String
   mut original_uri : String
+}
+
+///|
+priv struct TerminalLinkState {
+  mut provide_count : Int
+  mut handle_count : Int
+  mut last_line : String
+  mut last_tooltip : String
+}
+
+///|
+priv struct TerminalProfileState {
+  mut provide_count : Int
 }
 
 ///|
@@ -674,10 +712,7 @@ impl @vscode.RenameProvider for SmokeRenameProvider with provide_rename_edits(
   let edit = @vscode.WorkspaceEdit::new()
   edit.replace(
     document.uri(),
-    @vscode.Range::new(
-      @vscode.Position::new(0, 0),
-      @vscode.Position::new(0, 4),
-    ),
+    @vscode.Range::new(@vscode.Position::new(0, 0), @vscode.Position::new(0, 4)),
     new_name,
   )
   Some(edit)
@@ -691,10 +726,7 @@ impl @vscode.RenameProvider for SmokeRenameProvider with prepare_rename(
   _token,
 ) {
   Some(
-    @vscode.Range::new(
-      @vscode.Position::new(0, 0),
-      @vscode.Position::new(0, 4),
-    ),
+    @vscode.Range::new(@vscode.Position::new(0, 0), @vscode.Position::new(0, 4)),
   )
 }
 
@@ -765,7 +797,9 @@ impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with provide_c
   _token,
 ) {
   let presentation = @vscode.ColorPresentation::new("moon-color")
-  presentation.set_text_edit(@vscode.TextEdit::replace(context.range, "#123456"))
+  presentation.set_text_edit(
+    @vscode.TextEdit::replace(context.range, "#123456"),
+  )
   presentation.set_additional_text_edits([
     @vscode.TextEdit::insert(@vscode.Position::new(0, 7), " from MoonBit"),
   ])
@@ -893,10 +927,12 @@ impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with provide_c
         item.range(),
         item.selection_range(),
       ),
-      [@vscode.Range::new(
-        @vscode.Position::new(0, 0),
-        @vscode.Position::new(0, 4),
-      )],
+      [
+        @vscode.Range::new(
+          @vscode.Position::new(0, 0),
+          @vscode.Position::new(0, 4),
+        ),
+      ],
     ),
   ])
 }
@@ -917,10 +953,12 @@ impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with provide_c
         item.range(),
         item.selection_range(),
       ),
-      [@vscode.Range::new(
-        @vscode.Position::new(0, 4),
-        @vscode.Position::new(0, 8),
-      )],
+      [
+        @vscode.Range::new(
+          @vscode.Position::new(0, 4),
+          @vscode.Position::new(0, 8),
+        ),
+      ],
     ),
   ])
 }
@@ -993,9 +1031,7 @@ impl @vscode.FoldingRangeProvider for SmokeFoldingRangeProvider with provide_fol
   _context,
   _token,
 ) {
-  Some([
-    @vscode.FoldingRange::new(0, 2, kind=@vscode.FoldingRangeKind::Region),
-  ])
+  Some([@vscode.FoldingRange::new(0, 2, kind=@vscode.FoldingRangeKind::Region)])
 }
 
 ///|
@@ -1016,8 +1052,11 @@ impl @vscode.SelectionRangeProvider for SmokeSelectionRangeProvider with provide
       )
       Some([
         @vscode.SelectionRange::new(
-          @vscode.Range::new(position, @vscode.Position::new(position.line(), 4)),
-          parent=parent,
+          @vscode.Range::new(
+            position,
+            @vscode.Position::new(position.line(), 4),
+          ),
+          parent~,
         ),
       ])
     }
@@ -1055,7 +1094,7 @@ impl @vscode.WebviewViewProvider for SmokeWebviewViewProvider with resolve_webvi
   self.state.resolve_count = self.state.resolve_count + 1
   view.set_title(Some("MoonBit Smoke Webview"))
   view.set_description(Some("resolved"))
-  let html = "<!doctype html><html><body><main id=\"app\">MoonBit WebviewView</main></body></html>"
+  let html = "<!doctype html><html><head><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none';\"></head><body><main id=\"app\">MoonBit WebviewView</main></body></html>"
   view.webview().set_html(html)
   self.state.view_type = view.view_type()
   self.state.title = view.title().unwrap_or("")
@@ -1088,6 +1127,54 @@ impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with provide
   self.state.badge = decoration.badge().unwrap_or("")
   self.state.tooltip = decoration.tooltip().unwrap_or("")
   Some(decoration)
+}
+
+///|
+impl @vscode.TerminalLinkProvider for SmokeTerminalLinkProvider with provide_terminal_links(
+  self,
+  context,
+  _token,
+) {
+  self.state.provide_count = self.state.provide_count + 1
+  self.state.last_line = context.line
+  Some([
+    @vscode.TerminalLink::new(
+      0,
+      terminal_link_text.length(),
+      tooltip="MoonBit terminal link",
+    ),
+  ])
+}
+
+///|
+impl @vscode.TerminalLinkProvider for SmokeTerminalLinkProvider with handle_terminal_link(
+  self,
+  link,
+) {
+  self.state.handle_count = self.state.handle_count + 1
+  self.state.last_tooltip = link.tooltip().unwrap_or("")
+  @window.show_information_message("MoonBit terminal link handled")
+}
+
+///|
+impl @vscode.TerminalProfileProvider for SmokeTerminalProfileProvider with provide_terminal_profile(
+  self,
+  _token,
+) {
+  self.state.provide_count = self.state.provide_count + 1
+  let writes : @vscode.EventEmitter[String] = @vscode.EventEmitter::new()
+  let pty = @vscode.Pseudoterminal::new(
+    writes.event(),
+    fn(_dimensions) { writes.fire("\{terminal_profile_text}\r\n") },
+    fn() { () },
+  )
+  Some(
+    @vscode.TerminalProfile::from_extension(
+      @vscode.ExtensionTerminalOptions::new(
+        "MoonBit Smoke Profile Terminal", pty,
+      ),
+    ),
+  )
 }
 
 ///|
@@ -1129,6 +1216,11 @@ impl @vscode.InlineCompletionItemProvider for SmokeInlineCompletionProvider with
 ///|
 fn paste_kind() -> @vscode.DocumentDropOrPasteEditKind {
   @vscode.DocumentDropOrPasteEditKind::Text.append("moonbit")
+}
+
+///|
+fn drop_kind() -> @vscode.DocumentDropOrPasteEditKind {
+  @vscode.DocumentDropOrPasteEditKind::Text.append("moonbit-drop")
 }
 
 ///|
@@ -1178,10 +1270,49 @@ impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with metad
   _self,
 ) {
   Some(
-    @vscode.DocumentPasteProviderMetadata::new(
-      [paste_kind()],
-      paste_mime_types=["text/plain"],
+    @vscode.DocumentPasteProviderMetadata::new([paste_kind()], paste_mime_types=[
+      "text/plain",
+    ]),
+  )
+}
+
+///|
+impl @vscode.DocumentDropEditProvider for SmokeDocumentDropProvider with provide_document_drop_edits(
+  self,
+  document,
+  position,
+  data_transfer,
+  _token,
+) {
+  self.state.provide_count = self.state.provide_count + 1
+  self.state.last_uri = document.uri().to_string()
+  self.state.last_line = position.line()
+  self.state.last_character = position.character()
+  self.state.transfer_text = match data_transfer.get("text/plain") {
+    None => ""
+    Some(item) => item.as_string()
+  }
+  let title = "MoonBit drop edit"
+  self.state.edit_title = title
+  Some([
+    @vscode.DocumentDropEdit::new(
+      @vscode.StringOrSnippetString::Text(
+        "moonbit-dropped:\{self.state.transfer_text}",
+      ),
+      title~,
+      kind=drop_kind(),
     ),
+  ])
+}
+
+///|
+impl @vscode.DocumentDropEditProvider for SmokeDocumentDropProvider with metadata(
+  _self,
+) {
+  Some(
+    @vscode.DocumentDropEditProviderMetadata::new(["text/plain"], provided_kinds=[
+      drop_kind(),
+    ]),
   )
 }
 
@@ -1194,10 +1325,7 @@ impl @vscode.CommentingRangeProvider for SmokeCommentingRangeProvider with provi
   self.state.provide_count = self.state.provide_count + 1
   self.state.last_uri = document.uri().to_string()
   let ranges = [
-    @vscode.Range::new(
-      @vscode.Position::new(0, 0),
-      @vscode.Position::new(1, 0),
-    ),
+    @vscode.Range::new(@vscode.Position::new(0, 0), @vscode.Position::new(1, 0)),
   ]
   self.state.range_count = ranges.length()
   self.state.enable_file_comments = true
@@ -1255,13 +1383,10 @@ impl @vscode.TaskProvider for SmokeTaskProvider with provide_tasks(
   _token,
 ) {
   let task = @vscode.Task::new(
-    @vscode.TaskDefinition::new(
-      task_provider_type,
-      entries=[
-        ("script", @vscode.Any::from("smoke")),
-        ("fromMoonBit", @vscode.Any::from(true)),
-      ],
-    ),
+    @vscode.TaskDefinition::new(task_provider_type, entries=[
+      ("script", @vscode.Any::from("smoke")),
+      ("fromMoonBit", @vscode.Any::from(true)),
+    ]),
     @vscode.TaskScope::ScopeKind(@vscode.TaskScopeKind::Workspace),
     "MoonBit smoke task",
     "MoonBit",
@@ -1291,13 +1416,14 @@ fn SmokeAuthenticationProvider::new() -> SmokeAuthenticationProvider {
 }
 
 ///|
-fn smoke_authentication_session(scopes : Array[String]) -> @vscode.AuthenticationSession {
+fn smoke_authentication_session(
+  scopes : Array[String],
+) -> @vscode.AuthenticationSession {
   @vscode.AuthenticationSession::new(
     "moonbit-auth-session",
     "moonbit-auth-token",
     @vscode.AuthenticationSessionAccountInformation::new(
-      "moonbit-account",
-      "MoonBit Account",
+      "moonbit-account", "MoonBit Account",
     ),
     scopes,
   )
@@ -1465,9 +1591,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with copy(
 ///|
 fn SmokeDisposable::new(name : String) -> SmokeDisposable {
   SmokeDisposable::{
-    disposable: @vscode.Disposable::new(fn() {
-      write_disposable_marker(name)
-    }),
+    disposable: @vscode.Disposable::new(fn() { write_disposable_marker(name) }),
   }
 }
 
@@ -1485,6 +1609,21 @@ extern "js" fn write_disposable_marker(name : String) -> Unit =
 // the subscribe_async callback can finish before the smoke command reports.
 extern "js" fn wait_next_tick_ffi() -> @js_async.Promise[Unit] =
   #| () => new Promise(resolve => setTimeout(resolve, 0))
+
+///|
+extern "js" fn terminal_profile_visual_args_ffi(
+  id : String,
+  title : String,
+) -> @vscode.Any =
+  #| (id, title) => ({
+  #|   config: {
+  #|     extensionIdentifier: "vscode-mbt-tests.vscode-mbt-smoke-extension",
+  #|     id,
+  #|     title,
+  #|     icon: "terminal"
+  #|   },
+  #|   location: 1
+  #| })
 
 ///|
 async fn wait_next_tick() -> Unit {
@@ -1544,18 +1683,22 @@ async fn event_behavior(_args : @commands.CommandArgs) -> String {
     async_value: "none",
     async_count: 0,
   }
-  let sync_subscription = emitter.event().subscribe(value => {
-    state.sync_value = value
-    state.sync_count = state.sync_count + 1
-  })
+  let sync_subscription = emitter
+    .event()
+    .subscribe(value => {
+      state.sync_value = value
+      state.sync_count = state.sync_count + 1
+    })
   emitter.fire("sync-1")
   sync_subscription.dispose()
   emitter.fire("sync-ignored")
-  let async_subscription = emitter.event().subscribe_async(async fn(value) {
-    wait_next_tick()
-    state.async_value = value
-    state.async_count = state.async_count + 1
-  })
+  let async_subscription = emitter
+    .event()
+    .subscribe_async(async fn(value) {
+      wait_next_tick()
+      state.async_value = value
+      state.async_count = state.async_count + 1
+    })
   emitter.fire("async-1")
   wait_next_tick()
   wait_next_tick()
@@ -1783,6 +1926,42 @@ fn document_paste_behavior(
 }
 
 ///|
+fn document_drop_behavior(
+  state : DocumentDropState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.provide_count = 0
+    state.last_uri = ""
+    state.last_line = -1
+    state.last_character = -1
+    state.transfer_text = ""
+    state.edit_title = ""
+  }
+  "\{state.provide_count}|\{state.last_uri}|\{state.last_line}|\{state.last_character}|\{state.transfer_text}|\{state.edit_title}"
+}
+
+///|
+async fn document_drop_visual_behavior(
+  state : DocumentDropState,
+  _args : @commands.CommandArgs,
+) -> String {
+  ignore(document_drop_behavior(state, @commands.command_args1("reset")))
+  match first_workspace_file_uri("document-drop-visual.mbt") {
+    None => "missing workspace"
+    Some(uri) => {
+      let document = @workspace.open_text_document_uri(uri)
+      let language_document = @languages.set_text_document_language(
+        document, language_provider_language,
+      )
+      ignore(@window.show_text_document(language_document))
+      document_drop_behavior(state, @commands.command_args())
+    }
+  }
+}
+
+///|
 fn commenting_range_behavior(
   state : CommentingRangeState,
   args : @commands.CommandArgs,
@@ -1809,6 +1988,73 @@ fn quick_diff_behavior(
     state.original_uri = ""
   }
   "\{state.provide_count}|\{state.last_uri}|\{state.original_uri}"
+}
+
+///|
+fn terminal_link_behavior(
+  state : TerminalLinkState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.provide_count = 0
+    state.handle_count = 0
+    state.last_line = ""
+    state.last_tooltip = ""
+  }
+  "\{state.provide_count}|\{state.handle_count}|\{state.last_line}|\{state.last_tooltip}"
+}
+
+///|
+fn terminal_link_visual_behavior(
+  ctx : @vscode.ExtensionContext,
+  state : TerminalLinkState,
+  _args : @commands.CommandArgs,
+) -> String {
+  ignore(terminal_link_behavior(state, @commands.command_args1("reset")))
+  let writes : @vscode.EventEmitter[String] = @vscode.EventEmitter::new()
+  let pty = @vscode.Pseudoterminal::new(
+    writes.event(),
+    fn(_dimensions) { writes.fire("\{terminal_link_text}\r\n") },
+    fn() { () },
+  )
+  let terminal = @window.create_terminal_with_extension_options(
+    @vscode.ExtensionTerminalOptions::new("MoonBit Smoke Terminal Link", pty),
+  )
+  ctx.subscribe(writes)
+  ctx.subscribe(terminal)
+  terminal.show()
+  terminal_link_behavior(state, @commands.command_args())
+}
+
+///|
+fn terminal_profile_behavior(
+  state : TerminalProfileState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.provide_count = 0
+  }
+  "\{state.provide_count}"
+}
+
+///|
+async fn terminal_profile_visual_behavior(
+  state : TerminalProfileState,
+  _args : @commands.CommandArgs,
+) -> String {
+  ignore(terminal_profile_behavior(state, @commands.command_args1("reset")))
+  let result : Unit = @commands.execute_command(
+    "workbench.action.terminal.newWithProfile",
+    args=@commands.command_args1(
+      terminal_profile_visual_args_ffi(
+        terminal_profile_id, terminal_profile_title,
+      ),
+    ),
+  )
+  ignore(result)
+  terminal_profile_behavior(state, @commands.command_args())
 }
 
 ///|
@@ -1842,9 +2088,11 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     priority=100,
   )
   ctx.subscribe(SmokeDisposable::new("as-disposable"))
-  ctx.subscribe(@vscode.Disposable::new(fn() {
-    write_disposable_marker("callback-disposable")
-  }))
+  ctx.subscribe(
+    @vscode.Disposable::new(fn() {
+      write_disposable_marker("callback-disposable")
+    }),
+  )
   ctx.subscribe(
     @vscode.Disposable::from([
       @vscode.Disposable::new(fn() {
@@ -1855,17 +2103,23 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   )
   ctx.subscribe(status)
   ctx.subscribe(@commands.register_command(echo_command, echo))
-  ctx.subscribe(@commands.register_command_async(has_command_command, has_command))
+  ctx.subscribe(
+    @commands.register_command_async(has_command_command, has_command),
+  )
   ctx.subscribe(
     @commands.register_command(status_bar_command, fn(_args) {
       status_bar_value(status)
     }),
   )
   ctx.subscribe(
-    @commands.register_command_async(workspace_edit_command, apply_workspace_edit),
+    @commands.register_command_async(
+      workspace_edit_command, apply_workspace_edit,
+    ),
   )
   ctx.subscribe(@commands.register_command_async(event_command, event_behavior))
-  ctx.subscribe(@commands.register_command_async(tree_view_command, tree_view_behavior))
+  ctx.subscribe(
+    @commands.register_command_async(tree_view_command, tree_view_behavior),
+  )
   ctx.subscribe(
     @commands.register_command_async(tree_view_visual_command, args => {
       tree_view_visual_behavior(ctx, args)
@@ -1933,6 +2187,24 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       document_paste_behavior(document_paste_state, args)
     }),
   )
+  let document_drop_state = DocumentDropState::{
+    provide_count: 0,
+    last_uri: "",
+    last_line: -1,
+    last_character: -1,
+    transfer_text: "",
+    edit_title: "",
+  }
+  ctx.subscribe(
+    @commands.register_command(document_drop_command, args => {
+      document_drop_behavior(document_drop_state, args)
+    }),
+  )
+  ctx.subscribe(
+    @commands.register_command_async(document_drop_visual_command, args => {
+      document_drop_visual_behavior(document_drop_state, args)
+    }),
+  )
   let commenting_range_state = CommentingRangeState::{
     provide_count: 0,
     last_uri: "",
@@ -1954,35 +2226,62 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       quick_diff_behavior(quick_diff_state, args)
     }),
   )
+  let terminal_link_state = TerminalLinkState::{
+    provide_count: 0,
+    handle_count: 0,
+    last_line: "",
+    last_tooltip: "",
+  }
+  ctx.subscribe(
+    @commands.register_command(terminal_link_command, args => {
+      terminal_link_behavior(terminal_link_state, args)
+    }),
+  )
+  ctx.subscribe(
+    @commands.register_command(terminal_link_visual_command, args => {
+      terminal_link_visual_behavior(ctx, terminal_link_state, args)
+    }),
+  )
+  let terminal_profile_state = TerminalProfileState::{ provide_count: 0 }
+  ctx.subscribe(
+    @commands.register_command(terminal_profile_command, args => {
+      terminal_profile_behavior(terminal_profile_state, args)
+    }),
+  )
+  ctx.subscribe(
+    @commands.register_command_async(terminal_profile_visual_command, args => {
+      terminal_profile_visual_behavior(terminal_profile_state, args)
+    }),
+  )
   let comment_controller = @comments.create_comment_controller(
-    "vscode-mbt-smoke-comments",
-    "MoonBit Smoke Comments",
+    "vscode-mbt-smoke-comments", "MoonBit Smoke Comments",
   )
-  comment_controller.set_commenting_range_provider(
-    SmokeCommentingRangeProvider::{ state: commenting_range_state },
-  )
+  comment_controller.set_commenting_range_provider(SmokeCommentingRangeProvider::{
+    state: commenting_range_state,
+  })
   ctx.subscribe(comment_controller)
   let source_control = @scm.create_source_control(
-    "vscode-mbt-smoke-scm",
-    "MoonBit Smoke SCM",
+    "vscode-mbt-smoke-scm", "MoonBit Smoke SCM",
   )
-  source_control.set_quick_diff_provider(
-    SmokeQuickDiffProvider::{ state: quick_diff_state },
-  )
+  source_control.set_quick_diff_provider(SmokeQuickDiffProvider::{
+    state: quick_diff_state,
+  })
   ctx.subscribe(source_control)
   ctx.subscribe(
-    @commands.register_command(content_provider_uri_command, content_provider_uri),
+    @commands.register_command(
+      content_provider_uri_command, content_provider_uri,
+    ),
   )
   ctx.subscribe(
     @workspace.register_text_document_content_provider(
       content_provider_scheme,
-      SmokeTextDocumentContentProvider::{},
+      SmokeTextDocumentContentProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_completion_item_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeCompletionProvider::{},
+      SmokeCompletionProvider::{  },
       trigger_characters=["."],
     ),
   )
@@ -1995,166 +2294,167 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   ctx.subscribe(
     @languages.register_code_actions_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeCodeActionProvider::{},
-      metadata=@vscode.CodeActionProviderMetadata::new(
-        provided_kinds=[@vscode.CodeActionKind::QuickFix],
-      ),
+      SmokeCodeActionProvider::{  },
+      metadata=@vscode.CodeActionProviderMetadata::new(provided_kinds=[
+        @vscode.CodeActionKind::QuickFix,
+      ]),
     ),
   )
   ctx.subscribe(
     @languages.register_code_lens_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeCodeLensProvider::{},
+      SmokeCodeLensProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_definition_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeDefinitionProvider::{},
+      SmokeDefinitionProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_implementation_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeImplementationProvider::{},
+      SmokeImplementationProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_type_definition_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeTypeDefinitionProvider::{},
+      SmokeTypeDefinitionProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_declaration_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeDeclarationProvider::{},
+      SmokeDeclarationProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_document_highlight_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeDocumentHighlightProvider::{},
+      SmokeDocumentHighlightProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_document_link_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeDocumentLinkProvider::{},
+      SmokeDocumentLinkProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_document_symbol_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeDocumentSymbolProvider::{},
+      SmokeDocumentSymbolProvider::{  },
       metadata=@vscode.DocumentSymbolProviderMetadata::new(
         label="MoonBit Symbols",
       ),
     ),
   )
   ctx.subscribe(
-    @languages.register_workspace_symbol_provider(SmokeWorkspaceSymbolProvider::{}),
+    @languages.register_workspace_symbol_provider(SmokeWorkspaceSymbolProvider::{
+
+    }),
   )
   ctx.subscribe(
     @languages.register_hover_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeHoverProvider::{},
+      SmokeHoverProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_reference_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeReferenceProvider::{},
+      SmokeReferenceProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_rename_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeRenameProvider::{},
+      SmokeRenameProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_signature_help_provider_metadata(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeSignatureHelpProvider::{},
-      @vscode.SignatureHelpProviderMetadata::new(
-        ["("],
-        retrigger_characters=[","],
-      ),
+      SmokeSignatureHelpProvider::{  },
+      @vscode.SignatureHelpProviderMetadata::new(["("], retrigger_characters=[
+        ",",
+      ]),
     ),
   )
   ctx.subscribe(
     @languages.register_document_formatting_edit_provider(
       @vscode.DocumentSelector::Language(document_formatting_language),
-      SmokeDocumentFormattingProvider::{},
+      SmokeDocumentFormattingProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_color_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeDocumentColorProvider::{},
+      SmokeDocumentColorProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_folding_range_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeFoldingRangeProvider::{},
+      SmokeFoldingRangeProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_inlay_hints_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeInlayHintsProvider::{},
+      SmokeInlayHintsProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_inline_values_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeInlineValuesProvider::{},
+      SmokeInlineValuesProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_document_semantic_tokens_provider(
       @vscode.DocumentSelector::Language(semantic_tokens_language),
-      SmokeDocumentSemanticTokensProvider::{},
+      SmokeDocumentSemanticTokensProvider::{  },
       @vscode.SemanticTokensLegend::new(["function"]),
     ),
   )
   ctx.subscribe(
     @languages.register_document_range_semantic_tokens_provider(
       @vscode.DocumentSelector::Language(range_semantic_tokens_language),
-      SmokeDocumentRangeSemanticTokensProvider::{},
+      SmokeDocumentRangeSemanticTokensProvider::{  },
       @vscode.SemanticTokensLegend::new(["function"]),
     ),
   )
   ctx.subscribe(
     @languages.register_call_hierarchy_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeCallHierarchyProvider::{},
+      SmokeCallHierarchyProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_type_hierarchy_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeTypeHierarchyProvider::{},
+      SmokeTypeHierarchyProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_selection_range_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeSelectionRangeProvider::{},
+      SmokeSelectionRangeProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_linked_editing_range_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
-      SmokeLinkedEditingRangeProvider::{},
+      SmokeLinkedEditingRangeProvider::{  },
     ),
   )
   ctx.subscribe(
     @languages.register_document_range_formatting_edit_provider(
       @vscode.DocumentSelector::Language(range_formatting_language),
-      SmokeDocumentRangeFormattingProvider::{},
+      SmokeDocumentRangeFormattingProvider::{  },
     ),
   )
   ctx.subscribe(
@@ -2165,29 +2465,49 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     ),
   )
   ctx.subscribe(
-    @window.register_file_decoration_provider(
-      SmokeFileDecorationProvider::{ state: file_decoration_state },
-    ),
+    @window.register_file_decoration_provider(SmokeFileDecorationProvider::{
+      state: file_decoration_state,
+    }),
+  )
+  ctx.subscribe(
+    @window.register_terminal_link_provider(SmokeTerminalLinkProvider::{
+      state: terminal_link_state,
+    }),
+  )
+  ctx.subscribe(
+    @window.register_terminal_profile_provider(terminal_profile_id, SmokeTerminalProfileProvider::{
+      state: terminal_profile_state,
+    }),
   )
   ctx.subscribe(
     @languages.register_document_paste_edit_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeDocumentPasteProvider::{ state: document_paste_state },
-      @vscode.DocumentPasteProviderMetadata::new(
-        [paste_kind()],
-        paste_mime_types=["text/plain"],
-      ),
+      @vscode.DocumentPasteProviderMetadata::new([paste_kind()], paste_mime_types=[
+        "text/plain",
+      ]),
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_document_drop_edit_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeDocumentDropProvider::{ state: document_drop_state },
+      metadata=@vscode.DocumentDropEditProviderMetadata::new(["text/plain"], provided_kinds=[
+        drop_kind(),
+      ]),
     ),
   )
   ctx.subscribe(
     @languages.register_on_type_formatting_edit_provider(
       @vscode.DocumentSelector::Language(on_type_formatting_language),
-      SmokeOnTypeFormattingProvider::{},
+      SmokeOnTypeFormattingProvider::{  },
       "}",
       more_trigger_characters=[";"],
     ),
   )
-  ctx.subscribe(@tasks.register_task_provider(task_provider_type, SmokeTaskProvider::{}))
+  ctx.subscribe(
+    @tasks.register_task_provider(task_provider_type, SmokeTaskProvider::{  }),
+  )
   ctx.subscribe(
     @authentication.register_authentication_provider(
       authentication_provider_id,
