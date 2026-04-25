@@ -66,6 +66,18 @@ priv struct SmokeDefinitionProvider {
 }
 
 ///|
+priv struct SmokeImplementationProvider {
+}
+
+///|
+priv struct SmokeTypeDefinitionProvider {
+}
+
+///|
+priv struct SmokeDeclarationProvider {
+}
+
+///|
 priv struct SmokeDocumentHighlightProvider {
 }
 
@@ -230,6 +242,60 @@ impl @vscode.DefinitionProvider for SmokeDefinitionProvider with provide_definit
       @vscode.Range::new(
         @vscode.Position::new(0, 0),
         @vscode.Position::new(0, 4),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.ImplementationProvider for SmokeImplementationProvider with provide_implementation(
+  _self,
+  document,
+  _position,
+  _token,
+) {
+  Some([
+    @vscode.Location::new(
+      document.uri(),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 5),
+        @vscode.Position::new(0, 19),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.TypeDefinitionProvider for SmokeTypeDefinitionProvider with provide_type_definition(
+  _self,
+  document,
+  _position,
+  _token,
+) {
+  Some([
+    @vscode.Location::new(
+      document.uri(),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 5),
+        @vscode.Position::new(0, 19),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.DeclarationProvider for SmokeDeclarationProvider with provide_declaration(
+  _self,
+  document,
+  _position,
+  _token,
+) {
+  Some([
+    @vscode.Location::new(
+      document.uri(),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 5),
+        @vscode.Position::new(0, 16),
       ),
     ),
   ])
@@ -698,6 +764,24 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @languages.register_definition_provider(
       @vscode.DocumentSelector::Language(language_provider_language),
       SmokeDefinitionProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_implementation_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeImplementationProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_type_definition_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeTypeDefinitionProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_declaration_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeDeclarationProvider::{},
     ),
   )
   ctx.subscribe(

@@ -152,6 +152,78 @@ async function run() {
     );
   });
 
+  await runCase('serves implementations from a MoonBit ImplementationProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon implementation'
+    });
+    const locations = await vscode.commands.executeCommand(
+      'vscode.executeImplementationProvider',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(locations.length, 1);
+    assert.strictEqual(locations[0].uri.toString(), document.uri.toString());
+    assert.deepStrictEqual(
+      [
+        locations[0].range.start.line,
+        locations[0].range.start.character,
+        locations[0].range.end.line,
+        locations[0].range.end.character
+      ],
+      [0, 5, 0, 19]
+    );
+  });
+
+  await runCase('serves type definitions from a MoonBit TypeDefinitionProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon type definition'
+    });
+    const locations = await vscode.commands.executeCommand(
+      'vscode.executeTypeDefinitionProvider',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(locations.length, 1);
+    assert.strictEqual(locations[0].uri.toString(), document.uri.toString());
+    assert.deepStrictEqual(
+      [
+        locations[0].range.start.line,
+        locations[0].range.start.character,
+        locations[0].range.end.line,
+        locations[0].range.end.character
+      ],
+      [0, 5, 0, 19]
+    );
+  });
+
+  await runCase('serves declarations from a MoonBit DeclarationProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon declaration'
+    });
+    const locations = await vscode.commands.executeCommand(
+      'vscode.executeDeclarationProvider',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(locations.length, 1);
+    assert.strictEqual(locations[0].uri.toString(), document.uri.toString());
+    assert.deepStrictEqual(
+      [
+        locations[0].range.start.line,
+        locations[0].range.start.character,
+        locations[0].range.end.line,
+        locations[0].range.end.character
+      ],
+      [0, 5, 0, 16]
+    );
+  });
+
   await runCase('serves document highlights from a MoonBit DocumentHighlightProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
       language: 'vscode-mbt-smoke-language',
