@@ -15,6 +15,7 @@
     "onCommand:vscode-mbt-tests.workspaceEdit",
     "onCommand:vscode-mbt-tests.event",
     "onCommand:vscode-mbt-tests.treeView",
+    "onCommand:vscode-mbt-tests.webviewView",
     "onCommand:vscode-mbt-tests.contentProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemReadDirectory",
@@ -58,6 +59,11 @@
         {
           "id": "vscode-mbt-smoke-tree",
           "name": "MoonBit Smoke Tree"
+        },
+        {
+          "id": "vscode-mbt-smoke-webview",
+          "name": "MoonBit Smoke Webview",
+          "type": "webview"
         }
       ]
     },
@@ -85,6 +91,10 @@
       {
         "command": "vscode-mbt-tests.treeView",
         "title": "MoonBit Smoke: Tree View"
+      },
+      {
+        "command": "vscode-mbt-tests.webviewView",
+        "title": "MoonBit Smoke: Webview View"
       },
       {
         "command": "vscode-mbt-tests.contentProviderUri",

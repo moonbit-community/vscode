@@ -42,6 +42,33 @@ function monacoRangeTuple(range) {
   ];
 }
 
+function parseWebviewViewState(value) {
+  const [resolveCount, viewType, title, description, ...htmlParts] = value.split('|');
+  return {
+    resolveCount: Number(resolveCount),
+    viewType,
+    title,
+    description,
+    html: htmlParts.join('|')
+  };
+}
+
+async function waitForWebviewViewState(predicate) {
+  let state = parseWebviewViewState(
+    await vscode.commands.executeCommand('vscode-mbt-tests.webviewView', 'read')
+  );
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    if (predicate(state)) {
+      return state;
+    }
+    await new Promise(resolve => setTimeout(resolve, 50));
+    state = parseWebviewViewState(
+      await vscode.commands.executeCommand('vscode-mbt-tests.webviewView', 'read')
+    );
+  }
+  assert.fail(`webview view provider was not called: ${JSON.stringify(state)}`);
+}
+
 function documentationText(value) {
   return value && typeof value === 'object' ? value.value : value;
 }
@@ -793,6 +820,17 @@ async function run() {
     assert.strictEqual(result.ranges.length, 2);
     assert.deepStrictEqual(monacoRangeTuple(result.ranges[0]), [0, 0, 0, 4]);
     assert.deepStrictEqual(monacoRangeTuple(result.ranges[1]), [0, 7, 0, 11]);
+  });
+
+  await runCase('resolves views from a MoonBit WebviewViewProvider', async () => {
+    await vscode.commands.executeCommand('vscode-mbt-tests.webviewView', 'reset');
+    await vscode.commands.executeCommand('vscode-mbt-smoke-webview.focus');
+
+    const state = await waitForWebviewViewState(({ resolveCount }) => resolveCount === 1);
+    assert.strictEqual(state.viewType, 'vscode-mbt-smoke-webview');
+    assert.strictEqual(state.title, 'MoonBit Smoke Webview');
+    assert.strictEqual(state.description, 'resolved');
+    assert.ok(state.html.includes('MoonBit WebviewView'));
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {

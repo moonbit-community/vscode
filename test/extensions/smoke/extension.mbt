@@ -20,6 +20,12 @@ let tree_view_command = "vscode-mbt-tests.treeView"
 let tree_view_id = "vscode-mbt-smoke-tree"
 
 ///|
+let webview_view_command = "vscode-mbt-tests.webviewView"
+
+///|
+let webview_view_id = "vscode-mbt-smoke-webview"
+
+///|
 let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 
 ///|
@@ -181,6 +187,11 @@ priv struct SmokeLinkedEditingRangeProvider {
 }
 
 ///|
+priv struct SmokeWebviewViewProvider {
+  state : WebviewViewState
+}
+
+///|
 priv struct SmokeDocumentRangeFormattingProvider {
 }
 
@@ -217,6 +228,15 @@ priv struct TreeState {
   mut get_tree_item_count : Int
   mut get_children_count : Int
   mut get_parent_count : Int
+}
+
+///|
+priv struct WebviewViewState {
+  mut resolve_count : Int
+  mut view_type : String
+  mut title : String
+  mut description : String
+  mut html : String
 }
 
 ///|
@@ -931,6 +951,24 @@ impl @vscode.LinkedEditingRangeProvider for SmokeLinkedEditingRangeProvider with
 }
 
 ///|
+impl @vscode.WebviewViewProvider for SmokeWebviewViewProvider with resolve_webview_view(
+  self,
+  view,
+  _context,
+  _token,
+) {
+  self.state.resolve_count = self.state.resolve_count + 1
+  view.set_title(Some("MoonBit Smoke Webview"))
+  view.set_description(Some("resolved"))
+  let html = "<!doctype html><html><body><main id=\"app\">MoonBit WebviewView</main></body></html>"
+  view.webview().set_html(html)
+  self.state.view_type = view.view_type()
+  self.state.title = view.title().unwrap_or("")
+  self.state.description = view.description().unwrap_or("")
+  self.state.html = view.webview().html()
+}
+
+///|
 impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with provide_document_range_formatting_edits(
   _self,
   _document,
@@ -1351,6 +1389,22 @@ fn content_provider_uri(_args : @commands.CommandArgs) -> String {
 }
 
 ///|
+fn webview_view_behavior(
+  state : WebviewViewState,
+  args : @commands.CommandArgs,
+) -> String {
+  let action : String = args.get(0).unwrap_or("read")
+  if action == "reset" {
+    state.resolve_count = 0
+    state.view_type = ""
+    state.title = ""
+    state.description = ""
+    state.html = ""
+  }
+  "\{state.resolve_count}|\{state.view_type}|\{state.title}|\{state.description}|\{state.html}"
+}
+
+///|
 fn file_system_provider_uri(_args : @commands.CommandArgs) -> String {
   "\{file_system_provider_scheme}:\{file_system_file_path}"
 }
@@ -1405,6 +1459,18 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   )
   ctx.subscribe(@commands.register_command_async(event_command, event_behavior))
   ctx.subscribe(@commands.register_command_async(tree_view_command, tree_view_behavior))
+  let webview_view_state = WebviewViewState::{
+    resolve_count: 0,
+    view_type: "",
+    title: "",
+    description: "",
+    html: "",
+  }
+  ctx.subscribe(
+    @commands.register_command(webview_view_command, args => {
+      webview_view_behavior(webview_view_state, args)
+    }),
+  )
   ctx.subscribe(
     @commands.register_command(content_provider_uri_command, content_provider_uri),
   )
@@ -1584,6 +1650,13 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     @languages.register_document_range_formatting_edit_provider(
       @vscode.DocumentSelector::Language(range_formatting_language),
       SmokeDocumentRangeFormattingProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @window.register_webview_view_provider(
+      webview_view_id,
+      SmokeWebviewViewProvider::{ state: webview_view_state },
+      options=@vscode.WebviewViewOptions::new(retain_context_when_hidden=true),
     ),
   )
   ctx.subscribe(

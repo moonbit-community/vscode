@@ -46,7 +46,7 @@ Status keys:
 | `CommentingRangeProvider` | pending-harness | none | Needs comments controller/workbench trigger. |
 | `TextDocumentContentProvider` | covered | `workspace.openTextDocument` with custom scheme |  |
 | `FileSystemProvider` | covered | `workspace.fs` with custom scheme | Also validates provider disposables at shutdown. |
-| `WebviewViewProvider` | ui-backed | none | Needs view reveal plus webview content assertion or screenshot. |
+| `WebviewViewProvider` | covered | `vscode-mbt-smoke-webview.focus` | Verifies resolve state and webview HTML through a state command. |
 | `TerminalLinkProvider` | ui-backed | none | Needs terminal UI link detection. |
 | `TerminalProfileProvider` | ui-backed | none | Public registration works, but provider invocation is workbench profile/UI driven. |
 | `FileDecorationProvider` | ui-backed | none | Decoration result is rendered by the workbench explorer/UI. |
