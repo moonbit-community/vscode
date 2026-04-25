@@ -63,7 +63,7 @@ async function run() {
 
   await runCase('serves completions from a MoonBit CompletionItemProvider', async () => {
     const document = await vscode.workspace.openTextDocument({
-      language: 'vscode-mbt-smoke-completion',
+      language: 'vscode-mbt-smoke-language',
       content: 'moon.'
     });
     const completions = await vscode.commands.executeCommand(
@@ -80,6 +80,54 @@ async function run() {
     assert.strictEqual(item.insertText, 'moonbitInserted');
     assert.deepStrictEqual(item.commitCharacters, [';']);
     assert.strictEqual(item.documentation, 'resolved by MoonBit');
+  });
+
+  await runCase('serves definitions from a MoonBit DefinitionProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon definition'
+    });
+    const locations = await vscode.commands.executeCommand(
+      'vscode.executeDefinitionProvider',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(locations.length, 1);
+    assert.strictEqual(locations[0].uri.toString(), document.uri.toString());
+    assert.deepStrictEqual(
+      [
+        locations[0].range.start.line,
+        locations[0].range.start.character,
+        locations[0].range.end.line,
+        locations[0].range.end.character
+      ],
+      [0, 0, 0, 4]
+    );
+  });
+
+  await runCase('serves hovers from a MoonBit HoverProvider', async () => {
+    const document = await vscode.workspace.openTextDocument({
+      language: 'vscode-mbt-smoke-language',
+      content: 'moon hover'
+    });
+    const hovers = await vscode.commands.executeCommand(
+      'vscode.executeHoverProvider',
+      document.uri,
+      new vscode.Position(0, 1)
+    );
+
+    assert.strictEqual(hovers.length, 1);
+    assert.strictEqual(hovers[0].contents[0].value, 'hover from MoonBit');
+    assert.deepStrictEqual(
+      [
+        hovers[0].range.start.line,
+        hovers[0].range.start.character,
+        hovers[0].range.end.line,
+        hovers[0].range.end.character
+      ],
+      [0, 0, 0, 4]
+    );
   });
 
   await runCase('serves files from a MoonBit FileSystemProvider', async () => {

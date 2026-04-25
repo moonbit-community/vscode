@@ -20,7 +20,7 @@ let content_provider_uri_command = "vscode-mbt-tests.contentProviderUri"
 let content_provider_scheme = "vscode-mbt-smoke"
 
 ///|
-let completion_language = "vscode-mbt-smoke-completion"
+let language_provider_language = "vscode-mbt-smoke-language"
 
 ///|
 let file_system_provider_uri_command = "vscode-mbt-tests.fileSystemProviderUri"
@@ -51,6 +51,14 @@ priv struct SmokeTextDocumentContentProvider {
 
 ///|
 priv struct SmokeCompletionProvider {
+}
+
+///|
+priv struct SmokeDefinitionProvider {
+}
+
+///|
+priv struct SmokeHoverProvider {
 }
 
 ///|
@@ -114,6 +122,44 @@ impl @vscode.CompletionItemProvider for SmokeCompletionProvider with resolve_com
     @vscode.MarkdownStringValue::Text("resolved by MoonBit"),
   )
   Some(item)
+}
+
+///|
+impl @vscode.DefinitionProvider for SmokeDefinitionProvider with provide_definition(
+  _self,
+  document,
+  _position,
+  _token,
+) {
+  Some([
+    @vscode.Location::new(
+      document.uri(),
+      @vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+    ),
+  ])
+}
+
+///|
+impl @vscode.HoverProvider for SmokeHoverProvider with provide_hover(
+  _self,
+  _document,
+  _position,
+  _token,
+) {
+  Some(
+    @vscode.Hover::new_single(
+      @vscode.HoverContent::Markdown(
+        @vscode.MarkdownString::new(value="hover from MoonBit"),
+      ),
+      range=@vscode.Range::new(
+        @vscode.Position::new(0, 0),
+        @vscode.Position::new(0, 4),
+      ),
+    ),
+  )
 }
 
 ///|
@@ -413,9 +459,21 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   )
   ctx.subscribe(
     @languages.register_completion_item_provider(
-      @vscode.DocumentSelector::Language(completion_language),
+      @vscode.DocumentSelector::Language(language_provider_language),
       SmokeCompletionProvider::{},
       trigger_characters=["."],
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_definition_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeDefinitionProvider::{},
+    ),
+  )
+  ctx.subscribe(
+    @languages.register_hover_provider(
+      @vscode.DocumentSelector::Language(language_provider_language),
+      SmokeHoverProvider::{},
     ),
   )
   let file_system_provider = SmokeFileSystemProvider::new()

@@ -17,13 +17,13 @@
     "onCommand:vscode-mbt-tests.contentProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemProviderUri",
     "onCommand:vscode-mbt-tests.fileSystemReadDirectory",
-    "onLanguage:vscode-mbt-smoke-completion"
+    "onLanguage:vscode-mbt-smoke-language"
   ],
   "main": "../../../_build/js/release/build/vscode_mbt_smoke_extension/vscode_mbt_smoke_extension.js",
   "contributes": {
     "languages": [
       {
-        "id": "vscode-mbt-smoke-completion"
+        "id": "vscode-mbt-smoke-language"
       }
     ],
     "commands": [
