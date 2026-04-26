@@ -1117,16 +1117,18 @@ impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with provide
 ) {
   self.state.provide_count = self.state.provide_count + 1
   self.state.last_uri = uri.to_string()
-  if self.state.last_uri == self.state.target_uri {
+  if self.state.target_uri == "" || self.state.last_uri != self.state.target_uri {
+    None
+  } else {
     self.state.saw_target = true
+    let decoration = @vscode.FileDecoration::new(
+      badge="M",
+      tooltip="MoonBit decoration",
+    )
+    self.state.badge = decoration.badge().unwrap_or("")
+    self.state.tooltip = decoration.tooltip().unwrap_or("")
+    Some(decoration)
   }
-  let decoration = @vscode.FileDecoration::new(
-    badge="M",
-    tooltip="MoonBit decoration",
-  )
-  self.state.badge = decoration.badge().unwrap_or("")
-  self.state.tooltip = decoration.tooltip().unwrap_or("")
-  Some(decoration)
 }
 
 ///|

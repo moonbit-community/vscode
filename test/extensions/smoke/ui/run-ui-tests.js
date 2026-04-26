@@ -68,6 +68,8 @@ async function main() {
     await window.waitForLoadState('domcontentloaded');
     await window.locator('.monaco-workbench').waitFor({ timeout: 30000 });
     await window.setViewportSize({ width: 1400, height: 900 });
+    await stabilizeWorkbench(window);
+    await setPrimarySidebarWidth(window, 320);
 
     await captureStatusBar(window);
     await captureTreeView(window);
@@ -114,10 +116,16 @@ function writeUserSettings() {
     path.join(userDir, 'settings.json'),
     JSON.stringify(
       {
+        'breadcrumbs.enabled': false,
+        'editor.codeLens': false,
         'editor.cursorBlinking': 'solid',
         'editor.minimap.enabled': false,
+        'editor.occurrencesHighlight': 'off',
+        'editor.renderLineHighlight': 'none',
         'editor.scrollbar.horizontal': 'hidden',
         'editor.scrollbar.vertical': 'hidden',
+        'editor.selectionHighlight': false,
+        'git.decorations.enabled': false,
         'terminal.integrated.cursorBlinking': false,
         'terminal.integrated.gpuAcceleration': 'off',
         'telemetry.telemetryLevel': 'off',
@@ -250,6 +258,7 @@ async function captureTerminalLink(window) {
   await runCommand(window, 'MoonBit Smoke: Terminal Link Visual');
   const linkText = 'moonbit-terminal-link';
   await waitForVisibleText(window, linkText);
+  await setBottomPanelHeight(window, 220);
   const link = window.locator(`text=${linkText}`).first();
   const box = await link.boundingBox();
   assert.ok(box, 'terminal link text was visible but had no bounding box');
@@ -257,6 +266,8 @@ async function captureTerminalLink(window) {
   const y = box.y + box.height / 2;
   const linkModifier = os.platform() === 'darwin' ? 'Meta' : 'Control';
   await clickTerminalLink(window, x, y, linkModifier);
+  await window.mouse.move(20, 20);
+  await window.waitForTimeout(250);
   await screenshot(window, 'terminal-link.png');
   await closeActiveTerminal(window);
 }
@@ -264,6 +275,7 @@ async function captureTerminalLink(window) {
 async function captureTerminalProfile(window) {
   await runCommand(window, 'MoonBit Smoke: Terminal Profile Visual');
   await waitForVisibleText(window, 'moonbit-profile-terminal');
+  await setBottomPanelHeight(window, 220);
   await screenshot(window, 'terminal-profile.png');
 }
 
@@ -324,16 +336,29 @@ async function closeActiveTerminal(window) {
 }
 
 async function runCommand(window, title) {
-  await window.keyboard.press(os.platform() === 'darwin' ? 'Meta+Shift+P' : 'Control+Shift+P');
-  const input = window.locator('.quick-input-widget input').first();
-  await input.waitFor({ state: 'visible', timeout: 10000 });
-  await input.fill(`>${title}`);
-  await selectQuickPick(window, title);
+  let lastError;
+  for (let attempt = 0; attempt < 6; attempt += 1) {
+    await window.keyboard.press(os.platform() === 'darwin' ? 'Meta+Shift+P' : 'Control+Shift+P');
+    const input = window.locator('.quick-input-widget input').first();
+    await input.waitFor({ state: 'visible', timeout: 10000 });
+    await input.fill(`>${title}`);
+    try {
+      await selectQuickPick(window, title, 3000);
+      return;
+    } catch (error) {
+      lastError = error;
+      await window.keyboard.press('Escape');
+      await window.locator('.quick-input-widget').waitFor({ state: 'hidden', timeout: 10000 })
+        .catch(() => {});
+      await window.waitForTimeout(500);
+    }
+  }
+  throw lastError;
 }
 
-async function selectQuickPick(window, title) {
+async function selectQuickPick(window, title, timeout = 10000) {
   const command = window.locator('.quick-input-widget .monaco-list-row', { hasText: title }).first();
-  await command.waitFor({ state: 'visible', timeout: 10000 });
+  await command.waitFor({ state: 'visible', timeout });
   await command.click();
   await window.locator('.quick-input-widget').waitFor({ state: 'hidden', timeout: 10000 })
     .catch(() => {});
@@ -362,25 +387,73 @@ async function waitForFrameText(window, text) {
 }
 
 async function screenshot(window, name) {
-  const mask = screenshotMasks(window);
   await window.screenshot({
     path: path.join(screenshotDir, name),
-    fullPage: true,
-    mask,
-    maskColor: '#101010'
+    clip: {
+      x: 0,
+      y: 0,
+      width: 1100,
+      height: 900
+    }
   });
 }
 
-function screenshotMasks(window) {
-  return [
-    window.locator('.part.auxiliarybar'),
-    window.locator('.notifications-toasts'),
-    window.locator('.editor-group-watermark'),
-    window.locator('.monaco-editor .cursors-layer'),
-    window.locator('.monaco-hover'),
-    window.locator('.part.statusbar .right-items'),
-    window.locator('.xterm-cursor-layer')
-  ];
+async function stabilizeWorkbench(window) {
+  await window.addStyleTag({
+    content: `
+      .part.auxiliarybar,
+      .editor-group-watermark,
+      .part.activitybar .badge,
+      .part.statusbar .right-items,
+      .notifications-toasts,
+      .monaco-hover,
+      .monaco-editor .cursors-layer,
+      .xterm-cursor-layer {
+        visibility: hidden !important;
+      }
+    `
+  });
+}
+
+async function setPrimarySidebarWidth(window, width) {
+  const sidebar = window.locator('.part.sidebar').first();
+  await sidebar.waitFor({ state: 'visible', timeout: 10000 });
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const box = await sidebar.boundingBox();
+    assert.ok(box, 'primary sidebar was visible but had no bounding box');
+    if (Math.abs(box.width - width) <= 2) {
+      break;
+    }
+    const y = box.y + Math.min(120, box.height / 2);
+    await window.mouse.move(box.x + box.width - 1, y);
+    await window.mouse.down();
+    await window.mouse.move(box.x + width, y, { steps: 12 });
+    await window.mouse.up();
+    await window.waitForTimeout(250);
+  }
+  await window.mouse.move(20, 20);
+  await window.waitForTimeout(250);
+}
+
+async function setBottomPanelHeight(window, height) {
+  const panel = window.locator('.part.panel').first();
+  await panel.waitFor({ state: 'visible', timeout: 10000 });
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const box = await panel.boundingBox();
+    assert.ok(box, 'bottom panel was visible but had no bounding box');
+    if (Math.abs(box.height - height) <= 2) {
+      break;
+    }
+    const x = box.x + Math.min(500, box.width / 2);
+    const targetY = box.y + box.height - height;
+    await window.mouse.move(x, box.y + 1);
+    await window.mouse.down();
+    await window.mouse.move(x, targetY, { steps: 12 });
+    await window.mouse.up();
+    await window.waitForTimeout(250);
+  }
+  await window.mouse.move(20, 20);
+  await window.waitForTimeout(250);
 }
 
 async function captureFailureScreenshot(electronApp) {
