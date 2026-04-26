@@ -10,6 +10,7 @@
     "check:test-extension:smoke": "moon -C test/extensions/smoke check --target js",
     "test:integration": "npm run build:test-extension:smoke && node test/extensions/smoke/run-tests.js",
     "test:ui": "npm run build:test-extension:smoke && node test/extensions/smoke/ui/run-ui-tests.js",
+    "test:ui:update": "npm run build:test-extension:smoke && node test/extensions/smoke/ui/run-ui-tests.js --update-baselines",
     "update:vscode-dts": "node ./.codex/skills/moonbit-vscode-api-binding-style/scripts/update-vscode-dts.mjs"
   }
 }

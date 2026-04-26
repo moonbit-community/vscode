@@ -1,4 +1,5 @@
 const assert = require('assert');
+const { spawnSync } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
@@ -12,8 +13,22 @@ const userDataDir = path.join(testRoot, 'user-data');
 const extensionsDir = path.join(testRoot, 'extensions');
 const testHome = path.join(testRoot, 'home');
 const screenshotDir = path.join(testRoot, 'screenshots');
+const diffDir = path.join(testRoot, 'diffs');
+const baselinePlatform = `${process.platform}-${process.arch}`;
+const baselineDir = path.join(__dirname, 'baselines', baselinePlatform);
 const fixtureDecorationFile = path.join(workspacePath, 'file-decoration-visual.txt');
 const fixtureDropFile = path.join(workspacePath, 'document-drop-visual.mbt');
+const updateBaselines = process.argv.includes('--update-baselines');
+const screenshotNames = [
+  'status-bar.png',
+  'tree-view.png',
+  'webview-view.png',
+  'file-decoration.png',
+  'document-drop.png',
+  'terminal-link.png',
+  'terminal-profile.png'
+];
+const maxDiffPixels = Number.parseInt(process.env.VSCODE_MBT_UI_MAX_DIFF_PIXELS || '1000', 10);
 
 async function main() {
   resetTestWorkspace();
@@ -68,7 +83,16 @@ async function main() {
     await electronApp.close();
   }
 
+  if (updateBaselines) {
+    updateBaselineScreenshots();
+  } else {
+    compareScreenshots();
+  }
+
   console.log(`Smoke UI screenshots written to ${screenshotDir}`);
+  if (!updateBaselines) {
+    console.log(`Smoke UI diffs written to ${diffDir}`);
+  }
 }
 
 function resetTestWorkspace() {
@@ -77,8 +101,33 @@ function resetTestWorkspace() {
   fs.mkdirSync(extensionsDir, { recursive: true });
   fs.mkdirSync(workspacePath, { recursive: true });
   fs.mkdirSync(screenshotDir, { recursive: true });
+  fs.mkdirSync(diffDir, { recursive: true });
+  writeUserSettings();
   fs.writeFileSync(fixtureDecorationFile, 'moonbit file decoration visual smoke\n');
   fs.writeFileSync(fixtureDropFile, 'drop-target\n');
+}
+
+function writeUserSettings() {
+  const userDir = path.join(userDataDir, 'User');
+  fs.mkdirSync(userDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(userDir, 'settings.json'),
+    JSON.stringify(
+      {
+        'editor.cursorBlinking': 'solid',
+        'editor.minimap.enabled': false,
+        'editor.scrollbar.horizontal': 'hidden',
+        'editor.scrollbar.vertical': 'hidden',
+        'terminal.integrated.cursorBlinking': false,
+        'terminal.integrated.gpuAcceleration': 'off',
+        'telemetry.telemetryLevel': 'off',
+        'update.mode': 'none',
+        'workbench.startupEditor': 'none'
+      },
+      undefined,
+      2
+    )
+  );
 }
 
 async function resolveVSCodeExecutablePath() {
@@ -192,6 +241,8 @@ async function captureDocumentDrop(window) {
   await waitForVisibleText(window, 'drop-target');
   await dispatchEditorDrop(window, droppedText);
   await waitForVisibleText(window, `moonbit-dropped:${droppedText}`);
+  await window.mouse.move(20, 20);
+  await window.waitForTimeout(150);
   await screenshot(window, 'document-drop.png');
 }
 
@@ -204,13 +255,10 @@ async function captureTerminalLink(window) {
   assert.ok(box, 'terminal link text was visible but had no bounding box');
   const x = box.x + box.width / 2;
   const y = box.y + box.height / 2;
-  await window.mouse.move(x, y);
-  await waitForVisibleText(window, 'MoonBit terminal link');
-  await window.keyboard.down(os.platform() === 'darwin' ? 'Meta' : 'Control');
-  await window.mouse.click(x, y);
-  await window.keyboard.up(os.platform() === 'darwin' ? 'Meta' : 'Control');
-  await waitForVisibleText(window, 'MoonBit terminal link handled');
+  const linkModifier = os.platform() === 'darwin' ? 'Meta' : 'Control';
+  await clickTerminalLink(window, x, y, linkModifier);
   await screenshot(window, 'terminal-link.png');
+  await closeActiveTerminal(window);
 }
 
 async function captureTerminalProfile(window) {
@@ -247,6 +295,34 @@ async function dispatchEditorDrop(window, text) {
   }
 }
 
+async function clickTerminalLink(window, x, y, modifier) {
+  let lastError;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await window.keyboard.down(modifier);
+    try {
+      await window.mouse.move(x, y, { steps: 8 });
+      await waitForVisibleText(window, 'MoonBit terminal link', 1000).catch(() => {});
+      await window.mouse.click(x, y);
+    } finally {
+      await window.keyboard.up(modifier);
+    }
+
+    try {
+      await waitForVisibleText(window, 'MoonBit terminal link handled', 5000);
+      return;
+    } catch (error) {
+      lastError = error;
+      await window.waitForTimeout(250);
+    }
+  }
+  throw lastError;
+}
+
+async function closeActiveTerminal(window) {
+  await runCommand(window, 'Terminal: Kill the Active Terminal Instance');
+  await window.waitForTimeout(250);
+}
+
 async function runCommand(window, title) {
   await window.keyboard.press(os.platform() === 'darwin' ? 'Meta+Shift+P' : 'Control+Shift+P');
   const input = window.locator('.quick-input-widget input').first();
@@ -263,8 +339,8 @@ async function selectQuickPick(window, title) {
     .catch(() => {});
 }
 
-async function waitForVisibleText(window, text) {
-  await window.locator(`text=${text}`).first().waitFor({ state: 'visible', timeout: 15000 });
+async function waitForVisibleText(window, text, timeout = 15000) {
+  await window.locator(`text=${text}`).first().waitFor({ state: 'visible', timeout });
 }
 
 async function waitForFrameText(window, text) {
@@ -286,10 +362,25 @@ async function waitForFrameText(window, text) {
 }
 
 async function screenshot(window, name) {
+  const mask = screenshotMasks(window);
   await window.screenshot({
     path: path.join(screenshotDir, name),
-    fullPage: true
+    fullPage: true,
+    mask,
+    maskColor: '#101010'
   });
+}
+
+function screenshotMasks(window) {
+  return [
+    window.locator('.part.auxiliarybar'),
+    window.locator('.notifications-toasts'),
+    window.locator('.editor-group-watermark'),
+    window.locator('.monaco-editor .cursors-layer'),
+    window.locator('.monaco-hover'),
+    window.locator('.part.statusbar .right-items'),
+    window.locator('.xterm-cursor-layer')
+  ];
 }
 
 async function captureFailureScreenshot(electronApp) {
@@ -311,3 +402,99 @@ main().catch(error => {
   console.error(error);
   process.exit(1);
 });
+
+function updateBaselineScreenshots() {
+  fs.mkdirSync(baselineDir, { recursive: true });
+  for (const name of screenshotNames) {
+    fs.copyFileSync(path.join(screenshotDir, name), path.join(baselineDir, name));
+  }
+  console.log(`Updated Smoke UI baselines in ${baselineDir}`);
+}
+
+function compareScreenshots() {
+  assertBaselinesExist();
+  const compareCommand = resolveImageCompareCommand();
+  const failures = [];
+
+  for (const name of screenshotNames) {
+    const baseline = path.join(baselineDir, name);
+    const actual = path.join(screenshotDir, name);
+    const diff = path.join(diffDir, name);
+    const result = comparePng(compareCommand, baseline, actual, diff);
+    if (result.diffPixels > maxDiffPixels) {
+      failures.push(`${name}: ${result.diffPixels} pixels differ`);
+    } else if (fs.existsSync(diff)) {
+      fs.rmSync(diff, { force: true });
+    }
+  }
+
+  if (failures.length > 0) {
+    throw new Error(
+      [
+        'Smoke UI screenshot regression detected.',
+        ...failures,
+        `Review diffs in ${diffDir}`,
+        'Run npm run test:ui:update to accept intentional UI changes.'
+      ].join('\n')
+    );
+  }
+}
+
+function assertBaselinesExist() {
+  const missing = screenshotNames.filter(name => !fs.existsSync(path.join(baselineDir, name)));
+  if (missing.length > 0) {
+    throw new Error(
+      [
+        `Missing Smoke UI baselines for ${baselinePlatform}:`,
+        ...missing.map(name => `- ${path.join(baselineDir, name)}`),
+        'Run npm run test:ui:update to create them.'
+      ].join('\n')
+    );
+  }
+}
+
+function resolveImageCompareCommand() {
+  if (commandWorks('magick', ['-version'])) {
+    return { command: 'magick', argsPrefix: ['compare'] };
+  }
+  if (commandWorks('compare', ['-version'])) {
+    return { command: 'compare', argsPrefix: [] };
+  }
+  throw new Error('Smoke UI screenshot comparison requires ImageMagick: install `magick` or `compare`.');
+}
+
+function commandWorks(command, args) {
+  const result = spawnSync(command, args, { encoding: 'utf8' });
+  return result.status === 0;
+}
+
+function comparePng(compareCommand, baseline, actual, diff) {
+  const args = [
+    ...compareCommand.argsPrefix,
+    '-metric',
+    'AE',
+    '-fuzz',
+    '1%',
+    baseline,
+    actual,
+    diff
+  ];
+  const result = spawnSync(compareCommand.command, args, { encoding: 'utf8' });
+  if (result.status !== 0 && result.status !== 1) {
+    throw new Error(
+      `ImageMagick compare failed for ${path.basename(actual)}:\n${result.stderr || result.stdout}`
+    );
+  }
+  return { diffPixels: parseDiffPixels(result.stderr || result.stdout) };
+}
+
+function parseDiffPixels(output) {
+  const text = String(output);
+  const parenthesized = text.match(/\((\d+)\)/);
+  if (parenthesized) {
+    return Number.parseInt(parenthesized[1], 10);
+  }
+
+  const match = text.match(/\d+/);
+  return match ? Number.parseInt(match[0], 10) : 0;
+}
