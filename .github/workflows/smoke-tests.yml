@@ -27,7 +27,26 @@ jobs:
         run: |
           moon check --target js
           moon build --target js
-          moon info --target js
+          moon info --target js \
+            . \
+            authentication \
+            chat \
+            commands \
+            comments \
+            debug \
+            env \
+            extensions \
+            internal/v \
+            internal/v/providers \
+            l10n \
+            languages \
+            lm \
+            notebooks \
+            scm \
+            tasks \
+            tests \
+            window \
+            workspace
           git diff --exit-code -- pkg.generated.mbti
 
       - name: Check smoke extension
