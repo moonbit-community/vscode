@@ -1,7 +1,7 @@
 {
   "name": "progress_sample",
   "deps": {
-    "username/vscode": "0.1.0",
-    "moonbitlang/async": "0.17.0"
+    "moonbit-community/vscode": "0.1.0",
+    "moonbitlang/async": "0.20.4"
   }
 }

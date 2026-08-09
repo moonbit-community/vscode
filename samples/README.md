@@ -1,6 +1,6 @@
 # VS Code Official Sample Porting
 
-This directory tracks MoonBit rewrites of official VS Code extension samples using the typed `username/vscode/*` bindings from this repository.
+This directory tracks MoonBit rewrites of official VS Code extension samples using the typed `moonbit-community/vscode/*` bindings from this repository.
 
 ## Porting Order
 

@@ -10,7 +10,7 @@ fn basename(path : String) -> String {
   let normalized = path.replace_all(old="\\", new="/")
   let parts = normalized.split("/").to_array()
   match parts.last() {
-    Some(name) => name.to_string()
+    Some(name) => name.to_owned()
     None => path
   }
 }

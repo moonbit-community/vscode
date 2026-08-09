@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/tests"
+package "moonbit-community/vscode/tests"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -159,4 +159,3 @@ pub fn TestTag::new(String) -> Self
 // Type aliases
 
 // Traits
-

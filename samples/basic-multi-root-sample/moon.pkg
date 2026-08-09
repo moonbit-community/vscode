@@ -1,7 +1,7 @@
 import {
-  "username/vscode/window",
-  "username/vscode/workspace",
-  "username/vscode",
+  "moonbit-community/vscode/window",
+  "moonbit-community/vscode/workspace",
+  "moonbit-community/vscode",
 }
 
 options(

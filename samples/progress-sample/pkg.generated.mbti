@@ -2,7 +2,7 @@
 package "progress_sample"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values

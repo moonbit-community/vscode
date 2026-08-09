@@ -1,9 +1,9 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/chat"
+package "moonbit-community/vscode/chat"
 
 import {
-  "username/vscode",
-  "username/vscode/lm",
+  "moonbit-community/vscode",
+  "moonbit-community/vscode/lm",
 }
 
 // Values
@@ -196,4 +196,3 @@ pub fn ChatTurn::as_response_turn(Self) -> ChatResponseTurn?
 // Type aliases
 
 // Traits
-

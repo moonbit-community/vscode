@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/commands"
+package "moonbit-community/vscode/commands"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -42,4 +42,3 @@ pub fn CommandArgs::length(Self) -> Int
 // Type aliases
 
 // Traits
-

@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/env"
+package "moonbit-community/vscode/env"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -53,4 +53,3 @@ pub fn uri_scheme() -> String
 // Type aliases
 
 // Traits
-

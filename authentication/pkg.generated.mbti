@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/authentication"
+package "moonbit-community/vscode/authentication"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -25,4 +25,3 @@ pub fn[T : @vscode.AuthenticationProvider] register_authentication_provider(Stri
 // Type aliases
 
 // Traits
-

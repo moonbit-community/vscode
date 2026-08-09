@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/internal/v"
+package "moonbit-community/vscode/internal/v"
 
 // Values
 pub fn[T] js_to_option(JsValue) -> T?
@@ -17,4 +17,3 @@ pub fn[X] JsValue::make(X) -> Self
 // Type aliases
 
 // Traits
-

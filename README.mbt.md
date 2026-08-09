@@ -1,4 +1,4 @@
-# username/vscode
+# moonbit-community/vscode
 
 MoonBit bindings for the VS Code extension API.
 

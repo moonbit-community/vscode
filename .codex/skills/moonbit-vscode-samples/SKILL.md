@@ -1,6 +1,6 @@
 ---
 name: moonbit-vscode-samples
-description: Rewrite VS Code extension samples from microsoft/vscode-extension-samples into MoonBit extensions that use this repository's bound VS Code API (`username/vscode/*`). Use when asked to port, translate, or reimplement an upstream sample extension in MoonBit with exact upstream behavior and sample-scoped validation.
+description: Rewrite VS Code extension samples from microsoft/vscode-extension-samples into MoonBit extensions that use this repository's bound VS Code API (`moonbit-community/vscode/*`). Use when asked to port, translate, or reimplement an upstream sample extension in MoonBit with exact upstream behavior and sample-scoped validation.
 ---
 
 # MoonBit VS Code Samples Porting
@@ -46,14 +46,14 @@ test/samples/<sample-name>/
 ## Porting Workflow
 1. Locate and read upstream `package.json`, `src/extension.ts`, and `README.md`.
 2. Port behavior first, preserving IDs and message text.
-3. Implement with `username/vscode/*` bindings and MoonBit stdlib/async packages.
+3. Implement with `moonbit-community/vscode/*` bindings and MoonBit stdlib/async packages.
 4. Copy upstream `README.md` and keep its structure/content, but update build/run steps for MoonBit (`moon check`, `moon build`, sample-local `F5`).
 5. Ensure `package.json.main`, npm scripts, `.vscode/tasks.json`, and README run commands all use the same build mode (release/debug) so F5 runs the latest compiled artifact.
 6. Add sample-local `.vscode/launch.json` and `.vscode/tasks.json` so `F5` works from the sample folder.
 7. If APIs are missing in bindings, add typed binding support in main module first, then finish sample port.
 
 ## JS/TS -> MoonBit Translation Rules
-- Replace `import * as vscode from 'vscode'` with scoped imports such as `username/vscode/core`, `username/vscode/commands`, `username/vscode/window`, `username/vscode/workspace`, and other API modules in this repo.
+- Replace `import * as vscode from 'vscode'` with scoped imports such as `moonbit-community/vscode/core`, `moonbit-community/vscode/commands`, `moonbit-community/vscode/window`, `moonbit-community/vscode/workspace`, and other API modules in this repo.
 - Replace `context.subscriptions.push(disposable)` with:
   - `let subscriptions = ctx.subscriptions()`
   - `subscriptions.push(disposable)`

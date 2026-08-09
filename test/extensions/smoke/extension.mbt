@@ -2100,7 +2100,9 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
       @vscode.Disposable::new(fn() {
         write_disposable_marker("combined-callback-disposable")
       }),
-      SmokeDisposable::new("combined-as-disposable").as_disposable(),
+      @vscode.AsDisposable::as_disposable(
+        SmokeDisposable::new("combined-as-disposable"),
+      ),
     ]),
   )
   ctx.subscribe(status)

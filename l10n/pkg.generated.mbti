@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/l10n"
+package "moonbit-community/vscode/l10n"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -23,4 +23,3 @@ pub fn uri() -> @vscode.Uri?
 // Type aliases
 
 // Traits
-

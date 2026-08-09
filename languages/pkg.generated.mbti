@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/languages"
+package "moonbit-community/vscode/languages"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -171,4 +171,3 @@ pub(all) enum SyntaxTokenType {
 // Type aliases
 
 // Traits
-

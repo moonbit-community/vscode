@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/internal/v/providers"
+package "moonbit-community/vscode/internal/v/providers"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -194,14 +194,13 @@ pub fn WorkspaceSymbolProviderObject::new(async (String, @vscode.CancellationTok
 
 // Traits
 pub(open) trait AuthenticationProvider {
-  on_did_change_sessions(Self) -> @vscode.Event[@vscode.AuthenticationProviderAuthenticationSessionsChangeEvent]
-  async get_sessions(Self, Array[String]?, @vscode.AuthenticationProviderSessionOptions) -> Array[@vscode.AuthenticationSession]
-  async create_session(Self, Array[String], @vscode.AuthenticationProviderSessionOptions) -> @vscode.AuthenticationSession
-  async remove_session(Self, String) -> Unit
+  fn on_did_change_sessions(Self) -> @vscode.Event[@vscode.AuthenticationProviderAuthenticationSessionsChangeEvent]
+  async fn get_sessions(Self, Array[String]?, @vscode.AuthenticationProviderSessionOptions) -> Array[@vscode.AuthenticationSession]
+  async fn create_session(Self, Array[String], @vscode.AuthenticationProviderSessionOptions) -> @vscode.AuthenticationSession
+  async fn remove_session(Self, String) -> Unit
 }
 
 pub(open) trait TaskProvider {
-  async provide_tasks(Self, @vscode.CancellationToken) -> Array[@vscode.Task]?
-  async resolve_task(Self, @vscode.Task, @vscode.CancellationToken) -> @vscode.Task?
+  async fn provide_tasks(Self, @vscode.CancellationToken) -> Array[@vscode.Task]?
+  async fn resolve_task(Self, @vscode.Task, @vscode.CancellationToken) -> @vscode.Task?
 }
-

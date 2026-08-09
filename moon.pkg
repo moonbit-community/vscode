@@ -1,6 +1,6 @@
 import {
   "moonbitlang/async/js_async",
-  "username/vscode/internal/v",
+  "moonbit-community/vscode/internal/v",
 }
 
 options(

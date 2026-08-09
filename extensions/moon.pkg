@@ -1,6 +1,6 @@
 import {
-  "username/vscode",
-  "username/vscode/internal/v",
+  "moonbit-community/vscode",
+  "moonbit-community/vscode/internal/v",
 }
 
 options(

@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/workspace"
+package "moonbit-community/vscode/workspace"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -123,4 +123,3 @@ pub fn workspace_folders() -> Array[@vscode.WorkspaceFolder]?
 // Type aliases
 
 // Traits
-

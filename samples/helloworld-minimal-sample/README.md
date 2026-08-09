@@ -2,7 +2,7 @@
 
 This is a MoonBit port of the official [Hello World Sample](https://github.com/microsoft/vscode-extension-samples/tree/main/helloworld-sample).
 
-It keeps the original behavior of the upstream [`helloworld-minimal-sample`](https://github.com/microsoft/vscode-extension-samples/tree/main/helloworld-minimal-sample) while replacing the JavaScript implementation with this repository's `username/vscode/*` bindings.
+It keeps the original behavior of the upstream [`helloworld-minimal-sample`](https://github.com/microsoft/vscode-extension-samples/tree/main/helloworld-minimal-sample) while replacing the JavaScript implementation with this repository's `moonbit-community/vscode/*` bindings.
 
 ## VS Code API
 

@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/scm"
+package "moonbit-community/vscode/scm"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -17,4 +17,3 @@ pub fn input_box() -> @vscode.SourceControlInputBox?
 // Type aliases
 
 // Traits
-

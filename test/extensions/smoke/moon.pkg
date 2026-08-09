@@ -1,14 +1,14 @@
 import {
   "moonbitlang/async/js_async",
-  "username/vscode",
-  "username/vscode/authentication",
-  "username/vscode/comments",
-  "username/vscode/commands",
-  "username/vscode/languages",
-  "username/vscode/scm",
-  "username/vscode/tasks",
-  "username/vscode/window",
-  "username/vscode/workspace",
+  "moonbit-community/vscode",
+  "moonbit-community/vscode/authentication",
+  "moonbit-community/vscode/comments",
+  "moonbit-community/vscode/commands",
+  "moonbit-community/vscode/languages",
+  "moonbit-community/vscode/scm",
+  "moonbit-community/vscode/tasks",
+  "moonbit-community/vscode/window",
+  "moonbit-community/vscode/workspace",
 }
 
 options(

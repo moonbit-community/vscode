@@ -2,7 +2,7 @@
 package "vscode_mbt_smoke_extension"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values

@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/debug"
+package "moonbit-community/vscode/debug"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -126,4 +126,3 @@ pub fn[T] DebugProtocolSource::from_value(T) -> Self
 // Type aliases
 
 // Traits
-

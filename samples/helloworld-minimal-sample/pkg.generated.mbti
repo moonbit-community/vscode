@@ -2,7 +2,7 @@
 package "helloworld_minimal_sample"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values

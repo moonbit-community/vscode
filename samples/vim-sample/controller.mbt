@@ -262,7 +262,7 @@ pub async fn Controller::replace_prev_char(
     let keep_prefix = if keep_len <= 0 {
       ""
     } else {
-      self.composing_text[:keep_len].to_string()
+      self.composing_text[:keep_len].to_owned()
     }
     self.composing_text = keep_prefix + text
     return true

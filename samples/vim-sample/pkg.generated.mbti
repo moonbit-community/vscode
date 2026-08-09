@@ -2,8 +2,8 @@
 package "vim_sample"
 
 import {
-  "username/vscode",
-  "username/vscode/commands",
+  "moonbit-community/vscode",
+  "moonbit-community/vscode/commands",
 }
 
 // Values

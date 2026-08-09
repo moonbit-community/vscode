@@ -44,7 +44,7 @@ fn slice_string(input : String, start : Int, end_index : Int) -> String {
   } else {
     end_index
   }
-  input[safe_start:safe_end].to_string()
+  input[safe_start:safe_end].to_owned()
 }
 
 ///|
@@ -61,7 +61,7 @@ fn parse_number_and_string(
       NumberAndString::{
         has_repeat_count: true,
         repeat_count: parse_positive_int(input, 0, end_index),
-        input: input[end_index:].to_string(),
+        input: input[end_index:].to_owned(),
       }
     } else {
       NumberAndString::{ has_repeat_count: false, repeat_count: 1, input }
@@ -76,7 +76,7 @@ fn parse_number_and_string(
       NumberAndString::{
         has_repeat_count: true,
         repeat_count: parse_positive_int(input, start, len),
-        input: input[:start].to_string(),
+        input: input[:start].to_owned(),
       }
     } else {
       NumberAndString::{ has_repeat_count: false, repeat_count: 1, input }
@@ -296,7 +296,7 @@ pub fn find_operator(
       Some(FoundOperator::{
         operator,
         repeat_count: parsed.repeat_count,
-        args: parsed.input[1:].to_string(),
+        args: parsed.input[1:].to_owned(),
       })
     None => None
   }

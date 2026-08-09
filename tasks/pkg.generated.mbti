@@ -1,8 +1,8 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode/tasks"
+package "moonbit-community/vscode/tasks"
 
 import {
-  "username/vscode",
+  "moonbit-community/vscode",
 }
 
 // Values
@@ -29,4 +29,3 @@ pub fn task_executions() -> Array[@vscode.TaskExecution]
 // Type aliases
 
 // Traits
-

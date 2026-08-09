@@ -1,7 +1,7 @@
 {
   "name": "vscode_mbt_smoke_extension",
   "deps": {
-    "moonbitlang/async": "0.17.0",
-    "username/vscode": "0.1.0"
+    "moonbitlang/async": "0.20.4",
+    "moonbit-community/vscode": "0.1.0"
   }
 }

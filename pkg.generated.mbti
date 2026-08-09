@@ -1,5 +1,5 @@
 // Generated using `moon info`, DON'T EDIT IT
-package "username/vscode"
+package "moonbit-community/vscode"
 
 import {
   "moonbitlang/async/js_async",
@@ -3228,222 +3228,221 @@ pub fn WorkspaceFoldersChangeEvent::new(added? : Array[WorkspaceFolder], removed
 
 // Traits
 pub(open) trait AsDisposable {
-  as_disposable(Self) -> Disposable
+  fn as_disposable(Self) -> Disposable
 }
 
 pub(open) trait AuthenticationProvider {
-  on_did_change_sessions(Self) -> Event[AuthenticationProviderAuthenticationSessionsChangeEvent]
-  async get_sessions(Self, Array[String]?, AuthenticationProviderSessionOptions) -> Array[AuthenticationSession]
-  async create_session(Self, Array[String], AuthenticationProviderSessionOptions) -> AuthenticationSession
-  async remove_session(Self, String) -> Unit
+  fn on_did_change_sessions(Self) -> Event[AuthenticationProviderAuthenticationSessionsChangeEvent]
+  async fn get_sessions(Self, Array[String]?, AuthenticationProviderSessionOptions) -> Array[AuthenticationSession]
+  async fn create_session(Self, Array[String], AuthenticationProviderSessionOptions) -> AuthenticationSession
+  async fn remove_session(Self, String) -> Unit
 }
 
 pub(open) trait CallHierarchyProvider {
-  async prepare_call_hierarchy(Self, TextDocument, Position, CancellationToken) -> Array[CallHierarchyItem]?
-  async provide_call_hierarchy_incoming_calls(Self, CallHierarchyItem, CancellationToken) -> Array[CallHierarchyIncomingCall]?
-  async provide_call_hierarchy_outgoing_calls(Self, CallHierarchyItem, CancellationToken) -> Array[CallHierarchyOutgoingCall]?
+  async fn prepare_call_hierarchy(Self, TextDocument, Position, CancellationToken) -> Array[CallHierarchyItem]?
+  async fn provide_call_hierarchy_incoming_calls(Self, CallHierarchyItem, CancellationToken) -> Array[CallHierarchyIncomingCall]?
+  async fn provide_call_hierarchy_outgoing_calls(Self, CallHierarchyItem, CancellationToken) -> Array[CallHierarchyOutgoingCall]?
 }
 
 pub(open) trait CodeActionProvider {
-  async provide_code_actions(Self, TextDocument, Range, CodeActionContext, CancellationToken) -> Array[CodeAction]?
-  async resolve_code_action(Self, CodeAction, CancellationToken) -> CodeAction?
+  async fn provide_code_actions(Self, TextDocument, Range, CodeActionContext, CancellationToken) -> Array[CodeAction]?
+  async fn resolve_code_action(Self, CodeAction, CancellationToken) -> CodeAction?
 }
 
 pub(open) trait CodeLensProvider {
-  on_did_change_code_lenses(Self) -> Event[Unit]?
-  async provide_code_lenses(Self, TextDocument, CancellationToken) -> Array[CodeLens]?
-  async resolve_code_lens(Self, CodeLens, CancellationToken) -> CodeLens?
+  fn on_did_change_code_lenses(Self) -> Event[Unit]?
+  async fn provide_code_lenses(Self, TextDocument, CancellationToken) -> Array[CodeLens]?
+  async fn resolve_code_lens(Self, CodeLens, CancellationToken) -> CodeLens?
 }
 
 pub(open) trait CommentingRangeProvider {
-  async provide_commenting_ranges(Self, TextDocument, CancellationToken) -> CommentingRanges?
+  async fn provide_commenting_ranges(Self, TextDocument, CancellationToken) -> CommentingRanges?
 }
 
 pub(open) trait CompletionItemProvider {
-  async provide_completion_items(Self, TextDocument, Position, CancellationToken, CompletionContext) -> Array[CompletionItem]?
-  async resolve_completion_item(Self, CompletionItem, CancellationToken) -> CompletionItem?
+  async fn provide_completion_items(Self, TextDocument, Position, CancellationToken, CompletionContext) -> Array[CompletionItem]?
+  async fn resolve_completion_item(Self, CompletionItem, CancellationToken) -> CompletionItem?
 }
 
 pub(open) trait CustomEditorProvider {
-  on_did_change_custom_document(Self) -> Event[CustomDocumentChangeEvent[CustomDocument]]?
-  async open_custom_document(Self, Uri, CustomDocumentOpenContext, CancellationToken) -> CustomDocument
-  async resolve_custom_editor(Self, CustomDocument, WebviewPanel, CancellationToken) -> Unit
-  async save_custom_document(Self, CustomDocument, CancellationToken) -> Unit
-  async save_custom_document_as(Self, CustomDocument, Uri, CancellationToken) -> Unit
-  async revert_custom_document(Self, CustomDocument, CancellationToken) -> Unit
-  async backup_custom_document(Self, CustomDocument, CustomDocumentBackupContext, CancellationToken) -> CustomDocumentBackup
+  fn on_did_change_custom_document(Self) -> Event[CustomDocumentChangeEvent[CustomDocument]]?
+  async fn open_custom_document(Self, Uri, CustomDocumentOpenContext, CancellationToken) -> CustomDocument
+  async fn resolve_custom_editor(Self, CustomDocument, WebviewPanel, CancellationToken) -> Unit
+  async fn save_custom_document(Self, CustomDocument, CancellationToken) -> Unit
+  async fn save_custom_document_as(Self, CustomDocument, Uri, CancellationToken) -> Unit
+  async fn revert_custom_document(Self, CustomDocument, CancellationToken) -> Unit
+  async fn backup_custom_document(Self, CustomDocument, CustomDocumentBackupContext, CancellationToken) -> CustomDocumentBackup
 }
 
 pub(open) trait CustomReadonlyEditorProvider {
-  async open_custom_document(Self, Uri, CustomDocumentOpenContext, CancellationToken) -> CustomDocument
-  async resolve_custom_editor(Self, CustomDocument, WebviewPanel, CancellationToken) -> Unit
+  async fn open_custom_document(Self, Uri, CustomDocumentOpenContext, CancellationToken) -> CustomDocument
+  async fn resolve_custom_editor(Self, CustomDocument, WebviewPanel, CancellationToken) -> Unit
 }
 
 pub(open) trait CustomTextEditorProvider {
-  async resolve_custom_text_editor(Self, TextDocument, WebviewPanel, CancellationToken) -> Unit
+  async fn resolve_custom_text_editor(Self, TextDocument, WebviewPanel, CancellationToken) -> Unit
 }
 
 pub(open) trait DeclarationProvider {
-  async provide_declaration(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
+  async fn provide_declaration(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
 }
 
 pub(open) trait DefinitionProvider {
-  async provide_definition(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
+  async fn provide_definition(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
 }
 
 pub(open) trait DocumentColorProvider {
-  async provide_document_colors(Self, TextDocument, CancellationToken) -> Array[ColorInformation]?
-  async provide_color_presentations(Self, Color, ColorPresentationContext, CancellationToken) -> Array[ColorPresentation]?
+  async fn provide_document_colors(Self, TextDocument, CancellationToken) -> Array[ColorInformation]?
+  async fn provide_color_presentations(Self, Color, ColorPresentationContext, CancellationToken) -> Array[ColorPresentation]?
 }
 
 pub(open) trait DocumentDropEditProvider {
-  async provide_document_drop_edits(Self, TextDocument, Position, DataTransfer, CancellationToken) -> Array[DocumentDropEdit]?
-  metadata(Self) -> DocumentDropEditProviderMetadata?
+  async fn provide_document_drop_edits(Self, TextDocument, Position, DataTransfer, CancellationToken) -> Array[DocumentDropEdit]?
+  fn metadata(Self) -> DocumentDropEditProviderMetadata?
 }
 
 pub(open) trait DocumentFormattingEditProvider {
-  async provide_document_formatting_edits(Self, TextDocument, FormattingOptions, CancellationToken) -> Array[TextEdit]?
+  async fn provide_document_formatting_edits(Self, TextDocument, FormattingOptions, CancellationToken) -> Array[TextEdit]?
 }
 
 pub(open) trait DocumentHighlightProvider {
-  async provide_document_highlights(Self, TextDocument, Position, CancellationToken) -> Array[DocumentHighlight]?
+  async fn provide_document_highlights(Self, TextDocument, Position, CancellationToken) -> Array[DocumentHighlight]?
 }
 
 pub(open) trait DocumentLinkProvider {
-  async provide_document_links(Self, TextDocument, CancellationToken) -> Array[DocumentLink]?
-  async resolve_document_link(Self, DocumentLink, CancellationToken) -> DocumentLink?
+  async fn provide_document_links(Self, TextDocument, CancellationToken) -> Array[DocumentLink]?
+  async fn resolve_document_link(Self, DocumentLink, CancellationToken) -> DocumentLink?
 }
 
 pub(open) trait DocumentPasteEditProvider {
-  async provide_document_paste_edits(Self, TextDocument, Array[Range], DataTransfer, DocumentPasteEditContext, CancellationToken) -> Array[DocumentPasteEdit]?
-  metadata(Self) -> DocumentPasteProviderMetadata?
+  async fn provide_document_paste_edits(Self, TextDocument, Array[Range], DataTransfer, DocumentPasteEditContext, CancellationToken) -> Array[DocumentPasteEdit]?
+  fn metadata(Self) -> DocumentPasteProviderMetadata?
 }
 
 pub(open) trait DocumentRangeFormattingEditProvider {
-  async provide_document_range_formatting_edits(Self, TextDocument, Range, FormattingOptions, CancellationToken) -> Array[TextEdit]?
+  async fn provide_document_range_formatting_edits(Self, TextDocument, Range, FormattingOptions, CancellationToken) -> Array[TextEdit]?
 }
 
 pub(open) trait DocumentRangeSemanticTokensProvider {
-  async provide_document_range_semantic_tokens(Self, TextDocument, Range, CancellationToken) -> SemanticTokens
+  async fn provide_document_range_semantic_tokens(Self, TextDocument, Range, CancellationToken) -> SemanticTokens
 }
 
 pub(open) trait DocumentSemanticTokensProvider {
-  async provide_document_semantic_tokens(Self, TextDocument, CancellationToken) -> SemanticTokens
-  provide_document_semantic_tokens_edits(Self) -> (async (TextDocument, String, CancellationToken) -> SemanticTokensEdits)?
-  on_did_change_semantic_tokens(Self) -> Event[Unit]?
+  async fn provide_document_semantic_tokens(Self, TextDocument, CancellationToken) -> SemanticTokens
+  fn provide_document_semantic_tokens_edits(Self) -> (async (TextDocument, String, CancellationToken) -> SemanticTokensEdits)?
+  fn on_did_change_semantic_tokens(Self) -> Event[Unit]?
 }
 
 pub(open) trait DocumentSymbolProvider {
-  async provide_document_symbols(Self, TextDocument, CancellationToken) -> Array[DocumentSymbol]?
+  async fn provide_document_symbols(Self, TextDocument, CancellationToken) -> Array[DocumentSymbol]?
 }
 
 pub(open) trait FileDecorationProvider {
-  on_did_change_file_decorations(Self) -> Event[FileDecorationChange]?
-  async provide_file_decoration(Self, Uri, CancellationToken) -> FileDecoration?
+  fn on_did_change_file_decorations(Self) -> Event[FileDecorationChange]?
+  async fn provide_file_decoration(Self, Uri, CancellationToken) -> FileDecoration?
 }
 
 pub(open) trait FileSystemProvider {
-  on_did_change_file(Self) -> Event[Array[FileChangeEvent]]
-  watch(Self, Uri, Bool, Array[String]) -> Disposable
-  async stat(Self, Uri) -> FileStat
-  async read_directory(Self, Uri) -> Array[DirectoryEntry]
-  async create_directory(Self, Uri) -> Unit
-  async read_file(Self, Uri) -> Bytes
-  async write_file(Self, Uri, Bytes, Bool, Bool) -> Unit
-  async delete(Self, Uri, Bool) -> Unit
-  async rename(Self, Uri, Uri, Bool) -> Unit
-  async copy(Self, Uri, Uri, Bool) -> Unit
+  fn on_did_change_file(Self) -> Event[Array[FileChangeEvent]]
+  fn watch(Self, Uri, Bool, Array[String]) -> Disposable
+  async fn stat(Self, Uri) -> FileStat
+  async fn read_directory(Self, Uri) -> Array[DirectoryEntry]
+  async fn create_directory(Self, Uri) -> Unit
+  async fn read_file(Self, Uri) -> Bytes
+  async fn write_file(Self, Uri, Bytes, Bool, Bool) -> Unit
+  async fn delete(Self, Uri, Bool) -> Unit
+  async fn rename(Self, Uri, Uri, Bool) -> Unit
+  async fn copy(Self, Uri, Uri, Bool) -> Unit
 }
 
 pub(open) trait FoldingRangeProvider {
-  async provide_folding_ranges(Self, TextDocument, FoldingContext, CancellationToken) -> Array[FoldingRange]?
+  async fn provide_folding_ranges(Self, TextDocument, FoldingContext, CancellationToken) -> Array[FoldingRange]?
 }
 
 pub(open) trait HoverProvider {
-  async provide_hover(Self, TextDocument, Position, CancellationToken) -> Hover?
+  async fn provide_hover(Self, TextDocument, Position, CancellationToken) -> Hover?
 }
 
 pub(open) trait ImplementationProvider {
-  async provide_implementation(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
+  async fn provide_implementation(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
 }
 
 pub(open) trait InlayHintsProvider {
-  async provide_inlay_hints(Self, TextDocument, Range, CancellationToken) -> Array[InlayHint]?
-  async resolve_inlay_hint(Self, InlayHint, CancellationToken) -> InlayHint?
+  async fn provide_inlay_hints(Self, TextDocument, Range, CancellationToken) -> Array[InlayHint]?
+  async fn resolve_inlay_hint(Self, InlayHint, CancellationToken) -> InlayHint?
 }
 
 pub(open) trait InlineCompletionItemProvider {
-  async provide_inline_completion_items(Self, TextDocument, Position, InlineCompletionContext, CancellationToken) -> Array[InlineCompletionItem]?
+  async fn provide_inline_completion_items(Self, TextDocument, Position, InlineCompletionContext, CancellationToken) -> Array[InlineCompletionItem]?
 }
 
 pub(open) trait InlineValuesProvider {
-  async provide_inline_values(Self, TextDocument, Range, InlineValueContext, CancellationToken) -> Array[InlineValue]?
+  async fn provide_inline_values(Self, TextDocument, Range, InlineValueContext, CancellationToken) -> Array[InlineValue]?
 }
 
 pub(open) trait LinkedEditingRangeProvider {
-  async provide_linked_editing_ranges(Self, TextDocument, Position, CancellationToken) -> LinkedEditingRanges?
+  async fn provide_linked_editing_ranges(Self, TextDocument, Position, CancellationToken) -> LinkedEditingRanges?
 }
 
 pub(open) trait OnTypeFormattingEditProvider {
-  async provide_on_type_formatting_edits(Self, TextDocument, Position, String, FormattingOptions, CancellationToken) -> Array[TextEdit]?
+  async fn provide_on_type_formatting_edits(Self, TextDocument, Position, String, FormattingOptions, CancellationToken) -> Array[TextEdit]?
 }
 
 pub(open) trait QuickDiffProvider {
-  async provide_original_resource(Self, Uri, CancellationToken) -> Uri?
+  async fn provide_original_resource(Self, Uri, CancellationToken) -> Uri?
 }
 
 pub(open) trait ReferenceProvider {
-  async provide_references(Self, TextDocument, Position, ReferenceContext, CancellationToken) -> Array[Location]?
+  async fn provide_references(Self, TextDocument, Position, ReferenceContext, CancellationToken) -> Array[Location]?
 }
 
 pub(open) trait RenameProvider {
-  async provide_rename_edits(Self, TextDocument, Position, String, CancellationToken) -> WorkspaceEdit?
-  async prepare_rename(Self, TextDocument, Position, CancellationToken) -> Range?
+  async fn provide_rename_edits(Self, TextDocument, Position, String, CancellationToken) -> WorkspaceEdit?
+  async fn prepare_rename(Self, TextDocument, Position, CancellationToken) -> Range?
 }
 
 pub(open) trait SelectionRangeProvider {
-  async provide_selection_ranges(Self, TextDocument, Array[Position], CancellationToken) -> Array[SelectionRange]?
+  async fn provide_selection_ranges(Self, TextDocument, Array[Position], CancellationToken) -> Array[SelectionRange]?
 }
 
 pub(open) trait SignatureHelpProvider {
-  async provide_signature_help(Self, TextDocument, Position, CancellationToken, SignatureHelpContext) -> SignatureHelp?
+  async fn provide_signature_help(Self, TextDocument, Position, CancellationToken, SignatureHelpContext) -> SignatureHelp?
 }
 
 pub(open) trait TaskProvider {
-  async provide_tasks(Self, CancellationToken) -> Array[Task]?
-  async resolve_task(Self, Task, CancellationToken) -> Task?
+  async fn provide_tasks(Self, CancellationToken) -> Array[Task]?
+  async fn resolve_task(Self, Task, CancellationToken) -> Task?
 }
 
 pub(open) trait TerminalLinkProvider {
-  async provide_terminal_links(Self, TerminalLinkContext, CancellationToken) -> Array[TerminalLink]?
-  async handle_terminal_link(Self, TerminalLink) -> Unit
+  async fn provide_terminal_links(Self, TerminalLinkContext, CancellationToken) -> Array[TerminalLink]?
+  async fn handle_terminal_link(Self, TerminalLink) -> Unit
 }
 
 pub(open) trait TerminalProfileProvider {
-  async provide_terminal_profile(Self, CancellationToken) -> TerminalProfile?
+  async fn provide_terminal_profile(Self, CancellationToken) -> TerminalProfile?
 }
 
 pub(open) trait TextDocumentContentProvider {
-  on_did_change(Self) -> Event[Uri]?
-  async provide_text_document_content(Self, Uri, CancellationToken) -> String
+  fn on_did_change(Self) -> Event[Uri]?
+  async fn provide_text_document_content(Self, Uri, CancellationToken) -> String
 }
 
 pub(open) trait TypeDefinitionProvider {
-  async provide_type_definition(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
+  async fn provide_type_definition(Self, TextDocument, Position, CancellationToken) -> Array[Location]?
 }
 
 pub(open) trait TypeHierarchyProvider {
-  async prepare_type_hierarchy(Self, TextDocument, Position, CancellationToken) -> Array[TypeHierarchyItem]?
-  async provide_type_hierarchy_supertypes(Self, TypeHierarchyItem, CancellationToken) -> Array[TypeHierarchyItem]?
-  async provide_type_hierarchy_subtypes(Self, TypeHierarchyItem, CancellationToken) -> Array[TypeHierarchyItem]?
+  async fn prepare_type_hierarchy(Self, TextDocument, Position, CancellationToken) -> Array[TypeHierarchyItem]?
+  async fn provide_type_hierarchy_supertypes(Self, TypeHierarchyItem, CancellationToken) -> Array[TypeHierarchyItem]?
+  async fn provide_type_hierarchy_subtypes(Self, TypeHierarchyItem, CancellationToken) -> Array[TypeHierarchyItem]?
 }
 
 pub(open) trait WebviewViewProvider {
-  async resolve_webview_view(Self, WebviewView, WebviewViewResolveContext, CancellationToken) -> Unit
+  async fn resolve_webview_view(Self, WebviewView, WebviewViewResolveContext, CancellationToken) -> Unit
 }
 
 pub(open) trait WorkspaceSymbolProvider {
-  async provide_workspace_symbols(Self, String, CancellationToken) -> Array[SymbolInformation]?
-  async resolve_workspace_symbol(Self, SymbolInformation, CancellationToken) -> SymbolInformation?
+  async fn provide_workspace_symbols(Self, String, CancellationToken) -> Array[SymbolInformation]?
+  async fn resolve_workspace_symbol(Self, SymbolInformation, CancellationToken) -> SymbolInformation?
 }
-
