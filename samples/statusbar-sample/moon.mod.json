@@ -1,6 +1,0 @@
-{
-  "name": "statusbar_sample",
-  "deps": {
-    "moonbit-community/vscode": "0.1.0"
-  }
-}
