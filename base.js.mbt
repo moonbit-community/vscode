@@ -12,11 +12,11 @@ pub type Disposable
 ///|
 /// A value that can expose a VS Code disposable handle.
 pub(open) trait AsDisposable {
-  as_disposable(Self) -> Disposable
+  fn as_disposable(Self) -> Disposable
 }
 
 ///|
-pub impl AsDisposable for Disposable with as_disposable(self) {
+pub impl AsDisposable for Disposable with fn as_disposable(self) {
   self
 }
 

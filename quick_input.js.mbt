@@ -94,6 +94,6 @@ pub fn QuickInput::dispose(self : QuickInput) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for QuickInput with as_disposable(self) {
+pub impl AsDisposable for QuickInput with fn as_disposable(self) {
   disposable_from_js(self)
 }

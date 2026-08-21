@@ -20,7 +20,7 @@ pub fn CustomDocument::dispose(self : CustomDocument) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for CustomDocument with as_disposable(self) {
+pub impl AsDisposable for CustomDocument with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -197,7 +197,7 @@ pub fn CustomDocumentOpenContext::new(
 
 ///|
 pub(open) trait CustomTextEditorProvider {
-  async resolve_custom_text_editor(
+  async fn resolve_custom_text_editor(
     Self,
     TextDocument,
     WebviewPanel,
@@ -207,13 +207,13 @@ pub(open) trait CustomTextEditorProvider {
 
 ///|
 pub(open) trait CustomReadonlyEditorProvider {
-  async open_custom_document(
+  async fn open_custom_document(
     Self,
     Uri,
     CustomDocumentOpenContext,
     CancellationToken,
   ) -> CustomDocument
-  async resolve_custom_editor(
+  async fn resolve_custom_editor(
     Self,
     CustomDocument,
     WebviewPanel,
@@ -223,25 +223,25 @@ pub(open) trait CustomReadonlyEditorProvider {
 
 ///|
 pub(open) trait CustomEditorProvider {
-  on_did_change_custom_document(Self) -> Event[
+  fn on_did_change_custom_document(Self) -> Event[
     CustomDocumentChangeEvent[CustomDocument],
   ]?
-  async open_custom_document(
+  async fn open_custom_document(
     Self,
     Uri,
     CustomDocumentOpenContext,
     CancellationToken,
   ) -> CustomDocument
-  async resolve_custom_editor(
+  async fn resolve_custom_editor(
     Self,
     CustomDocument,
     WebviewPanel,
     CancellationToken,
   ) -> Unit
-  async save_custom_document(Self, CustomDocument, CancellationToken) -> Unit
-  async save_custom_document_as(Self, CustomDocument, Uri, CancellationToken) -> Unit
-  async revert_custom_document(Self, CustomDocument, CancellationToken) -> Unit
-  async backup_custom_document(
+  async fn save_custom_document(Self, CustomDocument, CancellationToken) -> Unit
+  async fn save_custom_document_as(Self, CustomDocument, Uri, CancellationToken) -> Unit
+  async fn revert_custom_document(Self, CustomDocument, CancellationToken) -> Unit
+  async fn backup_custom_document(
     Self,
     CustomDocument,
     CustomDocumentBackupContext,

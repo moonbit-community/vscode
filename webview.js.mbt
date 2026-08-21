@@ -390,7 +390,7 @@ pub fn WebviewPanel::dispose(self : WebviewPanel) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for WebviewPanel with as_disposable(self) {
+pub impl AsDisposable for WebviewPanel with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
