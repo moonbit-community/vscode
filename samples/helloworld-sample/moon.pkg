@@ -5,5 +5,5 @@ import {
 }
 
 options(
-  link: { "js": { "exports": [ "activate" ], "format": "cjs" } },
+  link: { "js": { "exports": [ "activate", "deactivate" ], "format": "cjs" } },
 )

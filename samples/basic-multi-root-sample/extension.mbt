@@ -18,14 +18,14 @@ fn basename(path : String) -> String {
 ///|
 fn set_status(status : @vscode.StatusBarItem, info : EditorInfo?) -> Unit {
   match info {
-    None => {
-      status.hide()
-    }
+    None => status.hide()
     Some(info) => {
-      status.set_text(match info.text {
-        Some(text) => text
-        None => ""
-      })
+      status.set_text(
+        match info.text {
+          Some(text) => text
+          None => ""
+        },
+      )
       match info.tooltip {
         Some(tooltip) => status.set_tooltip(@vscode.Tooltip::Text(tooltip))
         None => status.clear_tooltip()
@@ -52,28 +52,24 @@ fn current_editor_info() -> EditorInfo? {
       let file_name = basename(resource.fs_path())
       match @workspace.get_workspace_folder(resource) {
         None =>
-          Some(
-            EditorInfo::{
-              text: Some("$(alert) <outside workspace> → \{file_name}"),
-              tooltip: None,
-              color: None,
-            },
-          )
+          Some(EditorInfo::{
+            text: Some("$(alert) <outside workspace> → \{file_name}"),
+            tooltip: None,
+            color: None,
+          })
         Some(folder) => {
           let folder_name = basename(folder.uri().fs_path())
           let color = @workspace.get_configuration(
             section="multiRootSample",
             scope=@vscode.ConfigurationScope::Uri(resource),
           ).get_string_option("statusColor")
-          Some(
-            EditorInfo::{
-              text: Some(
-                "$(file-submodule) \{folder_name} (\{folder.index() + 1} of \{workspace_folders.length()}) → $(file-code) \{file_name}",
-              ),
-              tooltip: Some(resource.fs_path()),
-              color,
-            },
-          )
+          Some(EditorInfo::{
+            text: Some(
+              "$(file-submodule) \{folder_name} (\{folder.index() + 1} of \{workspace_folders.length()}) → $(file-code) \{file_name}",
+            ),
+            tooltip: Some(resource.fs_path()),
+            color,
+          })
         }
       }
     }
@@ -93,23 +89,36 @@ pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
     priority=1000000,
   )
   ctx.subscribe(status)
-  ctx.subscribe(@workspace.on_did_change_workspace_folders().subscribe(_ => {
-    update_status(status)
-  }))
-  ctx.subscribe(@workspace.on_did_change_configuration().subscribe(_ => {
-    update_status(status)
-  }))
-  ctx.subscribe(@window.on_did_change_active_text_editor().subscribe(_ => {
-    update_status(status)
-  }))
-  ctx.subscribe(@window.on_did_change_text_editor_view_column().subscribe(_ => {
-    update_status(status)
-  }))
-  ctx.subscribe(@workspace.on_did_open_text_document().subscribe(_ => {
-    update_status(status)
-  }))
-  ctx.subscribe(@workspace.on_did_close_text_document().subscribe(_ => {
-    update_status(status)
-  }))
+  ctx.subscribe(
+    @workspace.on_did_change_workspace_folders().subscribe(_ => {
+      update_status(status)
+    }),
+  )
+  ctx.subscribe(
+    @workspace.on_did_change_configuration().subscribe(_ => {
+      update_status(status)
+    }),
+  )
+  ctx.subscribe(
+    @window.on_did_change_active_text_editor().subscribe(_ => {
+      update_status(status)
+    }),
+  )
+  ctx.subscribe(
+    @window.on_did_change_text_editor_view_column().subscribe(_ => {
+      update_status(status)
+    }),
+  )
+  ctx.subscribe(
+    @workspace.on_did_open_text_document().subscribe(_ => update_status(status)),
+  )
+  ctx.subscribe(
+    @workspace.on_did_close_text_document().subscribe(_ => update_status(status)),
+  )
   update_status(status)
+}
+
+///|
+pub fn deactivate() -> Unit {
+  ()
 }
