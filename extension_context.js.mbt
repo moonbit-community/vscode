@@ -145,6 +145,27 @@ pub extern "js" fn ExtensionContext::as_absolute_path(
   #| (ctx, rel) => ctx.asAbsolutePath(rel)
 
 ///|
+/// The absolute path of the workspace-specific storage directory.
+/// The value is `undefined` when no workspace has been opened.
+pub fn ExtensionContext::storage_path(self : ExtensionContext) -> String? {
+  extension_js_to_option(extension_context_storage_path_raw(self))
+}
+
+///|
+/// The absolute path of the global storage directory.
+pub fn ExtensionContext::global_storage_path(
+  self : ExtensionContext,
+) -> String? {
+  extension_js_to_option(extension_context_global_storage_path_raw(self))
+}
+
+///|
+/// The absolute path of the log directory.
+pub fn ExtensionContext::log_path(self : ExtensionContext) -> String? {
+  extension_js_to_option(extension_context_log_path_raw(self))
+}
+
+///|
 /// Get a stored value, if present.
 pub fn[T] Memento::get(memento : Memento, key : String) -> T? {
   let raw = memento_get_ffi(memento, key, JsValue::make(()))
@@ -808,3 +829,21 @@ extern "js" fn global_environment_variable_collection_get_scoped_ffi(
   scope : JsValue,
 ) -> EnvironmentVariableCollection =
   #| (collection, scope) => collection.getScoped(scope)
+
+///|
+extern "js" fn extension_context_storage_path_raw(
+  ctx : ExtensionContext,
+) -> JsValue =
+  #| (ctx) => ctx.storagePath
+
+///|
+extern "js" fn extension_context_global_storage_path_raw(
+  ctx : ExtensionContext,
+) -> JsValue =
+  #| (ctx) => ctx.globalStoragePath
+
+///|
+extern "js" fn extension_context_log_path_raw(
+  ctx : ExtensionContext,
+) -> JsValue =
+  #| (ctx) => ctx.logPath

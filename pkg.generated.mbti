@@ -964,7 +964,10 @@ pub fn ExtensionContext::extension_mode(Self) -> ExtensionMode
 pub fn ExtensionContext::extension_path(Self) -> String
 pub fn ExtensionContext::extension_uri(Self) -> Uri
 pub fn ExtensionContext::global_state(Self) -> Memento
+pub fn ExtensionContext::global_storage_path(Self) -> String?
+pub fn ExtensionContext::log_path(Self) -> String?
 pub fn ExtensionContext::secrets(Self) -> SecretStorage
+pub fn ExtensionContext::storage_path(Self) -> String?
 pub fn[T : AsDisposable] ExtensionContext::subscribe(Self, T) -> Unit
 pub fn ExtensionContext::workspace_state(Self) -> Memento
 
