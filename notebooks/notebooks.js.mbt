@@ -161,7 +161,7 @@ pub fn NotebookController::dispose(self : NotebookController) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for NotebookController with as_disposable(self) {
+pub impl @vscode.AsDisposable for NotebookController with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 

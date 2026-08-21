@@ -531,7 +531,7 @@ pub fn ChatParticipant::dispose(self : ChatParticipant) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for ChatParticipant with as_disposable(self) {
+pub impl @vscode.AsDisposable for ChatParticipant with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 

@@ -489,7 +489,7 @@ pub fn TestController::dispose(self : TestController) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for TestController with as_disposable(self) {
+pub impl @vscode.AsDisposable for TestController with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 
@@ -593,7 +593,7 @@ pub fn TestRunProfile::dispose(self : TestRunProfile) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for TestRunProfile with as_disposable(self) {
+pub impl @vscode.AsDisposable for TestRunProfile with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 

@@ -373,19 +373,19 @@ priv struct TerminalProfileState {
 }
 
 ///|
-impl @vscode.AsDisposable for SmokeDisposable with as_disposable(self) {
+impl @vscode.AsDisposable for SmokeDisposable with fn as_disposable(self) {
   self.disposable
 }
 
 ///|
-impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider with on_did_change(
+impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider with fn on_did_change(
   _self,
 ) {
   None
 }
 
 ///|
-impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider with provide_text_document_content(
+impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider with fn provide_text_document_content(
   _self,
   uri,
   _token,
@@ -394,7 +394,7 @@ impl @vscode.TextDocumentContentProvider for SmokeTextDocumentContentProvider wi
 }
 
 ///|
-impl @vscode.CompletionItemProvider for SmokeCompletionProvider with provide_completion_items(
+impl @vscode.CompletionItemProvider for SmokeCompletionProvider with fn provide_completion_items(
   _self,
   _document,
   _position,
@@ -411,7 +411,7 @@ impl @vscode.CompletionItemProvider for SmokeCompletionProvider with provide_com
 }
 
 ///|
-impl @vscode.CompletionItemProvider for SmokeCompletionProvider with resolve_completion_item(
+impl @vscode.CompletionItemProvider for SmokeCompletionProvider with fn resolve_completion_item(
   _self,
   item,
   _token,
@@ -423,7 +423,7 @@ impl @vscode.CompletionItemProvider for SmokeCompletionProvider with resolve_com
 }
 
 ///|
-impl @vscode.CodeActionProvider for SmokeCodeActionProvider with provide_code_actions(
+impl @vscode.CodeActionProvider for SmokeCodeActionProvider with fn provide_code_actions(
   _self,
   _document,
   _range,
@@ -439,7 +439,7 @@ impl @vscode.CodeActionProvider for SmokeCodeActionProvider with provide_code_ac
 }
 
 ///|
-impl @vscode.CodeActionProvider for SmokeCodeActionProvider with resolve_code_action(
+impl @vscode.CodeActionProvider for SmokeCodeActionProvider with fn resolve_code_action(
   _self,
   action,
   _token,
@@ -449,14 +449,14 @@ impl @vscode.CodeActionProvider for SmokeCodeActionProvider with resolve_code_ac
 }
 
 ///|
-impl @vscode.CodeLensProvider for SmokeCodeLensProvider with on_did_change_code_lenses(
+impl @vscode.CodeLensProvider for SmokeCodeLensProvider with fn on_did_change_code_lenses(
   _self,
 ) {
   None
 }
 
 ///|
-impl @vscode.CodeLensProvider for SmokeCodeLensProvider with provide_code_lenses(
+impl @vscode.CodeLensProvider for SmokeCodeLensProvider with fn provide_code_lenses(
   _self,
   _document,
   _token,
@@ -472,7 +472,7 @@ impl @vscode.CodeLensProvider for SmokeCodeLensProvider with provide_code_lenses
 }
 
 ///|
-impl @vscode.CodeLensProvider for SmokeCodeLensProvider with resolve_code_lens(
+impl @vscode.CodeLensProvider for SmokeCodeLensProvider with fn resolve_code_lens(
   _self,
   lens,
   _token,
@@ -488,7 +488,7 @@ impl @vscode.CodeLensProvider for SmokeCodeLensProvider with resolve_code_lens(
 }
 
 ///|
-impl @vscode.DefinitionProvider for SmokeDefinitionProvider with provide_definition(
+impl @vscode.DefinitionProvider for SmokeDefinitionProvider with fn provide_definition(
   _self,
   document,
   _position,
@@ -506,7 +506,7 @@ impl @vscode.DefinitionProvider for SmokeDefinitionProvider with provide_definit
 }
 
 ///|
-impl @vscode.ImplementationProvider for SmokeImplementationProvider with provide_implementation(
+impl @vscode.ImplementationProvider for SmokeImplementationProvider with fn provide_implementation(
   _self,
   document,
   _position,
@@ -524,7 +524,7 @@ impl @vscode.ImplementationProvider for SmokeImplementationProvider with provide
 }
 
 ///|
-impl @vscode.TypeDefinitionProvider for SmokeTypeDefinitionProvider with provide_type_definition(
+impl @vscode.TypeDefinitionProvider for SmokeTypeDefinitionProvider with fn provide_type_definition(
   _self,
   document,
   _position,
@@ -542,7 +542,7 @@ impl @vscode.TypeDefinitionProvider for SmokeTypeDefinitionProvider with provide
 }
 
 ///|
-impl @vscode.DeclarationProvider for SmokeDeclarationProvider with provide_declaration(
+impl @vscode.DeclarationProvider for SmokeDeclarationProvider with fn provide_declaration(
   _self,
   document,
   _position,
@@ -560,7 +560,7 @@ impl @vscode.DeclarationProvider for SmokeDeclarationProvider with provide_decla
 }
 
 ///|
-impl @vscode.DocumentHighlightProvider for SmokeDocumentHighlightProvider with provide_document_highlights(
+impl @vscode.DocumentHighlightProvider for SmokeDocumentHighlightProvider with fn provide_document_highlights(
   _self,
   _document,
   _position,
@@ -578,7 +578,7 @@ impl @vscode.DocumentHighlightProvider for SmokeDocumentHighlightProvider with p
 }
 
 ///|
-impl @vscode.DocumentLinkProvider for SmokeDocumentLinkProvider with provide_document_links(
+impl @vscode.DocumentLinkProvider for SmokeDocumentLinkProvider with fn provide_document_links(
   _self,
   _document,
   _token,
@@ -594,7 +594,7 @@ impl @vscode.DocumentLinkProvider for SmokeDocumentLinkProvider with provide_doc
 }
 
 ///|
-impl @vscode.DocumentLinkProvider for SmokeDocumentLinkProvider with resolve_document_link(
+impl @vscode.DocumentLinkProvider for SmokeDocumentLinkProvider with fn resolve_document_link(
   _self,
   link,
   _token,
@@ -605,7 +605,7 @@ impl @vscode.DocumentLinkProvider for SmokeDocumentLinkProvider with resolve_doc
 }
 
 ///|
-impl @vscode.DocumentSymbolProvider for SmokeDocumentSymbolProvider with provide_document_symbols(
+impl @vscode.DocumentSymbolProvider for SmokeDocumentSymbolProvider with fn provide_document_symbols(
   _self,
   _document,
   _token,
@@ -628,7 +628,7 @@ impl @vscode.DocumentSymbolProvider for SmokeDocumentSymbolProvider with provide
 }
 
 ///|
-impl @vscode.WorkspaceSymbolProvider for SmokeWorkspaceSymbolProvider with provide_workspace_symbols(
+impl @vscode.WorkspaceSymbolProvider for SmokeWorkspaceSymbolProvider with fn provide_workspace_symbols(
   _self,
   query,
   _token,
@@ -654,7 +654,7 @@ impl @vscode.WorkspaceSymbolProvider for SmokeWorkspaceSymbolProvider with provi
 }
 
 ///|
-impl @vscode.WorkspaceSymbolProvider for SmokeWorkspaceSymbolProvider with resolve_workspace_symbol(
+impl @vscode.WorkspaceSymbolProvider for SmokeWorkspaceSymbolProvider with fn resolve_workspace_symbol(
   _self,
   symbol,
   _token,
@@ -663,7 +663,7 @@ impl @vscode.WorkspaceSymbolProvider for SmokeWorkspaceSymbolProvider with resol
 }
 
 ///|
-impl @vscode.HoverProvider for SmokeHoverProvider with provide_hover(
+impl @vscode.HoverProvider for SmokeHoverProvider with fn provide_hover(
   _self,
   _document,
   _position,
@@ -683,7 +683,7 @@ impl @vscode.HoverProvider for SmokeHoverProvider with provide_hover(
 }
 
 ///|
-impl @vscode.ReferenceProvider for SmokeReferenceProvider with provide_references(
+impl @vscode.ReferenceProvider for SmokeReferenceProvider with fn provide_references(
   _self,
   document,
   _position,
@@ -702,7 +702,7 @@ impl @vscode.ReferenceProvider for SmokeReferenceProvider with provide_reference
 }
 
 ///|
-impl @vscode.RenameProvider for SmokeRenameProvider with provide_rename_edits(
+impl @vscode.RenameProvider for SmokeRenameProvider with fn provide_rename_edits(
   _self,
   document,
   _position,
@@ -719,7 +719,7 @@ impl @vscode.RenameProvider for SmokeRenameProvider with provide_rename_edits(
 }
 
 ///|
-impl @vscode.RenameProvider for SmokeRenameProvider with prepare_rename(
+impl @vscode.RenameProvider for SmokeRenameProvider with fn prepare_rename(
   _self,
   _document,
   _position,
@@ -731,7 +731,7 @@ impl @vscode.RenameProvider for SmokeRenameProvider with prepare_rename(
 }
 
 ///|
-impl @vscode.SignatureHelpProvider for SmokeSignatureHelpProvider with provide_signature_help(
+impl @vscode.SignatureHelpProvider for SmokeSignatureHelpProvider with fn provide_signature_help(
   _self,
   _document,
   _position,
@@ -757,7 +757,7 @@ impl @vscode.SignatureHelpProvider for SmokeSignatureHelpProvider with provide_s
 }
 
 ///|
-impl @vscode.DocumentFormattingEditProvider for SmokeDocumentFormattingProvider with provide_document_formatting_edits(
+impl @vscode.DocumentFormattingEditProvider for SmokeDocumentFormattingProvider with fn provide_document_formatting_edits(
   _self,
   _document,
   options,
@@ -773,7 +773,7 @@ impl @vscode.DocumentFormattingEditProvider for SmokeDocumentFormattingProvider 
 }
 
 ///|
-impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with provide_document_colors(
+impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with fn provide_document_colors(
   _self,
   _document,
   _token,
@@ -790,7 +790,7 @@ impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with provide_d
 }
 
 ///|
-impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with provide_color_presentations(
+impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with fn provide_color_presentations(
   _self,
   _color,
   context,
@@ -807,7 +807,7 @@ impl @vscode.DocumentColorProvider for SmokeDocumentColorProvider with provide_c
 }
 
 ///|
-impl @vscode.InlayHintsProvider for SmokeInlayHintsProvider with provide_inlay_hints(
+impl @vscode.InlayHintsProvider for SmokeInlayHintsProvider with fn provide_inlay_hints(
   _self,
   _document,
   range,
@@ -823,7 +823,7 @@ impl @vscode.InlayHintsProvider for SmokeInlayHintsProvider with provide_inlay_h
 }
 
 ///|
-impl @vscode.InlayHintsProvider for SmokeInlayHintsProvider with resolve_inlay_hint(
+impl @vscode.InlayHintsProvider for SmokeInlayHintsProvider with fn resolve_inlay_hint(
   _self,
   hint,
   _token,
@@ -833,7 +833,7 @@ impl @vscode.InlayHintsProvider for SmokeInlayHintsProvider with resolve_inlay_h
 }
 
 ///|
-impl @vscode.InlineValuesProvider for SmokeInlineValuesProvider with provide_inline_values(
+impl @vscode.InlineValuesProvider for SmokeInlineValuesProvider with fn provide_inline_values(
   _self,
   _document,
   _range,
@@ -854,7 +854,7 @@ impl @vscode.InlineValuesProvider for SmokeInlineValuesProvider with provide_inl
 }
 
 ///|
-impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with provide_document_semantic_tokens(
+impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with fn provide_document_semantic_tokens(
   _self,
   _document,
   _token,
@@ -863,21 +863,21 @@ impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvi
 }
 
 ///|
-impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with provide_document_semantic_tokens_edits(
+impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with fn provide_document_semantic_tokens_edits(
   _self,
 ) {
   None
 }
 
 ///|
-impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with on_did_change_semantic_tokens(
+impl @vscode.DocumentSemanticTokensProvider for SmokeDocumentSemanticTokensProvider with fn on_did_change_semantic_tokens(
   _self,
 ) {
   None
 }
 
 ///|
-impl @vscode.DocumentRangeSemanticTokensProvider for SmokeDocumentRangeSemanticTokensProvider with provide_document_range_semantic_tokens(
+impl @vscode.DocumentRangeSemanticTokensProvider for SmokeDocumentRangeSemanticTokensProvider with fn provide_document_range_semantic_tokens(
   _self,
   _document,
   _range,
@@ -887,7 +887,7 @@ impl @vscode.DocumentRangeSemanticTokensProvider for SmokeDocumentRangeSemanticT
 }
 
 ///|
-impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with prepare_call_hierarchy(
+impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with fn prepare_call_hierarchy(
   _self,
   document,
   _position,
@@ -912,7 +912,7 @@ impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with prepare_c
 }
 
 ///|
-impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with provide_call_hierarchy_incoming_calls(
+impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with fn provide_call_hierarchy_incoming_calls(
   _self,
   item,
   _token,
@@ -938,7 +938,7 @@ impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with provide_c
 }
 
 ///|
-impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with provide_call_hierarchy_outgoing_calls(
+impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with fn provide_call_hierarchy_outgoing_calls(
   _self,
   item,
   _token,
@@ -964,7 +964,7 @@ impl @vscode.CallHierarchyProvider for SmokeCallHierarchyProvider with provide_c
 }
 
 ///|
-impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with prepare_type_hierarchy(
+impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with fn prepare_type_hierarchy(
   _self,
   document,
   _position,
@@ -989,7 +989,7 @@ impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with prepare_t
 }
 
 ///|
-impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with provide_type_hierarchy_supertypes(
+impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with fn provide_type_hierarchy_supertypes(
   _self,
   item,
   _token,
@@ -1007,7 +1007,7 @@ impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with provide_t
 }
 
 ///|
-impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with provide_type_hierarchy_subtypes(
+impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with fn provide_type_hierarchy_subtypes(
   _self,
   item,
   _token,
@@ -1025,7 +1025,7 @@ impl @vscode.TypeHierarchyProvider for SmokeTypeHierarchyProvider with provide_t
 }
 
 ///|
-impl @vscode.FoldingRangeProvider for SmokeFoldingRangeProvider with provide_folding_ranges(
+impl @vscode.FoldingRangeProvider for SmokeFoldingRangeProvider with fn provide_folding_ranges(
   _self,
   _document,
   _context,
@@ -1035,7 +1035,7 @@ impl @vscode.FoldingRangeProvider for SmokeFoldingRangeProvider with provide_fol
 }
 
 ///|
-impl @vscode.SelectionRangeProvider for SmokeSelectionRangeProvider with provide_selection_ranges(
+impl @vscode.SelectionRangeProvider for SmokeSelectionRangeProvider with fn provide_selection_ranges(
   _self,
   _document,
   positions,
@@ -1064,7 +1064,7 @@ impl @vscode.SelectionRangeProvider for SmokeSelectionRangeProvider with provide
 }
 
 ///|
-impl @vscode.LinkedEditingRangeProvider for SmokeLinkedEditingRangeProvider with provide_linked_editing_ranges(
+impl @vscode.LinkedEditingRangeProvider for SmokeLinkedEditingRangeProvider with fn provide_linked_editing_ranges(
   _self,
   _document,
   position,
@@ -1085,7 +1085,7 @@ impl @vscode.LinkedEditingRangeProvider for SmokeLinkedEditingRangeProvider with
 }
 
 ///|
-impl @vscode.WebviewViewProvider for SmokeWebviewViewProvider with resolve_webview_view(
+impl @vscode.WebviewViewProvider for SmokeWebviewViewProvider with fn resolve_webview_view(
   self,
   view,
   _context,
@@ -1103,14 +1103,14 @@ impl @vscode.WebviewViewProvider for SmokeWebviewViewProvider with resolve_webvi
 }
 
 ///|
-impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with on_did_change_file_decorations(
+impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with fn on_did_change_file_decorations(
   self,
 ) {
   Some(self.state.changes.event())
 }
 
 ///|
-impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with provide_file_decoration(
+impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with fn provide_file_decoration(
   self,
   uri,
   _token,
@@ -1132,7 +1132,7 @@ impl @vscode.FileDecorationProvider for SmokeFileDecorationProvider with provide
 }
 
 ///|
-impl @vscode.TerminalLinkProvider for SmokeTerminalLinkProvider with provide_terminal_links(
+impl @vscode.TerminalLinkProvider for SmokeTerminalLinkProvider with fn provide_terminal_links(
   self,
   context,
   _token,
@@ -1149,7 +1149,7 @@ impl @vscode.TerminalLinkProvider for SmokeTerminalLinkProvider with provide_ter
 }
 
 ///|
-impl @vscode.TerminalLinkProvider for SmokeTerminalLinkProvider with handle_terminal_link(
+impl @vscode.TerminalLinkProvider for SmokeTerminalLinkProvider with fn handle_terminal_link(
   self,
   link,
 ) {
@@ -1159,7 +1159,7 @@ impl @vscode.TerminalLinkProvider for SmokeTerminalLinkProvider with handle_term
 }
 
 ///|
-impl @vscode.TerminalProfileProvider for SmokeTerminalProfileProvider with provide_terminal_profile(
+impl @vscode.TerminalProfileProvider for SmokeTerminalProfileProvider with fn provide_terminal_profile(
   self,
   _token,
 ) {
@@ -1191,7 +1191,7 @@ fn inline_completion_trigger_kind_name(
 }
 
 ///|
-impl @vscode.InlineCompletionItemProvider for SmokeInlineCompletionProvider with provide_inline_completion_items(
+impl @vscode.InlineCompletionItemProvider for SmokeInlineCompletionProvider with fn provide_inline_completion_items(
   self,
   document,
   position,
@@ -1235,7 +1235,7 @@ fn paste_trigger_kind_name(kind : @vscode.DocumentPasteTriggerKind) -> String {
 }
 
 ///|
-impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with provide_document_paste_edits(
+impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with fn provide_document_paste_edits(
   self,
   _document,
   ranges,
@@ -1268,7 +1268,7 @@ impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with provi
 }
 
 ///|
-impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with metadata(
+impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with fn metadata(
   _self,
 ) {
   Some(
@@ -1279,7 +1279,7 @@ impl @vscode.DocumentPasteEditProvider for SmokeDocumentPasteProvider with metad
 }
 
 ///|
-impl @vscode.DocumentDropEditProvider for SmokeDocumentDropProvider with provide_document_drop_edits(
+impl @vscode.DocumentDropEditProvider for SmokeDocumentDropProvider with fn provide_document_drop_edits(
   self,
   document,
   position,
@@ -1308,7 +1308,7 @@ impl @vscode.DocumentDropEditProvider for SmokeDocumentDropProvider with provide
 }
 
 ///|
-impl @vscode.DocumentDropEditProvider for SmokeDocumentDropProvider with metadata(
+impl @vscode.DocumentDropEditProvider for SmokeDocumentDropProvider with fn metadata(
   _self,
 ) {
   Some(
@@ -1319,7 +1319,7 @@ impl @vscode.DocumentDropEditProvider for SmokeDocumentDropProvider with metadat
 }
 
 ///|
-impl @vscode.CommentingRangeProvider for SmokeCommentingRangeProvider with provide_commenting_ranges(
+impl @vscode.CommentingRangeProvider for SmokeCommentingRangeProvider with fn provide_commenting_ranges(
   self,
   document,
   _token,
@@ -1335,7 +1335,7 @@ impl @vscode.CommentingRangeProvider for SmokeCommentingRangeProvider with provi
 }
 
 ///|
-impl @vscode.QuickDiffProvider for SmokeQuickDiffProvider with provide_original_resource(
+impl @vscode.QuickDiffProvider for SmokeQuickDiffProvider with fn provide_original_resource(
   self,
   uri,
   _token,
@@ -1350,7 +1350,7 @@ impl @vscode.QuickDiffProvider for SmokeQuickDiffProvider with provide_original_
 }
 
 ///|
-impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with provide_document_range_formatting_edits(
+impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattingProvider with fn provide_document_range_formatting_edits(
   _self,
   _document,
   range,
@@ -1362,7 +1362,7 @@ impl @vscode.DocumentRangeFormattingEditProvider for SmokeDocumentRangeFormattin
 }
 
 ///|
-impl @vscode.OnTypeFormattingEditProvider for SmokeOnTypeFormattingProvider with provide_on_type_formatting_edits(
+impl @vscode.OnTypeFormattingEditProvider for SmokeOnTypeFormattingProvider with fn provide_on_type_formatting_edits(
   _self,
   _document,
   position,
@@ -1380,7 +1380,7 @@ impl @vscode.OnTypeFormattingEditProvider for SmokeOnTypeFormattingProvider with
 }
 
 ///|
-impl @vscode.TaskProvider for SmokeTaskProvider with provide_tasks(
+impl @vscode.TaskProvider for SmokeTaskProvider with fn provide_tasks(
   _self,
   _token,
 ) {
@@ -1403,7 +1403,7 @@ impl @vscode.TaskProvider for SmokeTaskProvider with provide_tasks(
 }
 
 ///|
-impl @vscode.TaskProvider for SmokeTaskProvider with resolve_task(
+impl @vscode.TaskProvider for SmokeTaskProvider with fn resolve_task(
   _self,
   task,
   _token,
@@ -1432,14 +1432,14 @@ fn smoke_authentication_session(
 }
 
 ///|
-impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with on_did_change_sessions(
+impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with fn on_did_change_sessions(
   self,
 ) {
   self.changes.event()
 }
 
 ///|
-impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with get_sessions(
+impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with fn get_sessions(
   _self,
   scopes,
   _options,
@@ -1452,7 +1452,7 @@ impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with get_ses
 }
 
 ///|
-impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with create_session(
+impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with fn create_session(
   _self,
   scopes,
   _options,
@@ -1461,7 +1461,7 @@ impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with create_
 }
 
 ///|
-impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with remove_session(
+impl @vscode.AuthenticationProvider for SmokeAuthenticationProvider with fn remove_session(
   _self,
   _session_id,
 ) {
@@ -1485,14 +1485,14 @@ fn SmokeFileSystemProvider::is_file(uri : @vscode.Uri) -> Bool {
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with on_did_change_file(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn on_did_change_file(
   self,
 ) {
   self.changes.event()
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with watch(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn watch(
   _self,
   _uri,
   _recursive,
@@ -1505,7 +1505,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with watch(
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with stat(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn stat(
   _self,
   uri,
 ) {
@@ -1523,7 +1523,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with stat(
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with read_directory(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn read_directory(
   _self,
   _uri,
 ) {
@@ -1531,7 +1531,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with read_directory(
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with create_directory(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn create_directory(
   _self,
   _uri,
 ) {
@@ -1539,7 +1539,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with create_director
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with read_file(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn read_file(
   _self,
   uri,
 ) {
@@ -1551,7 +1551,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with read_file(
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with write_file(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn write_file(
   _self,
   _uri,
   _content,
@@ -1562,7 +1562,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with write_file(
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with delete(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn delete(
   _self,
   _uri,
   _recursive,
@@ -1571,7 +1571,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with delete(
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with rename(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn rename(
   _self,
   _old_uri,
   _new_uri,
@@ -1581,7 +1581,7 @@ impl @vscode.FileSystemProvider for SmokeFileSystemProvider with rename(
 }
 
 ///|
-impl @vscode.FileSystemProvider for SmokeFileSystemProvider with copy(
+impl @vscode.FileSystemProvider for SmokeFileSystemProvider with fn copy(
   _self,
   _source,
   _destination,

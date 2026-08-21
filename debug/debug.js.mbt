@@ -346,7 +346,7 @@ pub fn DebugAdapter::dispose(self : DebugAdapter) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for DebugAdapter with as_disposable(self) {
+pub impl @vscode.AsDisposable for DebugAdapter with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 

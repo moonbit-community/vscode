@@ -827,7 +827,10 @@ pub fn DocumentRangeFormattingEditProviderObject::new(
     @js_async.Promise::from_async(async fn() {
       @v.option_to_js(
         provide_edits(
-          document, range, formatting_options_from_js(options), token,
+          document,
+          range,
+          formatting_options_from_js(options),
+          token,
         ),
       )
     })
@@ -1879,29 +1882,31 @@ pub fn CommentingRangeProviderObject::new_ranges_with_details(
 
 ///|
 pub(open) trait AuthenticationProvider {
-  on_did_change_sessions(Self) -> Event[
+  fn on_did_change_sessions(Self) -> Event[
     AuthenticationProviderAuthenticationSessionsChangeEvent,
   ]
-  async get_sessions(Self, Array[String]?, AuthenticationProviderSessionOptions) -> Array[
-    AuthenticationSession,
-  ]
-  async create_session(
+  async fn get_sessions(
+    Self,
+    Array[String]?,
+    AuthenticationProviderSessionOptions,
+  ) -> Array[AuthenticationSession]
+  async fn create_session(
     Self,
     Array[String],
     AuthenticationProviderSessionOptions,
   ) -> AuthenticationSession
-  async remove_session(Self, String) -> Unit
+  async fn remove_session(Self, String) -> Unit
 }
 
 ///|
-pub impl AuthenticationProvider for AuthenticationProviderObject with on_did_change_sessions(
+pub impl AuthenticationProvider for AuthenticationProviderObject with fn on_did_change_sessions(
   self,
 ) {
   authentication_provider_on_did_change_sessions(self)
 }
 
 ///|
-pub impl AuthenticationProvider for AuthenticationProviderObject with get_sessions(
+pub impl AuthenticationProvider for AuthenticationProviderObject with fn get_sessions(
   self,
   scopes,
   options,
@@ -1918,7 +1923,7 @@ pub impl AuthenticationProvider for AuthenticationProviderObject with get_sessio
 }
 
 ///|
-pub impl AuthenticationProvider for AuthenticationProviderObject with create_session(
+pub impl AuthenticationProvider for AuthenticationProviderObject with fn create_session(
   self,
   scopes,
   options,
@@ -1937,7 +1942,7 @@ pub impl AuthenticationProvider for AuthenticationProviderObject with create_ses
 }
 
 ///|
-pub impl AuthenticationProvider for AuthenticationProviderObject with remove_session(
+pub impl AuthenticationProvider for AuthenticationProviderObject with fn remove_session(
   self,
   session_id,
 ) {
@@ -2175,17 +2180,17 @@ fn authentication_session_account_information_from_js(
 
 ///|
 pub(open) trait TaskProvider {
-  async provide_tasks(Self, CancellationToken) -> Array[Task]?
-  async resolve_task(Self, Task, CancellationToken) -> Task?
+  async fn provide_tasks(Self, CancellationToken) -> Array[Task]?
+  async fn resolve_task(Self, Task, CancellationToken) -> Task?
 }
 
 ///|
-pub impl TaskProvider for TaskProviderObject with provide_tasks(self, token) {
+pub impl TaskProvider for TaskProviderObject with fn provide_tasks(self, token) {
   TaskProviderObject::provide_tasks(self, token)
 }
 
 ///|
-pub impl TaskProvider for TaskProviderObject with resolve_task(
+pub impl TaskProvider for TaskProviderObject with fn resolve_task(
   self,
   task,
   token,
@@ -3911,14 +3916,14 @@ extern "js" fn file_stat_permissions_raw(value : @v.JsValue) -> @v.JsValue =
   #| (value) => value.permissions
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with on_did_change_file(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn on_did_change_file(
   self,
 ) {
   FileSystemProviderObject::on_did_change_file(self)
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with watch(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn watch(
   self,
   uri,
   recursive,
@@ -3928,7 +3933,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with watch(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with stat(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn stat(
   self,
   uri,
 ) {
@@ -3936,7 +3941,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with stat(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with read_directory(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn read_directory(
   self,
   uri,
 ) {
@@ -3944,7 +3949,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with read_direc
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with create_directory(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn create_directory(
   self,
   uri,
 ) {
@@ -3952,7 +3957,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with create_dir
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with read_file(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn read_file(
   self,
   uri,
 ) {
@@ -3960,7 +3965,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with read_file(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with write_file(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn write_file(
   self,
   uri,
   content,
@@ -3971,7 +3976,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with write_file
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with delete(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn delete(
   self,
   uri,
   recursive,
@@ -3980,7 +3985,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with delete(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with rename(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn rename(
   self,
   old_uri,
   new_uri,
@@ -3990,7 +3995,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with rename(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with copy(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn copy(
   self,
   source,
   destination,

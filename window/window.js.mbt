@@ -1935,9 +1935,7 @@ pub fn[T] create_tree_view(
 ///
 /// @param handler The uri handler to register for this extension.
 /// @returns A {@link Disposable disposable} that unregisters the handler.
-pub fn register_uri_handler(
-  handler : @vscode.UriHandler,
-) -> @vscode.Disposable {
+pub fn register_uri_handler(handler : @vscode.UriHandler) -> @vscode.Disposable {
   window_register_uri_handler_ffi(handler)
 }
 
