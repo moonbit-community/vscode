@@ -13,6 +13,8 @@ npm run test:smoke
 
 ## Screenshot Baselines
 
+The test host is pinned by `config.vscodeTestVersion` in the root `package.json` (currently VS Code 1.144.0). Upgrade that version and review all screenshot changes together so editor chrome updates do not appear as binding regressions.
+
 UI screenshots are platform-specific because VS Code and Electron render text and workbench chrome differently by OS and CPU architecture. Baselines live under:
 
 ```text

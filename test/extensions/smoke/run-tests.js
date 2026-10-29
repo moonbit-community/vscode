@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
+const vscodeVersion = require('../../../package.json').config.vscodeTestVersion;
 const { runTests, downloadAndUnzipVSCode } = require('@vscode/test-electron');
 
 async function main() {
@@ -13,7 +14,7 @@ async function main() {
   fs.mkdirSync(testHome, { recursive: true });
   fs.rmSync(disposeMarker, { force: true });
 
-  let vscodeExecutablePath = await downloadAndUnzipVSCode();
+  let vscodeExecutablePath = await downloadAndUnzipVSCode(vscodeVersion);
   if (process.platform === 'darwin' && !fs.existsSync(vscodeExecutablePath)) {
     const codePath = path.join(path.dirname(vscodeExecutablePath), 'Code');
     if (fs.existsSync(codePath)) vscodeExecutablePath = codePath;

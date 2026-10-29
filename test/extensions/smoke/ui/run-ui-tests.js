@@ -6,6 +6,7 @@ const path = require('path');
 const { downloadAndUnzipVSCode } = require('@vscode/test-electron');
 
 const repoRoot = path.resolve(__dirname, '..', '..', '..', '..');
+const vscodeVersion = require(path.join(repoRoot, 'package.json')).config.vscodeTestVersion;
 const smokeRoot = path.resolve(__dirname, '..');
 const workspacePath = path.join(smokeRoot, 'fixture');
 const testRoot = path.join(repoRoot, '.vscode-test', 'smoke-ui');
@@ -149,7 +150,7 @@ async function resolveVSCodeExecutablePath() {
     return cached;
   }
 
-  const downloaded = await downloadAndUnzipVSCode();
+  const downloaded = await downloadAndUnzipVSCode(vscodeVersion);
   if (process.platform === 'darwin' && !fs.existsSync(downloaded)) {
     const codePath = path.join(path.dirname(downloaded), 'Code');
     if (fs.existsSync(codePath)) return codePath;
@@ -164,6 +165,7 @@ function findCachedVSCodeExecutablePath() {
   }
 
   for (const entry of fs.readdirSync(cacheRoot)) {
+    if (!entry.endsWith(`-${vscodeVersion}`)) continue;
     const root = path.join(cacheRoot, entry);
     const executablePath = executablePathForVSCodeRoot(root);
     if (executablePath && fs.existsSync(executablePath)) {
