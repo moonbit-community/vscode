@@ -26,6 +26,9 @@ jobs:
         with:
           version: ${{ matrix.toolchain }}
 
+      - name: Update Mooncakes index
+        run: moon update
+
       - name: Install Node dependencies
         run: npm install
 

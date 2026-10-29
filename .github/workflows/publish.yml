@@ -17,6 +17,7 @@ jobs:
       - uses: moonbit-community/setup-moonbit@main
         with:
           version: latest
+      - run: moon update
       - run: moon check --target js --deny-warn
       - run: moon build --target js --deny-warn
       - run: moon fmt --check
