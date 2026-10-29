@@ -70,11 +70,28 @@ extern "js" fn chat_followup_provider_ffi(
   #| })
 
 ///|
-extern "js" fn chat_request_turn_ffi(
+fn chat_request_turn_ffi(
   prompt : String,
   participant : String,
   references : Array[ChatPromptReference],
   tool_references : Array[ChatLanguageModelToolReference],
+  command : @v.JsValue,
+) -> ChatRequestTurn {
+  chat_request_turn_ffi_fixedarray_ffi(
+    prompt,
+    participant,
+    FixedArray::from_array(references[:]),
+    FixedArray::from_array(tool_references[:]),
+    command,
+  )
+}
+
+///|
+extern "js" fn chat_request_turn_ffi_fixedarray_ffi(
+  prompt : String,
+  participant : String,
+  references : FixedArray[ChatPromptReference],
+  tool_references : FixedArray[ChatLanguageModelToolReference],
   command : @v.JsValue,
 ) -> ChatRequestTurn =
   #| (prompt, participant, references, toolReferences, command) => {
@@ -86,8 +103,23 @@ extern "js" fn chat_request_turn_ffi(
   #| }
 
 ///|
-extern "js" fn chat_response_turn_ffi(
+fn chat_response_turn_ffi(
   response : Array[ChatResponsePart],
+  result : ChatResult,
+  participant : String,
+  command : @v.JsValue,
+) -> ChatResponseTurn {
+  chat_response_turn_ffi_fixedarray_ffi(
+    FixedArray::from_array(response[:]),
+    result,
+    participant,
+    command,
+  )
+}
+
+///|
+extern "js" fn chat_response_turn_ffi_fixedarray_ffi(
+  response : FixedArray[ChatResponsePart],
   result : ChatResult,
   participant : String,
   command : @v.JsValue,

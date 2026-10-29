@@ -249,11 +249,11 @@ pub fn TabInputTerminal::new() -> TabInputTerminal {
 ///|
 /// The tabs that have been opened.
 pub fn TabChangeEvent::new(
-  opened? : Array[Tab] = [],
-  closed? : Array[Tab] = [],
-  changed? : Array[Tab] = [],
+  opened~ : Array[Tab] = [],
+  closed~ : Array[Tab] = [],
+  changed~ : Array[Tab] = [],
 ) -> TabChangeEvent {
-  TabChangeEvent::{ opened, closed, changed }
+  TabChangeEvent::{ opened, closed, changed, }
 }
 
 ///|
@@ -317,11 +317,11 @@ extern "js" fn tab_input_terminal_ffi() -> TabInputTerminal =
 ///|
 /// Tab groups that have been opened.
 pub fn TabGroupChangeEvent::new(
-  opened? : Array[TabGroup] = [],
-  closed? : Array[TabGroup] = [],
-  changed? : Array[TabGroup] = [],
+  opened~ : Array[TabGroup] = [],
+  closed~ : Array[TabGroup] = [],
+  changed~ : Array[TabGroup] = [],
 ) -> TabGroupChangeEvent {
-  TabGroupChangeEvent::{ opened, closed, changed }
+  TabGroupChangeEvent::{ opened, closed, changed, }
 }
 
 ///|

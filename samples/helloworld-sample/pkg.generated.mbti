@@ -15,4 +15,3 @@ pub fn activate(@vscode.ExtensionContext) -> Unit
 // Type aliases
 
 // Traits
-

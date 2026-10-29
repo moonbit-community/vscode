@@ -292,16 +292,36 @@ pub fn SourceControlResourceGroup::clear_context_value(
 
 ///|
 /// The source control resource states of this resource group.
-pub extern "js" fn SourceControlResourceGroup::resource_states(
+pub fn SourceControlResourceGroup::resource_states(
   self : SourceControlResourceGroup,
-) -> Array[SourceControlResourceState] =
+) -> Array[SourceControlResourceState] {
+  Array::from_fixed_array(
+    SourceControlResourceGroup::resource_states_fixedarray_ffi(self),
+  )
+}
+
+///|
+extern "js" fn SourceControlResourceGroup::resource_states_fixedarray_ffi(
+  self : SourceControlResourceGroup,
+) -> FixedArray[SourceControlResourceState] =
   #| (group) => group.resourceStates
 
 ///|
 /// The source control resource states of this resource group.
-pub extern "js" fn SourceControlResourceGroup::set_resource_states(
+pub fn SourceControlResourceGroup::set_resource_states(
   self : SourceControlResourceGroup,
   value : Array[SourceControlResourceState],
+) -> Unit {
+  SourceControlResourceGroup::set_resource_states_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn SourceControlResourceGroup::set_resource_states_fixedarray_ffi(
+  self : SourceControlResourceGroup,
+  value : FixedArray[SourceControlResourceState],
 ) -> Unit =
   #| (group, value) => { group.resourceStates = value; }
 
@@ -343,12 +363,14 @@ extern "js" fn source_control_resource_group_dispose_raw(
   #| (group) => group.dispose()
 
 ///|
-pub fn SourceControlResourceGroup::dispose(self : SourceControlResourceGroup) -> Unit {
+pub fn SourceControlResourceGroup::dispose(
+  self : SourceControlResourceGroup,
+) -> Unit {
   source_control_resource_group_dispose_raw(self)
 }
 
 ///|
-pub impl AsDisposable for SourceControlResourceGroup with as_disposable(self) {
+pub impl AsDisposable for SourceControlResourceGroup with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -387,7 +409,7 @@ pub extern "js" fn SourceControl::input_box(
 /// If undefined, this source control will
 /// - display its UI-visible count as zero, and
 /// - contribute the count of its {@link SourceControlResourceState resource states} to the UI-visible aggregated count for all source controls
-pub fn SourceControl::count(self : SourceControl) -> Int? {
+pub fn SourceControl::count(self : SourceControl) -> Int32? {
   let raw = SourceControl::source_control_count_raw(self)
   if raw.is_null_or_undefined() {
     None
@@ -403,7 +425,7 @@ pub fn SourceControl::count(self : SourceControl) -> Int? {
 /// If undefined, this source control will
 /// - display its UI-visible count as zero, and
 /// - contribute the count of its {@link SourceControlResourceState resource states} to the UI-visible aggregated count for all source controls
-pub fn SourceControl::set_count(self : SourceControl, value : Int) -> Unit {
+pub fn SourceControl::set_count(self : SourceControl, value : Int32) -> Unit {
   SourceControl::source_control_set_count_raw(self, JsValue::make(value))
 }
 
@@ -564,7 +586,7 @@ pub fn SourceControl::dispose(self : SourceControl) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for SourceControl with as_disposable(self) {
+pub impl AsDisposable for SourceControl with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -661,3 +683,9 @@ extern "js" fn quick_diff_provider_ffi(
   provide_original : (Uri, CancellationToken) -> @js_async.Promise[JsValue],
 ) -> JsValue =
   #| (provideOriginalResource) => ({ provideOriginalResource })
+
+///|
+pub extend SourceControlResourceGroup with AsDisposable::{as_disposable}
+
+///|
+pub extend SourceControl with AsDisposable::{as_disposable}

@@ -73,7 +73,7 @@ pub fn[T] EventEmitter::dispose(self : EventEmitter[T]) -> Unit {
 }
 
 ///|
-pub impl[T] AsDisposable for EventEmitter[T] with as_disposable(self) {
+pub impl[T] AsDisposable for EventEmitter[T] with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -109,7 +109,7 @@ pub fn CancellationTokenSource::dispose(self : CancellationTokenSource) -> Unit 
 }
 
 ///|
-pub impl AsDisposable for CancellationTokenSource with as_disposable(self) {
+pub impl AsDisposable for CancellationTokenSource with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -273,7 +273,7 @@ pub(all) enum DiagnosticTag {
 ///|
 pub(all) enum DiagnosticCodeValue {
   Text(String)
-  Numeric(Int)
+  Numeric(Int32)
 }
 
 ///|
@@ -285,7 +285,7 @@ pub fn DiagnosticCodeValue::as_text(self : DiagnosticCodeValue) -> String? {
 }
 
 ///|
-pub fn DiagnosticCodeValue::as_int(self : DiagnosticCodeValue) -> Int? {
+pub fn DiagnosticCodeValue::as_int(self : DiagnosticCodeValue) -> Int32? {
   match self {
     Text(_) => None
     Numeric(value) => Some(value)
@@ -295,7 +295,7 @@ pub fn DiagnosticCodeValue::as_int(self : DiagnosticCodeValue) -> Int? {
 ///|
 pub(all) enum DiagnosticCode {
   Text(String)
-  Numeric(Int)
+  Numeric(Int32)
   ValueAndTarget(DiagnosticCodeValue, Uri)
 }
 
@@ -309,7 +309,7 @@ pub fn DiagnosticCode::as_text(self : DiagnosticCode) -> String? {
 }
 
 ///|
-pub fn DiagnosticCode::as_int(self : DiagnosticCode) -> Int? {
+pub fn DiagnosticCode::as_int(self : DiagnosticCode) -> Int32? {
   match self {
     Text(_) => None
     Numeric(value) => Some(value)
@@ -435,17 +435,17 @@ pub struct AccessibilityInformation {
 ///|
 /// @param line A zero-based line value.
 /// @param character A zero-based character value.
-pub extern "js" fn Position::new(line : Int, character : Int) -> Position =
+pub extern "js" fn Position::new(line : Int32, character : Int32) -> Position =
   #| (line, character) => new (require("vscode").Position)(line, character)
 
 ///|
 /// The zero-based line value.
-pub extern "js" fn Position::line(self : Position) -> Int =
+pub extern "js" fn Position::line(self : Position) -> Int32 =
   #| (position) => position.line
 
 ///|
 /// The zero-based character value.
-pub extern "js" fn Position::character(self : Position) -> Int =
+pub extern "js" fn Position::character(self : Position) -> Int32 =
   #| (position) => position.character
 
 ///|
@@ -702,10 +702,23 @@ pub extern "js" fn DiagnosticCollection::name(
 ///
 /// @param uri A resource identifier.
 /// @param diagnostics Array of diagnostics or `undefined`
-pub extern "js" fn DiagnosticCollection::set(
+pub fn DiagnosticCollection::set(
   self : DiagnosticCollection,
   uri : Uri,
   diagnostics : Array[Diagnostic],
+) -> Unit {
+  DiagnosticCollection::set_fixedarray_ffi(
+    self,
+    uri,
+    FixedArray::from_array(diagnostics[:]),
+  )
+}
+
+///|
+extern "js" fn DiagnosticCollection::set_fixedarray_ffi(
+  self : DiagnosticCollection,
+  uri : Uri,
+  diagnostics : FixedArray[Diagnostic],
 ) -> Unit =
   #| (collection, uri, diagnostics) => collection.set(uri, diagnostics)
 
@@ -742,7 +755,7 @@ pub fn DiagnosticCollection::dispose(self : DiagnosticCollection) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for DiagnosticCollection with as_disposable(self) {
+pub impl AsDisposable for DiagnosticCollection with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -873,10 +886,10 @@ pub extern "js" fn Range::new(start : Position, end : Position) -> Range =
 
 ///|
 pub extern "js" fn Range::from_numbers(
-  start_line : Int,
-  start_character : Int,
-  end_line : Int,
-  end_character : Int,
+  start_line : Int32,
+  start_character : Int32,
+  end_line : Int32,
+  end_character : Int32,
 ) -> Range =
   #| (startLine, startCharacter, endLine, endCharacter) =>
   #|   new (require("vscode").Range)(startLine, startCharacter, endLine, endCharacter)
@@ -894,10 +907,10 @@ pub extern "js" fn Selection::new(
 
 ///|
 pub extern "js" fn Selection::from_numbers(
-  anchor_line : Int,
-  anchor_character : Int,
-  active_line : Int,
-  active_character : Int,
+  anchor_line : Int32,
+  anchor_character : Int32,
+  active_line : Int32,
+  active_character : Int32,
 ) -> Selection =
   #| (anchorLine, anchorCharacter, activeLine, activeCharacter) =>
   #|   new (require("vscode").Selection)(
@@ -985,7 +998,7 @@ pub extern "js" fn Position::is_equal(
 pub extern "js" fn Position::compare_to(
   self : Position,
   other : Position,
-) -> Int =
+) -> Int32 =
   #| (pos, other) => pos.compareTo(other)
 
 ///|
@@ -997,8 +1010,8 @@ pub extern "js" fn Position::compare_to(
 /// character and the corresponding deltas.
 pub extern "js" fn Position::translate(
   self : Position,
-  line_delta? : Int = 0,
-  character_delta? : Int = 0,
+  line_delta~ : Int32 = 0,
+  character_delta~ : Int32 = 0,
 ) -> Position =
   #| (pos, lineDelta, characterDelta) => pos.translate(lineDelta, characterDelta)
 
@@ -1010,7 +1023,10 @@ pub extern "js" fn Position::translate(
 /// @param line Value that should be used as line value, default is the {@link Position.line existing value}
 /// @param character Value that should be used as character value, default is the {@link Position.character existing value}
 /// @returns A position where line and character are replaced by the given values.
-pub extern "js" fn Position::with_line(self : Position, line : Int) -> Position =
+pub extern "js" fn Position::with_line(
+  self : Position,
+  line : Int32,
+) -> Position =
   #| (pos, line) => pos.with(line)
 
 ///|
@@ -1021,7 +1037,7 @@ pub extern "js" fn Position::with_line(self : Position, line : Int) -> Position 
 /// @returns A position where line and character are replaced by the given values.
 pub extern "js" fn Position::with_character(
   self : Position,
-  character : Int,
+  character : Int32,
 ) -> Position =
   #| (pos, character) => pos.with(undefined, character)
 
@@ -1033,8 +1049,8 @@ pub extern "js" fn Position::with_character(
 /// @returns A position where line and character are replaced by the given values.
 pub extern "js" fn Position::with_values(
   self : Position,
-  line : Int,
-  character : Int,
+  line : Int32,
+  character : Int32,
 ) -> Position =
   #| (pos, line, character) => pos.with(line, character)
 
@@ -1167,8 +1183,8 @@ pub extern "js" fn Selection::is_reversed(self : Selection) -> Bool =
 pub fn Command::new(
   title : String,
   command : String,
-  tooltip? : String = "",
-  arguments? : Array[Any] = [],
+  tooltip~ : String = "",
+  arguments~ : Array[Any] = [],
 ) -> Command {
   let tooltip_value : String? = if tooltip == "" { None } else { Some(tooltip) }
   let arguments_value : Array[Any]? = if arguments.length() == 0 {
@@ -1189,7 +1205,7 @@ pub fn AccessibilityInformation::new(
   label : String,
   role? : String,
 ) -> AccessibilityInformation {
-  AccessibilityInformation::{ label, role }
+  AccessibilityInformation::{ label, role, }
 }
 
 ///|
@@ -1205,7 +1221,7 @@ fn accessibility_information_from_js(
   let role_raw = accessibility_information_role_raw(value)
   let role = js_value_as_string_ffi(role_raw)
   match js_value_as_string_ffi(label_raw) {
-    Some(label) => Some(AccessibilityInformation::{ label, role })
+    Some(label) => Some(AccessibilityInformation::{ label, role, })
     None => None
   }
 }
@@ -1442,7 +1458,7 @@ pub fn LanguageStatusItem::dispose(self : LanguageStatusItem) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for LanguageStatusItem with as_disposable(self) {
+pub impl AsDisposable for LanguageStatusItem with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -1614,7 +1630,7 @@ pub struct TaskEndEvent {
 /// triggered through a task
 pub struct TaskProcessStartEvent {
   execution : TaskExecution
-  processId : Int
+  processId : Int32
 }
 
 ///|
@@ -1622,7 +1638,7 @@ pub struct TaskProcessStartEvent {
 /// triggered through a task
 pub struct TaskProcessEndEvent {
   execution : TaskExecution
-  exitCode : Int?
+  exitCode : Int32?
 }
 
 ///|
@@ -1791,7 +1807,7 @@ pub fn AuthenticationWwwAuthenticateRequest::new(
   www_authenticate : String,
   fallback_scopes? : Array[String],
 ) -> AuthenticationWwwAuthenticateRequest {
-  AuthenticationWwwAuthenticateRequest::{ www_authenticate, fallback_scopes }
+  AuthenticationWwwAuthenticateRequest::{ www_authenticate, fallback_scopes, }
 }
 
 ///|
@@ -1799,23 +1815,38 @@ pub fn AuthenticationProviderInformation::new(
   id : String,
   label : String,
 ) -> AuthenticationProviderInformation {
-  AuthenticationProviderInformation::{ id, label }
+  AuthenticationProviderInformation::{ id, label, }
 }
 
 ///|
-pub extern "js" fn AuthenticationSession::new(
+pub fn AuthenticationSession::new(
   id : String,
   access_token : String,
   account : AuthenticationSessionAccountInformation,
   scopes : Array[String],
+) -> AuthenticationSession {
+  AuthenticationSession::new_fixedarray_ffi(
+    id,
+    access_token,
+    account,
+    FixedArray::from_array(scopes[:]),
+  )
+}
+
+///|
+extern "js" fn AuthenticationSession::new_fixedarray_ffi(
+  id : String,
+  access_token : String,
+  account : AuthenticationSessionAccountInformation,
+  scopes : FixedArray[String],
 ) -> AuthenticationSession =
   #| (id, accessToken, account, scopes) => ({ id, accessToken, account, scopes })
 
 ///|
 pub fn AuthenticationProviderAuthenticationSessionsChangeEvent::new(
-  added? : Array[AuthenticationSession] = [],
-  removed? : Array[AuthenticationSession] = [],
-  changed? : Array[AuthenticationSession] = [],
+  added~ : Array[AuthenticationSession] = [],
+  removed~ : Array[AuthenticationSession] = [],
+  changed~ : Array[AuthenticationSession] = [],
 ) -> AuthenticationProviderAuthenticationSessionsChangeEvent {
   AuthenticationProviderAuthenticationSessionsChangeEvent::{
     added,
@@ -1959,7 +1990,7 @@ pub type Terminal
 ///|
 /// Represents how a terminal exited.
 pub struct TerminalExitStatus {
-  code : Int?
+  code : Int32?
   reason : TerminalExitReason
 }
 
@@ -2004,7 +2035,7 @@ pub struct TerminalShellExecutionEndEvent {
   terminal : Terminal
   shellIntegration : TerminalShellIntegration
   execution : TerminalShellExecution
-  exitCode : Int?
+  exitCode : Int32?
 }
 
 ///|
@@ -2025,11 +2056,11 @@ pub type TextDocument
 /// TextLine objects are __immutable__. When a {@link TextDocument document} changes,
 /// previously retrieved lines will not represent the latest state.
 pub struct TextLine {
-  lineNumber : Int
+  lineNumber : Int32
   text : String
   range : Range
   rangeIncludingLineBreak : Range
-  firstNonWhitespaceCharacterIndex : Int
+  firstNonWhitespaceCharacterIndex : Int32
   isEmptyOrWhitespace : Bool
 }
 
@@ -2143,7 +2174,7 @@ pub extern "js" fn TextDocument::encoding(self : TextDocument) -> String =
 ///|
 /// The version number of this document (it will strictly increase after each
 /// change, including undo/redo).
-pub extern "js" fn TextDocument::version(self : TextDocument) -> Int =
+pub extern "js" fn TextDocument::version(self : TextDocument) -> Int32 =
   #| (doc) => doc.version
 
 ///|
@@ -2165,7 +2196,7 @@ pub extern "js" fn TextDocument::eol(self : TextDocument) -> EndOfLine =
 
 ///|
 /// The number of lines in this document.
-pub extern "js" fn TextDocument::line_count(self : TextDocument) -> Int =
+pub extern "js" fn TextDocument::line_count(self : TextDocument) -> Int32 =
   #| (doc) => doc.lineCount
 
 ///|
@@ -2192,7 +2223,7 @@ pub async fn TextDocument::save(self : TextDocument) -> Bool {
 /// @returns A {@link TextLine line}.
 pub extern "js" fn TextDocument::line_at_line(
   self : TextDocument,
-  line : Int,
+  line : Int32,
 ) -> TextLine =
   #| (doc, line) => doc.lineAt(line)
 
@@ -2219,7 +2250,7 @@ pub extern "js" fn TextDocument::line_at_position(
 pub extern "js" fn TextDocument::offset_at(
   self : TextDocument,
   position : Position,
-) -> Int =
+) -> Int32 =
   #| (doc, position) => doc.offsetAt(position)
 
 ///|
@@ -2229,7 +2260,7 @@ pub extern "js" fn TextDocument::offset_at(
 /// @returns A valid {@link Position}.
 pub extern "js" fn TextDocument::position_at(
   self : TextDocument,
-  offset : Int,
+  offset : Int32,
 ) -> Position =
   #| (doc, offset) => doc.positionAt(offset)
 
@@ -2312,11 +2343,11 @@ pub extern "js" fn TextDocument::validate_position(
 
 ///|
 pub fn TextLine::new(
-  line_number : Int,
+  line_number : Int32,
   text : String,
   range : Range,
   range_including_line_break : Range,
-  first_non_whitespace_character_index : Int,
+  first_non_whitespace_character_index : Int32,
   is_empty_or_whitespace : Bool,
 ) -> TextLine {
   TextLine::{
@@ -2365,11 +2396,11 @@ pub(all) enum ViewColumn {
   Seven
   Eight
   Nine
-  Custom(Int)
+  Custom(Int32)
 } derive(Eq)
 
 ///|
-fn view_column_to_int(value : ViewColumn) -> Int {
+fn view_column_to_int(value : ViewColumn) -> Int32 {
   match value {
     Active => -1
     Beside => -2
@@ -2387,7 +2418,7 @@ fn view_column_to_int(value : ViewColumn) -> Int {
 }
 
 ///|
-fn view_column_from_int(value : Int) -> ViewColumn {
+fn view_column_from_int(value : Int32) -> ViewColumn {
   match value {
     -1 => Active
     -2 => Beside
@@ -2513,7 +2544,7 @@ pub fn MessageItem::new(
   title : String,
   is_close_affordance? : Bool,
 ) -> MessageItem {
-  MessageItem::{ title, isCloseAffordance: is_close_affordance }
+  MessageItem::{ title, isCloseAffordance: is_close_affordance, }
 }
 
 ///|
@@ -2664,7 +2695,7 @@ pub(all) struct SaveDialogOptions {
 pub(all) struct InputBoxOptions {
   mut title : String?
   mut value : String?
-  mut value_selection : Array[Int]?
+  mut value_selection : Array[Int32]?
   mut prompt : String?
   mut place_holder : String?
   mut password : Bool?
@@ -2850,7 +2881,7 @@ pub(all) enum TreeItemCheckboxState {
 ///|
 /// A badge presenting a value for a view
 pub struct ViewBadge {
-  value : Int
+  value : Int32
   tooltip : String
 }
 
@@ -3059,7 +3090,7 @@ pub(all) struct CommentAuthorInformation {
 pub struct CommentReaction {
   label : String
   iconPath : StringOrUri
-  count : Int
+  count : Int32
   authorHasReacted : Bool
 }
 
@@ -3109,9 +3140,9 @@ pub type FileSystem
 /// The `FileStat`-type represents metadata about a file
 pub(all) struct FileStat {
   file_type : FileType
-  mut ctime : Int
-  mut mtime : Int
-  mut size : Int
+  mut ctime : Int32
+  mut mtime : Int32
+  mut size : Int32
   mut permissions : FilePermission?
 }
 
@@ -3194,12 +3225,12 @@ pub type FileSystemWatcher
 ///|
 pub fn FileStat::new(
   file_type : FileType,
-  ctime : Int,
-  mtime : Int,
-  size : Int,
+  ctime : Int32,
+  mtime : Int32,
+  size : Int32,
   permissions? : FilePermission,
 ) -> FileStat {
-  FileStat::{ file_type, ctime, mtime, size, permissions }
+  FileStat::{ file_type, ctime, mtime, size, permissions, }
 }
 
 ///|
@@ -3207,7 +3238,7 @@ pub fn DirectoryEntry::new(
   name : String,
   file_type : FileType,
 ) -> DirectoryEntry {
-  DirectoryEntry::{ name, file_type }
+  DirectoryEntry::{ name, file_type, }
 }
 
 ///|
@@ -3404,7 +3435,7 @@ pub fn WorkspaceEditCreateFileOptions::new(
   ignore_if_exists? : Bool,
   contents? : WorkspaceEditFileContents,
 ) -> WorkspaceEditCreateFileOptions {
-  WorkspaceEditCreateFileOptions::{ overwrite, ignore_if_exists, contents }
+  WorkspaceEditCreateFileOptions::{ overwrite, ignore_if_exists, contents, }
 }
 
 ///|
@@ -3418,7 +3449,7 @@ pub fn WorkspaceEditDeleteFileOptions::new(
   recursive? : Bool,
   ignore_if_not_exists? : Bool,
 ) -> WorkspaceEditDeleteFileOptions {
-  WorkspaceEditDeleteFileOptions::{ recursive, ignore_if_not_exists }
+  WorkspaceEditDeleteFileOptions::{ recursive, ignore_if_not_exists, }
 }
 
 ///|
@@ -3432,7 +3463,7 @@ pub fn WorkspaceEditRenameFileOptions::new(
   overwrite? : Bool,
   ignore_if_exists? : Bool,
 ) -> WorkspaceEditRenameFileOptions {
-  WorkspaceEditRenameFileOptions::{ overwrite, ignore_if_exists }
+  WorkspaceEditRenameFileOptions::{ overwrite, ignore_if_exists, }
 }
 
 ///|
@@ -3507,8 +3538,8 @@ pub struct TextDocumentWillSaveEvent {
 /// An event describing an individual change in the text of a {@link TextDocument document}.
 pub struct TextDocumentContentChangeEvent {
   range : Range
-  rangeOffset : Int
-  rangeLength : Int
+  rangeOffset : Int32
+  rangeLength : Int32
   text : String
 }
 
@@ -4010,7 +4041,7 @@ pub struct CodeActionProviderMetadata {
 ///|
 /// Value-object describing what options formatting should use.
 pub(all) struct FormattingOptions {
-  mut tab_size : Int
+  mut tab_size : Int32
   mut insert_spaces : Bool
 }
 
@@ -4072,7 +4103,7 @@ pub(all) enum FoldingRangeKind {
 ///|
 /// Folding context (for future use)
 pub struct FoldingContext {
-  max_ranges : Int
+  max_ranges : Int32
 }
 
 ///|
@@ -4275,7 +4306,7 @@ pub type InlineValueEvaluatableExpression
 ///|
 /// A value-object that contains contextual information when requesting inline values from a InlineValuesProvider.
 pub struct InlineValueContext {
-  frame_id : Int
+  frame_id : Int32
   stopped_location : Range
 }
 
@@ -4377,21 +4408,35 @@ fn bytes_from_uint8_array(value : Uint8Array) -> Bytes {
 }
 
 ///|
-fn array_to_uint32_array(value : Array[Int]) -> Uint32Array {
+fn array_to_uint32_array(value : Array[Int32]) -> Uint32Array {
   uint32_array_from_array_ffi(value)
 }
 
 ///|
-fn array_from_uint32_array(value : Uint32Array) -> Array[Int] {
+fn array_from_uint32_array(value : Uint32Array) -> Array[Int32] {
   uint32_array_to_array_ffi(value)
 }
 
 ///|
-extern "js" fn uint32_array_from_array_ffi(value : Array[Int]) -> Uint32Array =
+fn uint32_array_from_array_ffi(value : Array[Int32]) -> Uint32Array {
+  uint32_array_from_array_ffi_fixedarray_ffi(FixedArray::from_array(value[:]))
+}
+
+///|
+extern "js" fn uint32_array_from_array_ffi_fixedarray_ffi(
+  value : FixedArray[Int32],
+) -> Uint32Array =
   #| (value) => Uint32Array.from(value)
 
 ///|
-extern "js" fn uint32_array_to_array_ffi(value : Uint32Array) -> Array[Int] =
+fn uint32_array_to_array_ffi(value : Uint32Array) -> Array[Int32] {
+  Array::from_fixed_array(uint32_array_to_array_ffi_fixedarray_ffi(value))
+}
+
+///|
+extern "js" fn uint32_array_to_array_ffi_fixedarray_ffi(
+  value : Uint32Array,
+) -> FixedArray[Int32] =
   #| (value) => Array.from(value)
 
 ///|
@@ -4426,16 +4471,32 @@ pub extern "js" fn TextEditor::set_selection(
 
 ///|
 /// The selections in this text editor. The primary selection is always at index 0.
-pub extern "js" fn TextEditor::selections(
+pub fn TextEditor::selections(self : TextEditor) -> Array[Selection] {
+  Array::from_fixed_array(TextEditor::selections_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn TextEditor::selections_fixedarray_ffi(
   self : TextEditor,
-) -> Array[Selection] =
+) -> FixedArray[Selection] =
   #| (editor) => editor.selections
 
 ///|
 /// The selections in this text editor. The primary selection is always at index 0.
-pub extern "js" fn TextEditor::set_selections(
+pub fn TextEditor::set_selections(
   self : TextEditor,
   selections : Array[Selection],
+) -> Unit {
+  TextEditor::set_selections_fixedarray_ffi(
+    self,
+    FixedArray::from_array(selections[:]),
+  )
+}
+
+///|
+extern "js" fn TextEditor::set_selections_fixedarray_ffi(
+  self : TextEditor,
+  selections : FixedArray[Selection],
 ) -> Unit =
   #| (editor, selections) => {
   #|   editor.selections = selections;
@@ -4444,9 +4505,14 @@ pub extern "js" fn TextEditor::set_selections(
 ///|
 /// The current visible ranges in the editor (vertically).
 /// This accounts only for vertical scrolling, and not for horizontal scrolling.
-pub extern "js" fn TextEditor::visible_ranges(
+pub fn TextEditor::visible_ranges(self : TextEditor) -> Array[Range] {
+  Array::from_fixed_array(TextEditor::visible_ranges_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn TextEditor::visible_ranges_fixedarray_ffi(
   self : TextEditor,
-) -> Array[Range] =
+) -> FixedArray[Range] =
   #| (editor) => editor.visibleRanges
 
 ///|
@@ -4503,7 +4569,7 @@ fn text_editor_insert_snippet_options_to_js(
 ///|
 extern "js" fn TextEditor::text_editor_view_column_raw(
   self : TextEditor,
-) -> Int? =
+) -> Int32? =
   #| (editor) => editor.viewColumn
 
 ///|
@@ -4687,10 +4753,23 @@ pub async fn TextEditor::insert_snippet_at_ranges(
 ///
 /// @param decorationType A decoration type.
 /// @param rangesOrOptions Either {@link Range ranges} or more detailed {@link DecorationOptions options}.
-pub extern "js" fn TextEditor::set_decorations_ranges(
+pub fn TextEditor::set_decorations_ranges(
   self : TextEditor,
   decoration_type : TextEditorDecorationType,
   ranges : Array[Range],
+) -> Unit {
+  TextEditor::set_decorations_ranges_fixedarray_ffi(
+    self,
+    decoration_type,
+    FixedArray::from_array(ranges[:]),
+  )
+}
+
+///|
+extern "js" fn TextEditor::set_decorations_ranges_fixedarray_ffi(
+  self : TextEditor,
+  decoration_type : TextEditorDecorationType,
+  ranges : FixedArray[Range],
 ) -> Unit =
   #| (editor, decorationType, ranges) => editor.setDecorations(decorationType, ranges)
 
@@ -4713,10 +4792,23 @@ pub fn TextEditor::set_decorations_options(
 }
 
 ///|
-extern "js" fn text_editor_set_decorations_options_raw(
+fn text_editor_set_decorations_options_raw(
   editor : TextEditor,
   decoration_type : TextEditorDecorationType,
   options : Array[DecorationOptions],
+) -> Unit {
+  text_editor_set_decorations_options_raw_fixedarray_ffi(
+    editor,
+    decoration_type,
+    FixedArray::from_array(options[:]),
+  )
+}
+
+///|
+extern "js" fn text_editor_set_decorations_options_raw_fixedarray_ffi(
+  editor : TextEditor,
+  decoration_type : TextEditorDecorationType,
+  options : FixedArray[DecorationOptions],
 ) -> Unit =
   #| (editor, decorationType, options) => editor.setDecorations(decorationType, options)
 
@@ -4728,7 +4820,7 @@ extern "js" fn text_editor_set_decorations_options_raw(
 pub extern "js" fn TextEditor::reveal_range(
   self : TextEditor,
   range : Range,
-  reveal_type? : TextEditorRevealType = JsValue::make(()).cast(),
+  reveal_type~ : TextEditorRevealType = JsValue::make(()).cast(),
 ) -> Unit =
   #| (editor, range, revealType) => editor.revealRange(range, revealType)
 
@@ -4777,12 +4869,14 @@ extern "js" fn text_editor_decoration_type_dispose_raw(
   #| (decoration) => decoration.dispose()
 
 ///|
-pub fn TextEditorDecorationType::dispose(self : TextEditorDecorationType) -> Unit {
+pub fn TextEditorDecorationType::dispose(
+  self : TextEditorDecorationType,
+) -> Unit {
   text_editor_decoration_type_dispose_raw(self)
 }
 
 ///|
-pub impl AsDisposable for TextEditorDecorationType with as_disposable(self) {
+pub impl AsDisposable for TextEditorDecorationType with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -4792,7 +4886,7 @@ pub fn TextEditorOptionsChangeEvent::new(
   text_editor : TextEditor,
   options : TextEditorOptions,
 ) -> TextEditorOptionsChangeEvent {
-  TextEditorOptionsChangeEvent::{ textEditor: text_editor, options }
+  TextEditorOptionsChangeEvent::{ textEditor: text_editor, options, }
 }
 
 ///|
@@ -4808,7 +4902,7 @@ pub fn TextEditorSelectionChangeEvent::new(
   selections : Array[Selection],
   kind? : TextEditorSelectionChangeKind,
 ) -> TextEditorSelectionChangeEvent {
-  TextEditorSelectionChangeEvent::{ textEditor: text_editor, selections, kind }
+  TextEditorSelectionChangeEvent::{ textEditor: text_editor, selections, kind, }
 }
 
 ///|
@@ -5016,7 +5110,7 @@ pub extern "js" fn SnippetString::append_text(
 /// @returns This snippet string.
 pub fn SnippetString::append_tabstop(
   self : SnippetString,
-  number? : Int,
+  number? : Int32,
 ) -> SnippetString {
   snippet_string_append_tabstop_raw(self, option_to_js(number))
 }
@@ -5033,7 +5127,7 @@ pub fn SnippetString::append_tabstop(
 pub fn SnippetString::append_placeholder_text(
   self : SnippetString,
   value : String,
-  number? : Int,
+  number? : Int32,
 ) -> SnippetString {
   snippet_string_append_placeholder_raw(
     self,
@@ -5054,7 +5148,7 @@ pub fn SnippetString::append_placeholder_text(
 pub fn SnippetString::append_placeholder_snippet(
   self : SnippetString,
   builder : (SnippetString) -> Unit,
-  number? : Int,
+  number? : Int32,
 ) -> SnippetString {
   snippet_string_append_placeholder_callback_raw(
     self,
@@ -5074,7 +5168,7 @@ pub fn SnippetString::append_placeholder_snippet(
 pub fn SnippetString::append_choice(
   self : SnippetString,
   values : Array[String],
-  number? : Int,
+  number? : Int32,
 ) -> SnippetString {
   snippet_string_append_choice_raw(self, values, option_to_js(number))
 }
@@ -5139,9 +5233,22 @@ extern "js" fn snippet_string_append_placeholder_callback_raw(
   #|   }, number)
 
 ///|
-extern "js" fn snippet_string_append_choice_raw(
+fn snippet_string_append_choice_raw(
   snippet : SnippetString,
   values : Array[String],
+  number : JsValue,
+) -> SnippetString {
+  snippet_string_append_choice_raw_fixedarray_ffi(
+    snippet,
+    FixedArray::from_array(values[:]),
+    number,
+  )
+}
+
+///|
+extern "js" fn snippet_string_append_choice_raw_fixedarray_ffi(
+  snippet : SnippetString,
+  values : FixedArray[String],
   number : JsValue,
 ) -> SnippetString =
   #| (snippet, values, number) => snippet.appendChoice(values, number)
@@ -5168,17 +5275,17 @@ extern "js" fn snippet_string_append_variable_callback_raw(
 
 ///|
 pub fn TextEditorEditOptions::new(
-  undo_stop_before? : Bool = true,
-  undo_stop_after? : Bool = true,
+  undo_stop_before~ : Bool = true,
+  undo_stop_after~ : Bool = true,
 ) -> TextEditorEditOptions {
-  TextEditorEditOptions::{ undo_stop_before, undo_stop_after }
+  TextEditorEditOptions::{ undo_stop_before, undo_stop_after, }
 }
 
 ///|
 pub fn TextEditorInsertSnippetOptions::new(
-  undo_stop_before? : Bool = true,
-  undo_stop_after? : Bool = true,
-  keep_whitespace? : Bool = false,
+  undo_stop_before~ : Bool = true,
+  undo_stop_after~ : Bool = true,
+  keep_whitespace~ : Bool = false,
 ) -> TextEditorInsertSnippetOptions {
   TextEditorInsertSnippetOptions::{
     undo_stop_before,
@@ -5297,7 +5404,7 @@ pub extern "js" fn OutputChannel::clear(self : OutputChannel) -> Unit =
 /// @param preserveFocus When `true` the channel will not take focus.
 pub extern "js" fn OutputChannel::show(
   self : OutputChannel,
-  preserve_focus? : Bool = false,
+  preserve_focus~ : Bool = false,
 ) -> Unit =
   #| (channel, preserveFocus) => channel.show(preserveFocus)
 
@@ -5317,7 +5424,7 @@ pub fn OutputChannel::dispose(self : OutputChannel) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for OutputChannel with as_disposable(self) {
+pub impl AsDisposable for OutputChannel with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -5422,7 +5529,7 @@ pub fn LogOutputChannel::dispose(self : LogOutputChannel) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for LogOutputChannel with as_disposable(self) {
+pub impl AsDisposable for LogOutputChannel with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -5448,7 +5555,7 @@ pub fn StatusBarItem::dispose(self : StatusBarItem) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for StatusBarItem with as_disposable(self) {
+pub impl AsDisposable for StatusBarItem with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -5645,7 +5752,7 @@ pub extern "js" fn StatusBarItem::alignment(
 ///|
 /// The priority of this item. Higher value means the item should
 /// be shown more to the left.
-pub fn StatusBarItem::priority(self : StatusBarItem) -> Int? {
+pub fn StatusBarItem::priority(self : StatusBarItem) -> Int32? {
   let raw = StatusBarItem::status_bar_item_priority_raw(self)
   if raw.is_null_or_undefined() {
     None
@@ -5806,7 +5913,7 @@ pub fn Terminal::dispose(self : Terminal) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for Terminal with as_disposable(self) {
+pub impl AsDisposable for Terminal with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -5821,7 +5928,7 @@ extern "js" fn Terminal::process_id_promise(
 
 ///|
 /// The process ID of the shell process.
-pub async fn Terminal::process_id(self : Terminal) -> Int? {
+pub async fn Terminal::process_id(self : Terminal) -> Int32? {
   let raw = @js_async.Promise::wait(Terminal::process_id_promise(self))
   if JsValue::is_null_or_undefined(raw) {
     None
@@ -5879,7 +5986,7 @@ pub fn Terminal::creation_options(self : Terminal) -> TerminalCreationOptions? {
 pub extern "js" fn Terminal::send_text(
   self : Terminal,
   text : String,
-  should_execute? : Bool = true,
+  should_execute~ : Bool = true,
 ) -> Unit =
   #| (terminal, text, shouldExecute) => terminal.sendText(text, shouldExecute)
 
@@ -5889,7 +5996,7 @@ pub extern "js" fn Terminal::send_text(
 /// @param preserveFocus When `true` the terminal will not take focus.
 pub extern "js" fn Terminal::show(
   self : Terminal,
-  preserve_focus? : Bool = false,
+  preserve_focus~ : Bool = false,
 ) -> Unit =
   #| (terminal, preserveFocus) => terminal.show(preserveFocus)
 
@@ -5946,7 +6053,14 @@ extern "js" fn Terminal::terminal_shell_integration_raw(
 
 ///|
 /// All the groups within the group container.
-pub extern "js" fn TabGroups::all(self : TabGroups) -> Array[TabGroup] =
+pub fn TabGroups::all(self : TabGroups) -> Array[TabGroup] {
+  Array::from_fixed_array(TabGroups::all_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn TabGroups::all_fixedarray_ffi(
+  self : TabGroups,
+) -> FixedArray[TabGroup] =
   #| (groups) => groups.all
 
 ///|
@@ -5972,7 +6086,7 @@ pub extern "js" fn TabGroups::on_did_change_tabs(
 extern "js" fn TabGroups::close_tab_promise(
   self : TabGroups,
   tab : Tab,
-  preserve_focus? : Bool = false,
+  preserve_focus~ : Bool = false,
 ) -> @js_async.Promise[Bool] =
   #| (groups, tab, preserveFocus) => groups.close(tab, preserveFocus)
 
@@ -5987,7 +6101,7 @@ extern "js" fn TabGroups::close_tab_promise(
 pub async fn TabGroups::close_tab(
   self : TabGroups,
   tab : Tab,
-  preserve_focus? : Bool = false,
+  preserve_focus~ : Bool = false,
 ) -> Bool {
   @js_async.Promise::wait(
     TabGroups::close_tab_promise(self, tab, preserve_focus~),
@@ -5998,7 +6112,7 @@ pub async fn TabGroups::close_tab(
 extern "js" fn TabGroups::close_tab_group_promise(
   self : TabGroups,
   tab_group : TabGroup,
-  preserve_focus? : Bool = false,
+  preserve_focus~ : Bool = false,
 ) -> @js_async.Promise[Bool] =
   #| (groups, tabGroup, preserveFocus) => groups.close(tabGroup, preserveFocus)
 
@@ -6013,7 +6127,7 @@ extern "js" fn TabGroups::close_tab_group_promise(
 pub async fn TabGroups::close_tab_group(
   self : TabGroups,
   tab_group : TabGroup,
-  preserve_focus? : Bool = false,
+  preserve_focus~ : Bool = false,
 ) -> Bool {
   @js_async.Promise::wait(
     TabGroups::close_tab_group_promise(self, tab_group, preserve_focus~),
@@ -6039,7 +6153,14 @@ pub fn TabGroup::active_tab(self : TabGroup) -> Tab? {
 }
 
 ///|
-pub extern "js" fn TabGroup::tabs(self : TabGroup) -> Array[Tab] =
+pub fn TabGroup::tabs(self : TabGroup) -> Array[Tab] {
+  Array::from_fixed_array(TabGroup::tabs_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn TabGroup::tabs_fixedarray_ffi(
+  self : TabGroup,
+) -> FixedArray[Tab] =
   #| (group) => group.tabs
 
 ///|
@@ -6121,7 +6242,7 @@ pub fn TerminalShellExecutionEndEvent::new(
   terminal : Terminal,
   shell_integration : TerminalShellIntegration,
   execution : TerminalShellExecution,
-  exit_code? : Int,
+  exit_code? : Int32,
 ) -> TerminalShellExecutionEndEvent {
   TerminalShellExecutionEndEvent::{
     terminal,
@@ -6191,7 +6312,7 @@ pub fn[T] QuickPick::dispose(self : QuickPick[T]) -> Unit {
 }
 
 ///|
-pub impl[T] AsDisposable for QuickPick[T] with as_disposable(self) {
+pub impl[T] AsDisposable for QuickPick[T] with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -6301,16 +6422,31 @@ pub extern "js" fn QuickPick::on_did_accept(
 
 ///|
 /// Buttons for actions in the UI.
-pub extern "js" fn QuickPick::buttons(
+pub fn QuickPick::buttons(
   self : QuickPick[QuickPickItem],
-) -> Array[QuickInputButton] =
+) -> Array[QuickInputButton] {
+  Array::from_fixed_array(QuickPick::buttons_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn QuickPick::buttons_fixedarray_ffi(
+  self : QuickPick[QuickPickItem],
+) -> FixedArray[QuickInputButton] =
   #| (picker) => picker.buttons
 
 ///|
 /// Buttons for actions in the UI.
-pub extern "js" fn QuickPick::set_buttons(
+pub fn QuickPick::set_buttons(
   self : QuickPick[QuickPickItem],
   value : Array[QuickInputButton],
+) -> Unit {
+  QuickPick::set_buttons_fixedarray_ffi(self, FixedArray::from_array(value[:]))
+}
+
+///|
+extern "js" fn QuickPick::set_buttons_fixedarray_ffi(
+  self : QuickPick[QuickPickItem],
+  value : FixedArray[QuickInputButton],
 ) -> Unit =
   #| (picker, value) => { picker.buttons = value; }
 
@@ -6491,7 +6627,7 @@ pub fn QuickPick::clear_title(self : QuickPick[QuickPickItem]) -> Unit {
 }
 
 ///|
-pub fn QuickPick::step(self : QuickPick[QuickPickItem]) -> Int? {
+pub fn QuickPick::step(self : QuickPick[QuickPickItem]) -> Int32? {
   let raw = QuickPick::quick_pick_step_raw(self)
   if JsValue::is_null_or_undefined(raw) {
     None
@@ -6503,7 +6639,7 @@ pub fn QuickPick::step(self : QuickPick[QuickPickItem]) -> Int? {
 ///|
 pub fn QuickPick::set_step(
   self : QuickPick[QuickPickItem],
-  value : Int,
+  value : Int32,
 ) -> Unit {
   QuickPick::quick_pick_set_step_raw(self, JsValue::make(value))
 }
@@ -6514,7 +6650,7 @@ pub fn QuickPick::clear_step(self : QuickPick[QuickPickItem]) -> Unit {
 }
 
 ///|
-pub fn QuickPick::total_steps(self : QuickPick[QuickPickItem]) -> Int? {
+pub fn QuickPick::total_steps(self : QuickPick[QuickPickItem]) -> Int32? {
   let raw = QuickPick::quick_pick_total_steps_raw(self)
   if JsValue::is_null_or_undefined(raw) {
     None
@@ -6526,7 +6662,7 @@ pub fn QuickPick::total_steps(self : QuickPick[QuickPickItem]) -> Int? {
 ///|
 pub fn QuickPick::set_total_steps(
   self : QuickPick[QuickPickItem],
-  value : Int,
+  value : Int32,
 ) -> Unit {
   QuickPick::quick_pick_set_total_steps_raw(self, JsValue::make(value))
 }
@@ -6726,7 +6862,7 @@ pub fn InputBox::dispose(self : InputBox) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for InputBox with as_disposable(self) {
+pub impl AsDisposable for InputBox with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -6752,7 +6888,7 @@ pub extern "js" fn InputBox::set_value(self : InputBox, value : String) -> Unit 
 ///
 /// This property does not get updated when the user types or makes a selection, but it can be updated
 /// by the extension.
-pub fn InputBox::value_selection(self : InputBox) -> Array[Int]? {
+pub fn InputBox::value_selection(self : InputBox) -> Array[Int32]? {
   let raw = InputBox::input_box_value_selection_raw(self)
   if raw.is_null_or_undefined() {
     None
@@ -6772,7 +6908,7 @@ pub fn InputBox::value_selection(self : InputBox) -> Array[Int]? {
 /// by the extension.
 pub fn InputBox::set_value_selection(
   self : InputBox,
-  value : Array[Int],
+  value : Array[Int32],
 ) -> Unit {
   InputBox::input_box_set_value_selection_raw(self, JsValue::make(value))
 }
@@ -6840,16 +6976,29 @@ pub extern "js" fn InputBox::on_did_accept(self : InputBox) -> Event[Unit] =
 
 ///|
 /// Buttons for actions in the UI.
-pub extern "js" fn InputBox::buttons(
+pub fn InputBox::buttons(self : InputBox) -> Array[QuickInputButton] {
+  Array::from_fixed_array(InputBox::buttons_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn InputBox::buttons_fixedarray_ffi(
   self : InputBox,
-) -> Array[QuickInputButton] =
+) -> FixedArray[QuickInputButton] =
   #| (input) => input.buttons
 
 ///|
 /// Buttons for actions in the UI.
-pub extern "js" fn InputBox::set_buttons(
+pub fn InputBox::set_buttons(
   self : InputBox,
   value : Array[QuickInputButton],
+) -> Unit {
+  InputBox::set_buttons_fixedarray_ffi(self, FixedArray::from_array(value[:]))
+}
+
+///|
+extern "js" fn InputBox::set_buttons_fixedarray_ffi(
+  self : InputBox,
+  value : FixedArray[QuickInputButton],
 ) -> Unit =
   #| (input, value) => { input.buttons = value; }
 
@@ -6935,7 +7084,7 @@ pub fn InputBox::clear_title(self : InputBox) -> Unit {
 }
 
 ///|
-pub fn InputBox::step(self : InputBox) -> Int? {
+pub fn InputBox::step(self : InputBox) -> Int32? {
   let raw = InputBox::input_box_step_raw(self)
   if JsValue::is_null_or_undefined(raw) {
     None
@@ -6945,7 +7094,7 @@ pub fn InputBox::step(self : InputBox) -> Int? {
 }
 
 ///|
-pub fn InputBox::set_step(self : InputBox, value : Int) -> Unit {
+pub fn InputBox::set_step(self : InputBox, value : Int32) -> Unit {
   InputBox::input_box_set_step_raw(self, JsValue::make(value))
 }
 
@@ -6955,7 +7104,7 @@ pub fn InputBox::clear_step(self : InputBox) -> Unit {
 }
 
 ///|
-pub fn InputBox::total_steps(self : InputBox) -> Int? {
+pub fn InputBox::total_steps(self : InputBox) -> Int32? {
   let raw = InputBox::input_box_total_steps_raw(self)
   if JsValue::is_null_or_undefined(raw) {
     None
@@ -6965,7 +7114,7 @@ pub fn InputBox::total_steps(self : InputBox) -> Int? {
 }
 
 ///|
-pub fn InputBox::set_total_steps(self : InputBox, value : Int) -> Unit {
+pub fn InputBox::set_total_steps(self : InputBox, value : Int32) -> Unit {
   InputBox::input_box_set_total_steps_raw(self, JsValue::make(value))
 }
 
@@ -7107,7 +7256,7 @@ pub fn QuickInputButton::new(
   icon_path : IconPath,
   tooltip? : String,
 ) -> QuickInputButton {
-  QuickInputButton::{ iconPath: icon_path, tooltip }
+  QuickInputButton::{ iconPath: icon_path, tooltip, }
 }
 
 ///|
@@ -7139,7 +7288,7 @@ pub fn[T] QuickPickItemButtonEvent::new(
   button : QuickInputButton,
   item : T,
 ) -> QuickPickItemButtonEvent[T] {
-  QuickPickItemButtonEvent::{ button, item }
+  QuickPickItemButtonEvent::{ button, item, }
 }
 
 ///|
@@ -7405,7 +7554,7 @@ pub fn InputBoxValidationMessage::new(
   message : String,
   severity : InputBoxValidationSeverity,
 ) -> InputBoxValidationMessage {
-  InputBoxValidationMessage::{ message, severity }
+  InputBoxValidationMessage::{ message, severity, }
 }
 
 ///|
@@ -7434,7 +7583,7 @@ pub fn FileSystemWatcher::dispose(self : FileSystemWatcher) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for FileSystemWatcher with as_disposable(self) {
+pub impl AsDisposable for FileSystemWatcher with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -7777,7 +7926,7 @@ pub fn[T] TreeView::dispose(self : TreeView[T]) -> Unit {
 }
 
 ///|
-pub impl[T] AsDisposable for TreeView[T] with as_disposable(self) {
+pub impl[T] AsDisposable for TreeView[T] with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -7932,7 +8081,7 @@ fn view_badge_from_js(value : JsValue) -> ViewBadge? {
   if value_raw.is_null_or_undefined() || tooltip_raw.is_null_or_undefined() {
     None
   } else {
-    Some(ViewBadge::{ value: value_raw.cast(), tooltip: tooltip_raw.cast() })
+    Some(ViewBadge::{ value: value_raw.cast(), tooltip: tooltip_raw.cast(), })
   }
 }
 
@@ -7997,7 +8146,7 @@ pub async fn[T] TreeView::reveal(
   select? : Bool,
   focus? : Bool,
   expand? : Bool,
-  expand_levels? : Int,
+  expand_levels? : Int32,
 ) -> Unit {
   @js_async.Promise::wait(
     TreeView::reveal_promise(
@@ -8125,7 +8274,7 @@ extern "js" fn TreeView::tree_view_set_badge_raw(
   #| (view, value) => { view.badge = value === undefined || value === null ? undefined : value; }
 
 ///|
-extern "js" fn view_badge_to_js_ffi(value : Int, tooltip : String) -> JsValue =
+extern "js" fn view_badge_to_js_ffi(value : Int32, tooltip : String) -> JsValue =
   #| (value, tooltip) => ({ value, tooltip })
 
 ///|
@@ -8211,7 +8360,7 @@ pub fn[T] TreeCheckboxChangeItem::new(
   element : T,
   state : TreeItemCheckboxState,
 ) -> TreeCheckboxChangeItem[T] {
-  TreeCheckboxChangeItem::{ element, state }
+  TreeCheckboxChangeItem::{ element, state, }
 }
 
 ///|
@@ -8246,7 +8395,7 @@ extern "js" fn tree_checkbox_change_item_state_raw(
 pub extern "js" fn WorkspaceFolder::new(
   uri : Uri,
   name : String,
-  index : Int,
+  index : Int32,
 ) -> WorkspaceFolder =
   #| (uri, name, index) => ({ uri, name, index })
 
@@ -8265,7 +8414,7 @@ pub extern "js" fn WorkspaceFolder::name(self : WorkspaceFolder) -> String =
 
 ///|
 /// The ordinal number of this workspace folder.
-pub extern "js" fn WorkspaceFolder::index(self : WorkspaceFolder) -> Int =
+pub extern "js" fn WorkspaceFolder::index(self : WorkspaceFolder) -> Int32 =
   #| (folder) => folder.index
 
 ///|
@@ -8278,10 +8427,10 @@ pub extern "js" fn WorkspaceFolder::index(self : WorkspaceFolder) -> Int =
 ///|
 /// Added workspace folders.
 pub fn WorkspaceFoldersChangeEvent::new(
-  added? : Array[WorkspaceFolder] = [],
-  removed? : Array[WorkspaceFolder] = [],
+  added~ : Array[WorkspaceFolder] = [],
+  removed~ : Array[WorkspaceFolder] = [],
 ) -> WorkspaceFoldersChangeEvent {
-  WorkspaceFoldersChangeEvent::{ added, removed }
+  WorkspaceFoldersChangeEvent::{ added, removed, }
 }
 
 ///|
@@ -8674,7 +8823,7 @@ pub async fn WorkspaceConfiguration::update(
   section : String,
   value? : Any,
   target? : ConfigurationTargetValue,
-  override_in_language? : Bool = false,
+  override_in_language~ : Bool = false,
 ) -> Unit {
   @js_async.Promise::wait(
     WorkspaceConfiguration::update_promise(
@@ -8693,7 +8842,7 @@ fn WorkspaceConfiguration::update_string_promise(
   section : String,
   value : String,
   target? : ConfigurationTarget,
-  override_in_language? : Bool = false,
+  override_in_language~ : Bool = false,
 ) -> @js_async.Promise[Unit] {
   let target_value = match target {
     None => JsValue::make(())
@@ -8741,7 +8890,7 @@ pub async fn WorkspaceConfiguration::update_string(
   section : String,
   value : String,
   target? : ConfigurationTarget,
-  override_in_language? : Bool = false,
+  override_in_language~ : Bool = false,
 ) -> Unit {
   match target {
     None =>
@@ -8772,7 +8921,7 @@ fn WorkspaceConfiguration::update_bool_promise(
   section : String,
   value : Bool,
   target? : ConfigurationTarget,
-  override_in_language? : Bool = false,
+  override_in_language~ : Bool = false,
 ) -> @js_async.Promise[Unit] {
   let target_value = match target {
     None => JsValue::make(())
@@ -8820,7 +8969,7 @@ pub async fn WorkspaceConfiguration::update_bool(
   section : String,
   value : Bool,
   target? : ConfigurationTarget,
-  override_in_language? : Bool = false,
+  override_in_language~ : Bool = false,
 ) -> Unit {
   match target {
     None =>
@@ -8899,8 +9048,8 @@ extern "js" fn ConfigurationChangeEvent::affects_configuration_raw(
 /// Text document change helpers
 pub fn TextDocumentContentChangeEvent::new(
   range : Range,
-  range_offset : Int,
-  range_length : Int,
+  range_offset : Int32,
+  range_length : Int32,
   text : String,
 ) -> TextDocumentContentChangeEvent {
   TextDocumentContentChangeEvent::{
@@ -8930,7 +9079,11 @@ pub fn TextDocumentChangeEvent::new(
   content_changes : Array[TextDocumentContentChangeEvent],
   reason? : TextDocumentChangeReason,
 ) -> TextDocumentChangeEvent {
-  TextDocumentChangeEvent::{ document, contentChanges: content_changes, reason }
+  TextDocumentChangeEvent::{
+    document,
+    contentChanges: content_changes,
+    reason,
+  }
 }
 
 ///|
@@ -9054,7 +9207,7 @@ pub fn FileRenameEventEntry::new(
   old_uri : Uri,
   new_uri : Uri,
 ) -> FileRenameEventEntry {
-  FileRenameEventEntry::{ oldUri: old_uri, newUri: new_uri }
+  FileRenameEventEntry::{ oldUri: old_uri, newUri: new_uri, }
 }
 
 ///|
@@ -9257,7 +9410,7 @@ pub fn FileChangeEvent::new(
   uri : Uri,
   change_type : FileChangeType,
 ) -> FileChangeEvent {
-  FileChangeEvent::{ uri, type_: change_type }
+  FileChangeEvent::{ uri, type_: change_type, }
 }
 
 ///|
@@ -9319,14 +9472,14 @@ pub fn CommentAuthorInformation::new(
   name : String,
   icon_path? : Uri,
 ) -> CommentAuthorInformation {
-  CommentAuthorInformation::{ name, iconPath: icon_path }
+  CommentAuthorInformation::{ name, iconPath: icon_path, }
 }
 
 ///|
 pub fn CommentReaction::new(
   label : String,
   icon_path : StringOrUri,
-  count : Int,
+  count : Int32,
   author_has_reacted : Bool,
 ) -> CommentReaction {
   CommentReaction::{
@@ -9348,8 +9501,8 @@ pub fn Comment::new(
 
 ///|
 pub fn CommentOptions::new(
-  prompt? : String = "",
-  place_holder? : String = "",
+  prompt~ : String = "",
+  place_holder~ : String = "",
 ) -> CommentOptions {
   let prompt_value : String? = if prompt == "" { None } else { Some(prompt) }
   let place_holder_value : String? = if place_holder == "" {
@@ -9357,13 +9510,13 @@ pub fn CommentOptions::new(
   } else {
     Some(place_holder)
   }
-  CommentOptions::{ prompt: prompt_value, placeHolder: place_holder_value }
+  CommentOptions::{ prompt: prompt_value, placeHolder: place_holder_value, }
 }
 
 ///|
 pub fn CommentingRanges::new(
   enable_file_comments : Bool,
-  ranges? : Array[Range] = [],
+  ranges~ : Array[Range] = [],
 ) -> CommentingRanges {
   let range_values : Array[Range]? = if ranges.length() == 0 {
     None
@@ -9453,11 +9606,26 @@ pub fn CommentController::clear_commenting_range_provider(
 /// @param uri The uri of the document the thread has been created on.
 /// @param range The range the comment thread is located within the document.
 /// @param comments The ordered comments of the thread.
-pub extern "js" fn CommentController::create_comment_thread(
+pub fn CommentController::create_comment_thread(
   self : CommentController,
   uri : Uri,
   range : Range,
   comments : Array[Comment],
+) -> CommentThread {
+  CommentController::create_comment_thread_fixedarray_ffi(
+    self,
+    uri,
+    range,
+    FixedArray::from_array(comments[:]),
+  )
+}
+
+///|
+extern "js" fn CommentController::create_comment_thread_fixedarray_ffi(
+  self : CommentController,
+  uri : Uri,
+  range : Range,
+  comments : FixedArray[Comment],
 ) -> CommentThread =
   #| (controller, uri, range, comments) =>
   #|   controller.createCommentThread(uri, range, comments)
@@ -9503,7 +9671,7 @@ pub fn CommentController::dispose(self : CommentController) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for CommentController with as_disposable(self) {
+pub impl AsDisposable for CommentController with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -9542,15 +9710,31 @@ pub fn CommentThread::clear_range(self : CommentThread) -> Unit {
 }
 
 ///|
-pub extern "js" fn CommentThread::comments(
+pub fn CommentThread::comments(self : CommentThread) -> Array[Comment] {
+  Array::from_fixed_array(CommentThread::comments_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn CommentThread::comments_fixedarray_ffi(
   self : CommentThread,
-) -> Array[Comment] =
+) -> FixedArray[Comment] =
   #| (thread) => thread.comments
 
 ///|
-pub extern "js" fn CommentThread::set_comments(
+pub fn CommentThread::set_comments(
   self : CommentThread,
   value : Array[Comment],
+) -> Unit {
+  CommentThread::set_comments_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn CommentThread::set_comments_fixedarray_ffi(
+  self : CommentThread,
+  value : FixedArray[Comment],
 ) -> Unit =
   #| (thread, value) => { thread.comments = value; }
 
@@ -9724,7 +9908,7 @@ pub fn CommentThread::dispose(self : CommentThread) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for CommentThread with as_disposable(self) {
+pub impl AsDisposable for CommentThread with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -9863,7 +10047,7 @@ pub impl AsDisposable for CommentThread with as_disposable(self) {
 ///|
 /// The active {@link CommentThread comment thread}
 pub fn CommentReply::new(thread : CommentThread, text : String) -> CommentReply {
-  CommentReply::{ thread, text }
+  CommentReply::{ thread, text, }
 }
 
 ///|
@@ -10010,7 +10194,7 @@ extern "js" fn CommentThread::comment_thread_set_can_reply_raw(
 ///|
 /// Whether the current window is focused.
 pub fn WindowState::new(focused : Bool, active : Bool) -> WindowState {
-  WindowState::{ focused, active }
+  WindowState::{ focused, active, }
 }
 
 ///|
@@ -10105,8 +10289,8 @@ extern "js" fn theme_icon_folder_ffi() -> ThemeIcon =
 /// @param value Optional, initial value.
 /// @param supportThemeIcons Optional, Specifies whether {@link ThemeIcon ThemeIcons} are supported within the {@linkcode MarkdownString}.
 pub fn MarkdownString::new(
-  value? : String = "",
-  support_theme_icons? : Bool = false,
+  value~ : String = "",
+  support_theme_icons~ : Bool = false,
 ) -> MarkdownString {
   markdown_string_ffi(value, support_theme_icons)
 }
@@ -10362,13 +10546,13 @@ pub extern "js" fn MarkdownString::append_markdown(
 pub extern "js" fn MarkdownString::append_codeblock(
   self : MarkdownString,
   value : String,
-  language? : String = "",
+  language~ : String = "",
 ) -> MarkdownString =
   #| (md, value, language) => language === "" ? md.appendCodeblock(value) : md.appendCodeblock(value, language)
 
 ///|
 pub fn MarkedString::new(language : String, value : String) -> MarkedString {
-  MarkedString::{ language, value }
+  MarkedString::{ language, value, }
 }
 
 ///|
@@ -10558,7 +10742,15 @@ fn hover_contents_from_js(value : JsValue) -> Array[HoverContent] {
 }
 
 ///|
-extern "js" fn hover_ffi(contents : Array[JsValue], range : JsValue) -> Hover =
+fn hover_ffi(contents : Array[JsValue], range : JsValue) -> Hover {
+  hover_ffi_fixedarray_ffi(FixedArray::from_array(contents[:]), range)
+}
+
+///|
+extern "js" fn hover_ffi_fixedarray_ffi(
+  contents : FixedArray[JsValue],
+  range : JsValue,
+) -> Hover =
   #| (contents, range) =>
   #|   range === undefined || range === null
   #|     ? new (require("vscode").Hover)(contents)
@@ -10597,7 +10789,7 @@ pub fn CompletionItemLabel::new(
   detail? : String,
   description? : String,
 ) -> CompletionItemLabel {
-  CompletionItemLabel::{ label, detail, description }
+  CompletionItemLabel::{ label, detail, description, }
 }
 
 ///|
@@ -10634,7 +10826,7 @@ pub fn CompletionItem::from_text(
 /// @param isIncomplete The list is not complete.
 pub fn CompletionList::new(
   items : Array[CompletionItem],
-  is_incomplete? : Bool = false,
+  is_incomplete~ : Bool = false,
 ) -> CompletionList[CompletionItem] {
   completion_list_ffi(items, is_incomplete).cast()
 }
@@ -10825,7 +11017,7 @@ pub fn CompletionContext::new(
   trigger_kind : CompletionTriggerKind,
   trigger_character? : String,
 ) -> CompletionContext {
-  CompletionContext::{ trigger_kind, trigger_character }
+  CompletionContext::{ trigger_kind, trigger_character, }
 }
 
 ///|
@@ -10956,7 +11148,7 @@ pub fn SignatureHelpProviderMetadata::new(
   trigger_characters : Array[String],
   retrigger_characters? : Array[String],
 ) -> SignatureHelpProviderMetadata {
-  SignatureHelpProviderMetadata::{ trigger_characters, retrigger_characters }
+  SignatureHelpProviderMetadata::{ trigger_characters, retrigger_characters, }
 }
 
 ///|
@@ -11059,16 +11251,34 @@ pub fn SignatureInformation::clear_documentation(
 
 ///|
 /// The parameters of this signature.
-pub extern "js" fn SignatureInformation::parameters(
+pub fn SignatureInformation::parameters(
   self : SignatureInformation,
-) -> Array[ParameterInformation] =
+) -> Array[ParameterInformation] {
+  Array::from_fixed_array(SignatureInformation::parameters_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn SignatureInformation::parameters_fixedarray_ffi(
+  self : SignatureInformation,
+) -> FixedArray[ParameterInformation] =
   #| (value) => value.parameters
 
 ///|
 /// The parameters of this signature.
-pub extern "js" fn SignatureInformation::set_parameters(
+pub fn SignatureInformation::set_parameters(
   self : SignatureInformation,
   value : Array[ParameterInformation],
+) -> Unit {
+  SignatureInformation::set_parameters_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn SignatureInformation::set_parameters_fixedarray_ffi(
+  self : SignatureInformation,
+  value : FixedArray[ParameterInformation],
 ) -> Unit =
   #| (info, value) => { info.parameters = value; }
 
@@ -11078,7 +11288,7 @@ pub extern "js" fn SignatureInformation::set_parameters(
 /// If provided, this is used in place of {@linkcode SignatureHelp.activeParameter}.
 pub fn SignatureInformation::active_parameter(
   self : SignatureInformation,
-) -> Int? {
+) -> Int32? {
   let raw = signature_information_active_parameter_raw(self)
   if raw.is_null_or_undefined() {
     None
@@ -11093,7 +11303,7 @@ pub fn SignatureInformation::active_parameter(
 /// If provided, this is used in place of {@linkcode SignatureHelp.activeParameter}.
 pub fn SignatureInformation::set_active_parameter(
   self : SignatureInformation,
-  value : Int,
+  value : Int32,
 ) -> Unit {
   signature_information_set_active_parameter_raw(self, JsValue::make(value))
 }
@@ -11110,42 +11320,64 @@ pub fn SignatureInformation::clear_active_parameter(
 
 ///|
 /// One or more signatures.
-pub extern "js" fn SignatureHelp::signatures(
+pub fn SignatureHelp::signatures(
   self : SignatureHelp,
-) -> Array[SignatureInformation] =
+) -> Array[SignatureInformation] {
+  Array::from_fixed_array(SignatureHelp::signatures_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn SignatureHelp::signatures_fixedarray_ffi(
+  self : SignatureHelp,
+) -> FixedArray[SignatureInformation] =
   #| (value) => value.signatures
 
 ///|
 /// One or more signatures.
-pub extern "js" fn SignatureHelp::set_signatures(
+pub fn SignatureHelp::set_signatures(
   self : SignatureHelp,
   value : Array[SignatureInformation],
+) -> Unit {
+  SignatureHelp::set_signatures_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn SignatureHelp::set_signatures_fixedarray_ffi(
+  self : SignatureHelp,
+  value : FixedArray[SignatureInformation],
 ) -> Unit =
   #| (info, value) => { info.signatures = value; }
 
 ///|
 /// The active signature.
-pub extern "js" fn SignatureHelp::active_signature(self : SignatureHelp) -> Int =
+pub extern "js" fn SignatureHelp::active_signature(
+  self : SignatureHelp,
+) -> Int32 =
   #| (value) => value.activeSignature
 
 ///|
 /// The active signature.
 pub extern "js" fn SignatureHelp::set_active_signature(
   self : SignatureHelp,
-  value : Int,
+  value : Int32,
 ) -> Unit =
   #| (info, value) => { info.activeSignature = value; }
 
 ///|
 /// The active parameter of the active signature.
-pub extern "js" fn SignatureHelp::active_parameter(self : SignatureHelp) -> Int =
+pub extern "js" fn SignatureHelp::active_parameter(
+  self : SignatureHelp,
+) -> Int32 =
   #| (value) => value.activeParameter
 
 ///|
 /// The active parameter of the active signature.
 pub extern "js" fn SignatureHelp::set_active_parameter(
   self : SignatureHelp,
-  value : Int,
+  value : Int32,
 ) -> Unit =
   #| (info, value) => { info.activeParameter = value; }
 
@@ -11349,7 +11581,7 @@ pub fn CodeActionContext::new(
   diagnostics : Array[Diagnostic],
   only? : CodeActionKind,
 ) -> CodeActionContext {
-  CodeActionContext::{ diagnostics, only, trigger_kind }
+  CodeActionContext::{ diagnostics, only, trigger_kind, }
 }
 
 ///|
@@ -11528,7 +11760,7 @@ pub fn CodeAction::clear_is_preferred(self : CodeAction) -> Unit {
 
 ///|
 pub fn CodeActionProviderMetadata::new(
-  provided_kinds? : Array[CodeActionKind] = [],
+  provided_kinds~ : Array[CodeActionKind] = [],
 ) -> CodeActionProviderMetadata {
   let provided_kinds_value : Array[CodeActionKind]? = if provided_kinds.length() ==
     0 {
@@ -11536,7 +11768,7 @@ pub fn CodeActionProviderMetadata::new(
   } else {
     Some(provided_kinds)
   }
-  CodeActionProviderMetadata::{ provided_kinds: provided_kinds_value }
+  CodeActionProviderMetadata::{ provided_kinds: provided_kinds_value, }
 }
 
 ///|
@@ -11547,10 +11779,10 @@ pub fn CodeActionProviderMetadata::new(
 
 ///|
 pub fn FormattingOptions::new(
-  tab_size : Int,
+  tab_size : Int32,
   insert_spaces : Bool,
 ) -> FormattingOptions {
-  FormattingOptions::{ tab_size, insert_spaces }
+  FormattingOptions::{ tab_size, insert_spaces, }
 }
 
 ///|
@@ -11865,11 +12097,11 @@ pub fn ColorPresentationContext::new(
   document : TextDocument,
   range : Range,
 ) -> ColorPresentationContext {
-  ColorPresentationContext::{ document, range }
+  ColorPresentationContext::{ document, range, }
 }
 
 ///|
-pub fn FoldingContext::new(max_ranges : Int) -> FoldingContext {
+pub fn FoldingContext::new(max_ranges : Int32) -> FoldingContext {
   FoldingContext::{ max_ranges, }
 }
 
@@ -11882,8 +12114,8 @@ pub fn FoldingContext::new(max_ranges : Int) -> FoldingContext {
 /// @param end The end line of the folded range.
 /// @param kind The kind of the folding range.
 pub fn FoldingRange::new(
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   kind? : FoldingRangeKind,
 ) -> FoldingRange {
   folding_range_ffi(start, end, option_to_js(kind))
@@ -11892,7 +12124,7 @@ pub fn FoldingRange::new(
 ///|
 /// The zero-based start line of the range to fold. The folded area starts after the line's last character.
 /// To be valid, the end must be zero or larger and smaller than the number of lines in the document.
-pub extern "js" fn FoldingRange::start(self : FoldingRange) -> Int =
+pub extern "js" fn FoldingRange::start(self : FoldingRange) -> Int32 =
   #| (value) => value.start
 
 ///|
@@ -11900,14 +12132,14 @@ pub extern "js" fn FoldingRange::start(self : FoldingRange) -> Int =
 /// To be valid, the end must be zero or larger and smaller than the number of lines in the document.
 pub extern "js" fn FoldingRange::set_start(
   self : FoldingRange,
-  value : Int,
+  value : Int32,
 ) -> Unit =
   #| (item, value) => { item.start = value; }
 
 ///|
 /// The zero-based end line of the range to fold. The folded area ends with the line's last character.
 /// To be valid, the end must be zero or larger and smaller than the number of lines in the document.
-pub extern "js" fn FoldingRange::end(self : FoldingRange) -> Int =
+pub extern "js" fn FoldingRange::end(self : FoldingRange) -> Int32 =
   #| (value) => value.end
 
 ///|
@@ -11915,7 +12147,7 @@ pub extern "js" fn FoldingRange::end(self : FoldingRange) -> Int =
 /// To be valid, the end must be zero or larger and smaller than the number of lines in the document.
 pub extern "js" fn FoldingRange::set_end(
   self : FoldingRange,
-  value : Int,
+  value : Int32,
 ) -> Unit =
   #| (item, value) => { item.end = value; }
 
@@ -12004,9 +12236,14 @@ pub fn LinkedEditingRanges::new(
 ///|
 /// A list of ranges that can be edited together. The ranges must have
 /// identical length and text content. The ranges cannot overlap.
-pub extern "js" fn LinkedEditingRanges::ranges(
+pub fn LinkedEditingRanges::ranges(self : LinkedEditingRanges) -> Array[Range] {
+  Array::from_fixed_array(LinkedEditingRanges::ranges_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn LinkedEditingRanges::ranges_fixedarray_ffi(
   self : LinkedEditingRanges,
-) -> Array[Range] =
+) -> FixedArray[Range] =
   #| (value) => value.ranges
 
 ///|
@@ -12022,8 +12259,19 @@ pub fn LinkedEditingRanges::word_pattern(self : LinkedEditingRanges) -> RegExp? 
 }
 
 ///|
-extern "js" fn linked_editing_ranges_ffi(
+fn linked_editing_ranges_ffi(
   ranges : Array[Range],
+  word_pattern : JsValue,
+) -> LinkedEditingRanges {
+  linked_editing_ranges_ffi_fixedarray_ffi(
+    FixedArray::from_array(ranges[:]),
+    word_pattern,
+  )
+}
+
+///|
+extern "js" fn linked_editing_ranges_ffi_fixedarray_ffi(
+  ranges : FixedArray[Range],
   word_pattern : JsValue,
 ) -> LinkedEditingRanges =
   #| (ranges, wordPattern) =>
@@ -12240,8 +12488,8 @@ extern "js" fn color_presentation_set_additional_text_edits_raw(
 
 ///|
 extern "js" fn folding_range_ffi(
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
   kind : JsValue,
 ) -> FoldingRange =
   #| (start, end, kind) =>
@@ -12289,16 +12537,38 @@ extern "js" fn call_hierarchy_item_ffi(
   #|   new (require("vscode").CallHierarchyItem)(kind, name, detail, uri, range, selectionRange)
 
 ///|
-extern "js" fn call_hierarchy_incoming_call_ffi(
+fn call_hierarchy_incoming_call_ffi(
   item : CallHierarchyItem,
   from_ranges : Array[Range],
+) -> CallHierarchyIncomingCall {
+  call_hierarchy_incoming_call_ffi_fixedarray_ffi(
+    item,
+    FixedArray::from_array(from_ranges[:]),
+  )
+}
+
+///|
+extern "js" fn call_hierarchy_incoming_call_ffi_fixedarray_ffi(
+  item : CallHierarchyItem,
+  from_ranges : FixedArray[Range],
 ) -> CallHierarchyIncomingCall =
   #| (item, fromRanges) => new (require("vscode").CallHierarchyIncomingCall)(item, fromRanges)
 
 ///|
-extern "js" fn call_hierarchy_outgoing_call_ffi(
+fn call_hierarchy_outgoing_call_ffi(
   item : CallHierarchyItem,
   from_ranges : Array[Range],
+) -> CallHierarchyOutgoingCall {
+  call_hierarchy_outgoing_call_ffi_fixedarray_ffi(
+    item,
+    FixedArray::from_array(from_ranges[:]),
+  )
+}
+
+///|
+extern "js" fn call_hierarchy_outgoing_call_ffi_fixedarray_ffi(
+  item : CallHierarchyItem,
+  from_ranges : FixedArray[Range],
 ) -> CallHierarchyOutgoingCall =
   #| (item, fromRanges) => new (require("vscode").CallHierarchyOutgoingCall)(item, fromRanges)
 
@@ -12352,8 +12622,15 @@ extern "js" fn inlay_hint_label_part_ffi(value : String) -> InlayHintLabelPart =
   #| (value) => new (require("vscode").InlayHintLabelPart)(value)
 
 ///|
-extern "js" fn inline_completion_list_ffi(
+fn inline_completion_list_ffi(
   items : Array[InlineCompletionItem],
+) -> InlineCompletionList {
+  inline_completion_list_ffi_fixedarray_ffi(FixedArray::from_array(items[:]))
+}
+
+///|
+extern "js" fn inline_completion_list_ffi_fixedarray_ffi(
+  items : FixedArray[InlineCompletionItem],
 ) -> InlineCompletionList =
   #| (items) => new (require("vscode").InlineCompletionList)(items)
 
@@ -12527,9 +12804,18 @@ pub extern "js" fn CallHierarchyIncomingCall::from_item(
 ///|
 /// The range at which at which the calls appears. This is relative to the caller
 /// denoted by {@linkcode CallHierarchyIncomingCall.from this.from}.
-pub extern "js" fn CallHierarchyIncomingCall::from_ranges(
+pub fn CallHierarchyIncomingCall::from_ranges(
   self : CallHierarchyIncomingCall,
-) -> Array[Range] =
+) -> Array[Range] {
+  Array::from_fixed_array(
+    CallHierarchyIncomingCall::from_ranges_fixedarray_ffi(self),
+  )
+}
+
+///|
+extern "js" fn CallHierarchyIncomingCall::from_ranges_fixedarray_ffi(
+  self : CallHierarchyIncomingCall,
+) -> FixedArray[Range] =
   #| (value) => value.fromRanges
 
 ///|
@@ -12555,9 +12841,18 @@ pub extern "js" fn CallHierarchyOutgoingCall::to_item(
 /// The range at which this item is called. This is the range relative to the caller, e.g the item
 /// passed to {@linkcode CallHierarchyProvider.provideCallHierarchyOutgoingCalls provideCallHierarchyOutgoingCalls}
 /// and not {@linkcode CallHierarchyOutgoingCall.to this.to}.
-pub extern "js" fn CallHierarchyOutgoingCall::from_ranges(
+pub fn CallHierarchyOutgoingCall::from_ranges(
   self : CallHierarchyOutgoingCall,
-) -> Array[Range] =
+) -> Array[Range] {
+  Array::from_fixed_array(
+    CallHierarchyOutgoingCall::from_ranges_fixedarray_ffi(self),
+  )
+}
+
+///|
+extern "js" fn CallHierarchyOutgoingCall::from_ranges_fixedarray_ffi(
+  self : CallHierarchyOutgoingCall,
+) -> FixedArray[Range] =
   #| (value) => value.fromRanges
 
 ///|
@@ -12686,23 +12981,41 @@ pub fn InlayHint::clear_kind(self : InlayHint) -> Unit {
 /// @param tokenModifiers An array of token modifiers.
 pub fn SemanticTokensLegend::new(
   token_types : Array[String],
-  token_modifiers? : Array[String] = [],
+  token_modifiers~ : Array[String] = [],
 ) -> SemanticTokensLegend {
   semantic_tokens_legend_ffi(token_types, token_modifiers)
 }
 
 ///|
 /// The possible token types.
-pub extern "js" fn SemanticTokensLegend::token_types(
+pub fn SemanticTokensLegend::token_types(
   self : SemanticTokensLegend,
-) -> Array[String] =
+) -> Array[String] {
+  Array::from_fixed_array(
+    SemanticTokensLegend::token_types_fixedarray_ffi(self),
+  )
+}
+
+///|
+extern "js" fn SemanticTokensLegend::token_types_fixedarray_ffi(
+  self : SemanticTokensLegend,
+) -> FixedArray[String] =
   #| (legend) => legend.tokenTypes
 
 ///|
 /// The possible token modifiers.
-pub extern "js" fn SemanticTokensLegend::token_modifiers(
+pub fn SemanticTokensLegend::token_modifiers(
   self : SemanticTokensLegend,
-) -> Array[String] =
+) -> Array[String] {
+  Array::from_fixed_array(
+    SemanticTokensLegend::token_modifiers_fixedarray_ffi(self),
+  )
+}
+
+///|
+extern "js" fn SemanticTokensLegend::token_modifiers_fixedarray_ffi(
+  self : SemanticTokensLegend,
+) -> FixedArray[String] =
   #| (legend) => legend.tokenModifiers
 
 ///|
@@ -12718,11 +13031,11 @@ pub fn SemanticTokensBuilder::new(
 ///|
 pub extern "js" fn SemanticTokensBuilder::push_raw(
   self : SemanticTokensBuilder,
-  line : Int,
-  char : Int,
-  length : Int,
-  token_type : Int,
-  token_modifiers? : Int = 0,
+  line : Int32,
+  char : Int32,
+  length : Int32,
+  token_type : Int32,
+  token_modifiers~ : Int32 = 0,
 ) -> Unit =
   #| (builder, line, char, length, tokenType, tokenModifiers) =>
   #|   builder.push(line, char, length, tokenType, tokenModifiers)
@@ -12735,11 +13048,26 @@ pub extern "js" fn SemanticTokensBuilder::push_raw(
 /// @param length The token length in characters.
 /// @param tokenType The encoded token type.
 /// @param tokenModifiers The encoded token modifiers.
-pub extern "js" fn SemanticTokensBuilder::push_range(
+pub fn SemanticTokensBuilder::push_range(
   self : SemanticTokensBuilder,
   range : Range,
   token_type : String,
-  token_modifiers? : Array[String] = [],
+  token_modifiers~ : Array[String] = [],
+) -> Unit {
+  SemanticTokensBuilder::push_range_fixedarray_ffi(
+    self,
+    range,
+    token_type,
+    token_modifiers=FixedArray::from_array(token_modifiers[:]),
+  )
+}
+
+///|
+extern "js" fn SemanticTokensBuilder::push_range_fixedarray_ffi(
+  self : SemanticTokensBuilder,
+  range : Range,
+  token_type : String,
+  token_modifiers~ : FixedArray[String] = [],
 ) -> Unit =
   #| (builder, range, tokenType, tokenModifiers) =>
   #|   tokenModifiers.length === 0
@@ -12750,7 +13078,7 @@ pub extern "js" fn SemanticTokensBuilder::push_range(
 /// Finish and create a `SemanticTokens` instance.
 pub extern "js" fn SemanticTokensBuilder::build(
   self : SemanticTokensBuilder,
-  result_id? : String = "",
+  result_id~ : String = "",
 ) -> SemanticTokens =
   #| (builder, resultId) => resultId === "" ? builder.build() : builder.build(resultId)
 
@@ -12760,8 +13088,8 @@ pub extern "js" fn SemanticTokensBuilder::build(
 /// @param data Token data.
 /// @param resultId Result identifier.
 pub fn SemanticTokens::new(
-  data : Array[Int],
-  result_id? : String = "",
+  data : Array[Int32],
+  result_id~ : String = "",
 ) -> SemanticTokens {
   semantic_tokens_ffi(
     array_to_uint32_array(data),
@@ -12776,7 +13104,7 @@ pub fn SemanticTokens::new(
 ///|
 /// The actual tokens data.
 /// @see {@link DocumentSemanticTokensProvider.provideDocumentSemanticTokens provideDocumentSemanticTokens} for an explanation of the format.
-pub fn SemanticTokens::data(self : SemanticTokens) -> Array[Int] {
+pub fn SemanticTokens::data(self : SemanticTokens) -> Array[Int32] {
   array_from_uint32_array(semantic_tokens_data_raw(self))
 }
 
@@ -12800,9 +13128,9 @@ pub fn SemanticTokens::result_id(self : SemanticTokens) -> String? {
 /// @param deleteCount Number of elements to remove.
 /// @param data Elements to insert
 pub fn SemanticTokensEdit::new(
-  start : Int,
-  delete_count : Int,
-  data? : Array[Int],
+  start : Int32,
+  delete_count : Int32,
+  data? : Array[Int32],
 ) -> SemanticTokensEdit {
   semantic_tokens_edit_ffi(
     start,
@@ -12816,19 +13144,21 @@ pub fn SemanticTokensEdit::new(
 
 ///|
 /// The start offset of the edit.
-pub extern "js" fn SemanticTokensEdit::start(self : SemanticTokensEdit) -> Int =
+pub extern "js" fn SemanticTokensEdit::start(
+  self : SemanticTokensEdit,
+) -> Int32 =
   #| (edit) => edit.start
 
 ///|
 /// The count of elements to remove.
 pub extern "js" fn SemanticTokensEdit::delete_count(
   self : SemanticTokensEdit,
-) -> Int =
+) -> Int32 =
   #| (edit) => edit.deleteCount
 
 ///|
 /// The elements to insert.
-pub fn SemanticTokensEdit::data(self : SemanticTokensEdit) -> Array[Int]? {
+pub fn SemanticTokensEdit::data(self : SemanticTokensEdit) -> Array[Int32]? {
   let raw = semantic_tokens_edit_data_raw(self)
   if raw.is_null_or_undefined() {
     None
@@ -12844,7 +13174,7 @@ pub fn SemanticTokensEdit::data(self : SemanticTokensEdit) -> Array[Int]? {
 /// @param resultId Result identifier.
 pub fn SemanticTokensEdits::new(
   edits : Array[SemanticTokensEdit],
-  result_id? : String = "",
+  result_id~ : String = "",
 ) -> SemanticTokensEdits {
   semantic_tokens_edits_ffi(
     edits,
@@ -12859,9 +13189,16 @@ pub fn SemanticTokensEdits::new(
 ///|
 /// The edits to the tokens data.
 /// All edits refer to the initial data state.
-pub extern "js" fn SemanticTokensEdits::edits(
+pub fn SemanticTokensEdits::edits(
   self : SemanticTokensEdits,
-) -> Array[SemanticTokensEdit] =
+) -> Array[SemanticTokensEdit] {
+  Array::from_fixed_array(SemanticTokensEdits::edits_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn SemanticTokensEdits::edits_fixedarray_ffi(
+  self : SemanticTokensEdits,
+) -> FixedArray[SemanticTokensEdit] =
   #| (value) => value.edits
 
 ///|
@@ -12887,9 +13224,16 @@ pub fn InlineCompletionList::new(
 
 ///|
 /// The inline completion items.
-pub extern "js" fn InlineCompletionList::items(
+pub fn InlineCompletionList::items(
   self : InlineCompletionList,
-) -> Array[InlineCompletionItem] =
+) -> Array[InlineCompletionItem] {
+  Array::from_fixed_array(InlineCompletionList::items_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn InlineCompletionList::items_fixedarray_ffi(
+  self : InlineCompletionList,
+) -> FixedArray[InlineCompletionItem] =
   #| (value) => value.items
 
 ///|
@@ -12897,7 +13241,7 @@ pub fn InlineCompletionContext::new(
   trigger_kind : InlineCompletionTriggerKind,
   selected_info? : SelectedCompletionInfo,
 ) -> InlineCompletionContext {
-  InlineCompletionContext::{ trigger_kind, selected_info }
+  InlineCompletionContext::{ trigger_kind, selected_info, }
 }
 
 ///|
@@ -12908,7 +13252,7 @@ pub fn SelectedCompletionInfo::new(
   range : Range,
   text : String,
 ) -> SelectedCompletionInfo {
-  SelectedCompletionInfo::{ range, text }
+  SelectedCompletionInfo::{ range, text, }
 }
 
 ///|
@@ -12985,8 +13329,8 @@ pub extern "js" fn InlineValueText::text(self : InlineValueText) -> String =
 /// @param caseSensitiveLookup How to perform the lookup. If missing lookup is case sensitive.
 pub fn InlineValueVariableLookup::new(
   range : Range,
-  variable_name? : String = "",
-  case_sensitive? : Bool = true,
+  variable_name~ : String = "",
+  case_sensitive~ : Bool = true,
 ) -> InlineValueVariableLookup {
   let variable_name_value : String? = if variable_name == "" {
     None
@@ -13035,7 +13379,7 @@ pub extern "js" fn InlineValueVariableLookup::case_sensitive_lookup(
 /// @param expression If specified overrides the extracted expression.
 pub fn InlineValueEvaluatableExpression::new(
   range : Range,
-  expression? : String = "",
+  expression~ : String = "",
 ) -> InlineValueEvaluatableExpression {
   let expression_value : String? = if expression == "" {
     None
@@ -13068,10 +13412,10 @@ pub fn InlineValueEvaluatableExpression::expression(
 
 ///|
 pub fn InlineValueContext::new(
-  frame_id : Int,
+  frame_id : Int32,
   stopped_location : Range,
 ) -> InlineValueContext {
-  InlineValueContext::{ frame_id, stopped_location }
+  InlineValueContext::{ frame_id, stopped_location, }
 }
 
 ///|
@@ -13212,7 +13556,7 @@ extern "js" fn document_drop_or_paste_kind_contains_ffi(
 /// @param kind {@link DocumentDropOrPasteEditKind Kind} of the edit.
 pub fn DocumentDropEdit::new(
   insert_text : StringOrSnippetString,
-  title? : String = "",
+  title~ : String = "",
   kind? : DocumentDropOrPasteEditKind,
 ) -> DocumentDropEdit {
   let normalized_title : String? = if title == "" { None } else { Some(title) }
@@ -13329,7 +13673,7 @@ pub fn DocumentPasteEditContext::new(
   trigger_kind : DocumentPasteTriggerKind,
   only? : DocumentDropOrPasteEditKind,
 ) -> DocumentPasteEditContext {
-  DocumentPasteEditContext::{ trigger_kind, only }
+  DocumentPasteEditContext::{ trigger_kind, only, }
 }
 
 ///|
@@ -13519,7 +13863,7 @@ pub fn DataTransferItem::value(self : DataTransferItem) -> Any {
 ///|
 /// The name of the file.
 pub fn DataTransferFile::new(name : String, uri? : Uri) -> DataTransferFile {
-  DataTransferFile::{ name, uri }
+  DataTransferFile::{ name, uri, }
 }
 
 ///|
@@ -13547,7 +13891,7 @@ pub async fn DataTransferFile::data(self : DataTransferFile) -> Bytes {
 ///|
 pub fn DocumentDropEditProviderMetadata::new(
   drop_mime_types : Array[String],
-  provided_kinds? : Array[DocumentDropOrPasteEditKind] = [],
+  provided_kinds~ : Array[DocumentDropOrPasteEditKind] = [],
 ) -> DocumentDropEditProviderMetadata {
   let kinds : Array[DocumentDropOrPasteEditKind]? = if provided_kinds.length() ==
     0 {
@@ -13555,14 +13899,14 @@ pub fn DocumentDropEditProviderMetadata::new(
   } else {
     Some(provided_kinds)
   }
-  DocumentDropEditProviderMetadata::{ provided_kinds: kinds, drop_mime_types }
+  DocumentDropEditProviderMetadata::{ provided_kinds: kinds, drop_mime_types, }
 }
 
 ///|
 pub fn DocumentPasteProviderMetadata::new(
   provided_kinds : Array[DocumentDropOrPasteEditKind],
-  copy_mime_types? : Array[String] = [],
-  paste_mime_types? : Array[String] = [],
+  copy_mime_types~ : Array[String] = [],
+  paste_mime_types~ : Array[String] = [],
 ) -> DocumentPasteProviderMetadata {
   let copy_mime_types : Array[String]? = if copy_mime_types.length() == 0 {
     None
@@ -13593,9 +13937,20 @@ extern "js" fn semantic_tokens_builder_ffi(
   #| }
 
 ///|
-extern "js" fn semantic_tokens_legend_ffi(
+fn semantic_tokens_legend_ffi(
   token_types : Array[String],
   token_modifiers : Array[String],
+) -> SemanticTokensLegend {
+  semantic_tokens_legend_ffi_fixedarray_ffi(
+    FixedArray::from_array(token_types[:]),
+    FixedArray::from_array(token_modifiers[:]),
+  )
+}
+
+///|
+extern "js" fn semantic_tokens_legend_ffi_fixedarray_ffi(
+  token_types : FixedArray[String],
+  token_modifiers : FixedArray[String],
 ) -> SemanticTokensLegend =
   #| (tokenTypes, tokenModifiers) =>
   #|   new (require("vscode").SemanticTokensLegend)(tokenTypes, tokenModifiers)
@@ -13622,8 +13977,8 @@ extern "js" fn semantic_tokens_result_id_raw(
 
 ///|
 extern "js" fn semantic_tokens_edit_ffi(
-  start : Int,
-  delete_count : Int,
+  start : Int32,
+  delete_count : Int32,
   data : JsValue,
 ) -> SemanticTokensEdit =
   #| (start, deleteCount, data) =>
@@ -13638,8 +13993,19 @@ extern "js" fn semantic_tokens_edit_data_raw(
   #| (value) => value.data
 
 ///|
-extern "js" fn semantic_tokens_edits_ffi(
+fn semantic_tokens_edits_ffi(
   edits : Array[SemanticTokensEdit],
+  result_id : JsValue,
+) -> SemanticTokensEdits {
+  semantic_tokens_edits_ffi_fixedarray_ffi(
+    FixedArray::from_array(edits[:]),
+    result_id,
+  )
+}
+
+///|
+extern "js" fn semantic_tokens_edits_ffi_fixedarray_ffi(
+  edits : FixedArray[SemanticTokensEdit],
   result_id : JsValue,
 ) -> SemanticTokensEdits =
   #| (edits, resultId) =>
@@ -13855,7 +14221,7 @@ pub fn DocumentSymbolProviderMetadata::new(
 ///|
 /// Include the declaration of the current symbol.
 pub fn ReferenceContext::new(include_declaration : Bool) -> ReferenceContext {
-  ReferenceContext::{ includeDeclaration: include_declaration }
+  ReferenceContext::{ includeDeclaration: include_declaration, }
 }
 
 ///|
@@ -13968,8 +14334,19 @@ extern "js" fn completion_item_ffi(
   #| }
 
 ///|
-extern "js" fn completion_list_ffi(
+fn completion_list_ffi(
   items : Array[CompletionItem],
+  is_incomplete : Bool,
+) -> JsValue {
+  completion_list_ffi_fixedarray_ffi(
+    FixedArray::from_array(items[:]),
+    is_incomplete,
+  )
+}
+
+///|
+extern "js" fn completion_list_ffi_fixedarray_ffi(
+  items : FixedArray[CompletionItem],
   is_incomplete : Bool,
 ) -> JsValue =
   #| (items, isIncomplete) => new (require("vscode").CompletionList)(items, isIncomplete)
@@ -14194,7 +14571,7 @@ pub fn TelemetryLogger::dispose(self : TelemetryLogger) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for TelemetryLogger with as_disposable(self) {
+pub impl AsDisposable for TelemetryLogger with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -14320,7 +14697,7 @@ pub fn DebugSessionCustomEvent::new(
   event : String,
   body : Any,
 ) -> DebugSessionCustomEvent {
-  DebugSessionCustomEvent::{ session, event, body }
+  DebugSessionCustomEvent::{ session, event, body, }
 }
 
 ///|
@@ -14339,7 +14716,7 @@ pub extern "js" fn WorkspaceEdit::new() -> WorkspaceEdit =
 
 ///|
 /// The number of affected resources of textual or resource changes.
-pub extern "js" fn WorkspaceEdit::size(self : WorkspaceEdit) -> Int =
+pub extern "js" fn WorkspaceEdit::size(self : WorkspaceEdit) -> Int32 =
   #| (edit) => edit.size
 
 ///|
@@ -14420,10 +14797,23 @@ pub extern "js" fn WorkspaceEdit::has(self : WorkspaceEdit, uri : Uri) -> Bool =
 ///
 /// @param uri A resource identifier.
 /// @param edits An array of edits.
-pub extern "js" fn WorkspaceEdit::set_text_edits(
+pub fn WorkspaceEdit::set_text_edits(
   self : WorkspaceEdit,
   uri : Uri,
   edits : Array[TextEdit],
+) -> Unit {
+  WorkspaceEdit::set_text_edits_fixedarray_ffi(
+    self,
+    uri,
+    FixedArray::from_array(edits[:]),
+  )
+}
+
+///|
+extern "js" fn WorkspaceEdit::set_text_edits_fixedarray_ffi(
+  self : WorkspaceEdit,
+  uri : Uri,
+  edits : FixedArray[TextEdit],
 ) -> Unit =
   #| (edit, uri, edits) => edit.set(uri, edits)
 
@@ -14432,10 +14822,23 @@ pub extern "js" fn WorkspaceEdit::set_text_edits(
 ///
 /// @param uri A resource identifier.
 /// @param edits An array of edits.
-pub extern "js" fn WorkspaceEdit::set_snippet_edits(
+pub fn WorkspaceEdit::set_snippet_edits(
   self : WorkspaceEdit,
   uri : Uri,
   edits : Array[SnippetTextEdit],
+) -> Unit {
+  WorkspaceEdit::set_snippet_edits_fixedarray_ffi(
+    self,
+    uri,
+    FixedArray::from_array(edits[:]),
+  )
+}
+
+///|
+extern "js" fn WorkspaceEdit::set_snippet_edits_fixedarray_ffi(
+  self : WorkspaceEdit,
+  uri : Uri,
+  edits : FixedArray[SnippetTextEdit],
 ) -> Unit =
   #| (edit, uri, edits) => edit.set(uri, edits)
 
@@ -14444,10 +14847,23 @@ pub extern "js" fn WorkspaceEdit::set_snippet_edits(
 ///
 /// @param uri A resource identifier.
 /// @param edits An array of edits.
-pub extern "js" fn WorkspaceEdit::set_notebook_edits(
+pub fn WorkspaceEdit::set_notebook_edits(
   self : WorkspaceEdit,
   uri : Uri,
   edits : Array[NotebookEdit],
+) -> Unit {
+  WorkspaceEdit::set_notebook_edits_fixedarray_ffi(
+    self,
+    uri,
+    FixedArray::from_array(edits[:]),
+  )
+}
+
+///|
+extern "js" fn WorkspaceEdit::set_notebook_edits_fixedarray_ffi(
+  self : WorkspaceEdit,
+  uri : Uri,
+  edits : FixedArray[NotebookEdit],
 ) -> Unit =
   #| (edit, uri, edits) => edit.set(uri, edits)
 
@@ -14456,10 +14872,15 @@ pub extern "js" fn WorkspaceEdit::set_notebook_edits(
 ///
 /// @param uri A resource identifier.
 /// @returns An array of text edits.
-pub extern "js" fn WorkspaceEdit::get(
+pub fn WorkspaceEdit::get(self : WorkspaceEdit, uri : Uri) -> Array[TextEdit] {
+  Array::from_fixed_array(WorkspaceEdit::get_fixedarray_ffi(self, uri))
+}
+
+///|
+extern "js" fn WorkspaceEdit::get_fixedarray_ffi(
   self : WorkspaceEdit,
   uri : Uri,
-) -> Array[TextEdit] =
+) -> FixedArray[TextEdit] =
   #| (edit, uri) => edit.get(uri)
 
 ///|
@@ -14910,15 +15331,15 @@ extern "js" fn file_stat_type_raw(stat : JsValue) -> FileType =
   #| (stat) => stat.type
 
 ///|
-extern "js" fn file_stat_ctime_raw(stat : JsValue) -> Int =
+extern "js" fn file_stat_ctime_raw(stat : JsValue) -> Int32 =
   #| (stat) => stat.ctime
 
 ///|
-extern "js" fn file_stat_mtime_raw(stat : JsValue) -> Int =
+extern "js" fn file_stat_mtime_raw(stat : JsValue) -> Int32 =
   #| (stat) => stat.mtime
 
 ///|
-extern "js" fn file_stat_size_raw(stat : JsValue) -> Int =
+extern "js" fn file_stat_size_raw(stat : JsValue) -> Int32 =
   #| (stat) => stat.size
 
 ///|
@@ -14987,3 +15408,168 @@ extern "js" fn file_system_error_unavailable_ffi(
   #|   require("vscode").FileSystemError.Unavailable(
   #|     messageOrUri === undefined || messageOrUri === null ? undefined : messageOrUri
   #|   )
+
+///|
+pub extend EventEmitter with AsDisposable::{as_disposable}
+
+///|
+pub extend CancellationTokenSource with AsDisposable::{as_disposable}
+
+///|
+pub extend UIKind with Eq::{not_equal, equal}
+
+///|
+pub extend DiagnosticSeverity with Eq::{not_equal, equal}
+
+///|
+pub extend DiagnosticTag with Eq::{not_equal, equal}
+
+///|
+pub extend LanguageStatusSeverity with Eq::{not_equal, equal}
+
+///|
+pub extend DiagnosticCollection with AsDisposable::{as_disposable}
+
+///|
+pub extend LanguageStatusItem with AsDisposable::{as_disposable}
+
+///|
+pub extend TextEditorSelectionChangeKind with Eq::{not_equal, equal}
+
+///|
+pub extend TextEditorCursorStyle with Eq::{not_equal, equal}
+
+///|
+pub extend TextEditorLineNumbersStyle with Eq::{not_equal, equal}
+
+///|
+pub extend EndOfLine with Eq::{not_equal, equal}
+
+///|
+pub extend TextEditorRevealType with Eq::{not_equal, equal}
+
+///|
+pub extend ViewColumn with Eq::{not_equal, equal}
+
+///|
+pub extend NotebookCellKind with Eq::{not_equal, equal}
+
+///|
+pub extend NotebookEditorRevealType with Eq::{not_equal, equal}
+
+///|
+pub extend InputBoxValidationSeverity with Eq::{not_equal, equal}
+
+///|
+pub extend LogLevel with Eq::{not_equal, equal}
+
+///|
+pub extend ProgressLocation with Eq::{not_equal, equal}
+
+///|
+pub extend TreeItemCheckboxState with Eq::{not_equal, equal}
+
+///|
+pub extend ColorThemeKind with Eq::{not_equal, equal}
+
+///|
+pub extend CommentThreadCollapsibleState with Eq::{not_equal, equal}
+
+///|
+pub extend CommentMode with Eq::{not_equal, equal}
+
+///|
+pub extend CommentThreadState with Eq::{not_equal, equal}
+
+///|
+pub extend FileType with Eq::{not_equal, equal}
+
+///|
+pub extend FilePermission with Eq::{not_equal, equal}
+
+///|
+pub extend FileChangeType with Eq::{not_equal, equal}
+
+///|
+pub extend TextDocumentChangeReason with Eq::{not_equal, equal}
+
+///|
+pub extend TextDocumentSaveReason with Eq::{not_equal, equal}
+
+///|
+pub extend ConfigurationTarget with Eq::{not_equal, equal}
+
+///|
+pub extend SignatureHelpTriggerKind with Eq::{not_equal, equal}
+
+///|
+pub extend CompletionItemKind with Eq::{not_equal, equal}
+
+///|
+pub extend CompletionItemTag with Eq::{not_equal, equal}
+
+///|
+pub extend CompletionTriggerKind with Eq::{not_equal, equal}
+
+///|
+pub extend DocumentHighlightKind with Eq::{not_equal, equal}
+
+///|
+pub extend CodeActionKind with Eq::{not_equal, equal}
+
+///|
+pub extend CodeActionTriggerKind with Eq::{not_equal, equal}
+
+///|
+pub extend FoldingRangeKind with Eq::{not_equal, equal}
+
+///|
+pub extend SymbolKind with Eq::{not_equal, equal}
+
+///|
+pub extend SymbolTag with Eq::{not_equal, equal}
+
+///|
+pub extend InlayHintKind with Eq::{not_equal, equal}
+
+///|
+pub extend InlineCompletionTriggerKind with Eq::{not_equal, equal}
+
+///|
+pub extend DocumentPasteTriggerKind with Eq::{not_equal, equal}
+
+///|
+pub extend TextEditorDecorationType with AsDisposable::{as_disposable}
+
+///|
+pub extend OutputChannel with AsDisposable::{as_disposable}
+
+///|
+pub extend LogOutputChannel with AsDisposable::{as_disposable}
+
+///|
+pub extend StatusBarItem with AsDisposable::{as_disposable}
+
+///|
+pub extend Terminal with AsDisposable::{as_disposable}
+
+///|
+pub extend QuickPick with AsDisposable::{as_disposable}
+
+///|
+pub extend InputBox with AsDisposable::{as_disposable}
+
+///|
+pub extend FileSystemWatcher with AsDisposable::{as_disposable}
+
+///|
+pub extend TreeView with AsDisposable::{as_disposable}
+
+///|
+pub extend CommentController with AsDisposable::{as_disposable}
+
+///|
+pub extend CommentThread with AsDisposable::{as_disposable}
+
+///|
+pub extend TelemetryLogger with AsDisposable::{as_disposable}

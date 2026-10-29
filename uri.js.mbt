@@ -39,7 +39,7 @@ pub fn Uri::file(path : String) -> Uri {
 /// @param value The string value of an Uri.
 /// @param strict Throw an error when `value` is empty or when no `scheme` can be parsed.
 /// @returns A new Uri instance.
-pub fn Uri::parse(value : String, strict? : Bool = false) -> Uri {
+pub fn Uri::parse(value : String, strict~ : Bool = false) -> Uri {
   uri_parse_ffi(value, strict)
 }
 
@@ -204,7 +204,15 @@ extern "js" fn uri_parse_ffi(value : String, strict : Bool) -> Uri =
   #| (value, strict) => require("vscode").Uri.parse(value, strict)
 
 ///|
-extern "js" fn uri_join_path_ffi(base : Uri, segments : Array[String]) -> Uri =
+fn uri_join_path_ffi(base : Uri, segments : Array[String]) -> Uri {
+  uri_join_path_ffi_fixedarray_ffi(base, FixedArray::from_array(segments[:]))
+}
+
+///|
+extern "js" fn uri_join_path_ffi_fixedarray_ffi(
+  base : Uri,
+  segments : FixedArray[String],
+) -> Uri =
   #| (base, segments) => require("vscode").Uri.joinPath(base, ...segments)
 
 ///|

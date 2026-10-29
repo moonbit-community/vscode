@@ -29,7 +29,7 @@ pub struct LanguageModelChat {
   vendor : String
   family : String
   version : String
-  max_input_tokens : Int
+  max_input_tokens : Int32
 }
 
 ///|
@@ -148,7 +148,7 @@ pub(all) struct LanguageModelToolInvocationOptions {
 ///|
 /// Options related to tokenization for a tool invocation.
 pub(all) struct LanguageModelToolTokenizationOptions {
-  mut token_budget : Int
+  mut token_budget : Int32
 }
 
 ///|
@@ -187,15 +187,15 @@ pub type ChatParticipantToolToken
 /// attachment via the paperclip button.
 pub struct ChatLanguageModelToolReference {
   name : String
-  range : (Int, Int)?
+  range : (Int32, Int32)?
 }
 
 ///|
 pub fn ChatLanguageModelToolReference::new(
   name : String,
-  range? : (Int, Int),
+  range? : (Int32, Int32),
 ) -> ChatLanguageModelToolReference {
-  { name, range }
+  { name, range, }
 }
 
 ///|
@@ -248,8 +248,8 @@ pub struct LanguageModelChatInformation {
   tooltip : String?
   detail : String?
   version : String
-  max_input_tokens : Int
-  max_output_tokens : Int
+  max_input_tokens : Int32
+  max_output_tokens : Int32
   capabilities : LanguageModelChatCapabilities
 }
 
@@ -757,9 +757,22 @@ pub fn LanguageModelChatMessage::new_with_text(
 }
 
 ///|
-pub extern "js" fn LanguageModelChatMessage::new_with_parts(
+pub fn LanguageModelChatMessage::new_with_parts(
   role : LanguageModelChatMessageRole,
   content : Array[LanguageModelInputPart],
+  name? : String,
+) -> LanguageModelChatMessage {
+  LanguageModelChatMessage::new_with_parts_fixedarray_ffi(
+    role,
+    FixedArray::from_array(content[:]),
+    name?,
+  )
+}
+
+///|
+extern "js" fn LanguageModelChatMessage::new_with_parts_fixedarray_ffi(
+  role : LanguageModelChatMessageRole,
+  content : FixedArray[LanguageModelInputPart],
   name? : String,
 ) -> LanguageModelChatMessage =
   #| (role, content, name) =>
@@ -877,7 +890,7 @@ pub async fn LanguageModelChat::count_tokens_text(
   self : LanguageModelChat,
   text : String,
   token? : CancellationToken,
-) -> Int {
+) -> Int32 {
   @js_async.Promise::wait(
     language_model_chat_count_tokens_text_ffi(self, text, option_to_js(token)),
   )
@@ -893,7 +906,7 @@ pub async fn LanguageModelChat::count_tokens_message(
   self : LanguageModelChat,
   message : LanguageModelChatMessage,
   token? : CancellationToken,
-) -> Int {
+) -> Int32 {
   @js_async.Promise::wait(
     language_model_chat_count_tokens_message_ffi(
       self,
@@ -1022,9 +1035,20 @@ pub extern "js" fn LanguageModelToolCallPart::new(
 ///|
 /// @param callId The ID of the tool call.
 /// @param content The content of the tool result.
-pub extern "js" fn LanguageModelToolResultPart::new(
+pub fn LanguageModelToolResultPart::new(
   call_id : String,
   content : Array[LanguageModelToolResultContentPart],
+) -> LanguageModelToolResultPart {
+  LanguageModelToolResultPart::new_fixedarray_ffi(
+    call_id,
+    FixedArray::from_array(content[:]),
+  )
+}
+
+///|
+extern "js" fn LanguageModelToolResultPart::new_fixedarray_ffi(
+  call_id : String,
+  content : FixedArray[LanguageModelToolResultContentPart],
 ) -> LanguageModelToolResultPart =
   #| (callId, content) => new (require("vscode").LanguageModelToolResultPart)(callId, content)
 
@@ -1061,8 +1085,17 @@ pub extern "js" fn LanguageModelPromptTsxPart::new(
 ///|
 /// Create a LanguageModelToolResult
 /// @param content A list of tool result content parts
-pub extern "js" fn LanguageModelToolResult::new(
+pub fn LanguageModelToolResult::new(
   content : Array[LanguageModelToolResultContentPart],
+) -> LanguageModelToolResult {
+  LanguageModelToolResult::new_fixedarray_ffi(
+    FixedArray::from_array(content[:]),
+  )
+}
+
+///|
+extern "js" fn LanguageModelToolResult::new_fixedarray_ffi(
+  content : FixedArray[LanguageModelToolResultContentPart],
 ) -> LanguageModelToolResult =
   #| (content) => new (require("vscode").LanguageModelToolResult)(content)
 
@@ -1070,9 +1103,16 @@ pub extern "js" fn LanguageModelToolResult::new(
 /// A list of tool result content parts. Includes `unknown` because this list may be extended with new content types in
 /// the future.
 /// @see {@link lm.invokeTool}.
-pub extern "js" fn LanguageModelToolResult::content(
+pub fn LanguageModelToolResult::content(
   self : LanguageModelToolResult,
-) -> Array[LanguageModelToolResultContentPart] =
+) -> Array[LanguageModelToolResultContentPart] {
+  Array::from_fixed_array(LanguageModelToolResult::content_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn LanguageModelToolResult::content_fixedarray_ffi(
+  self : LanguageModelToolResult,
+) -> FixedArray[LanguageModelToolResultContentPart] =
   #| (value) => value.content
 
 ///|
@@ -1204,8 +1244,8 @@ pub fn[T] LanguageModelToolInvocationOptions::input(
 
 ///|
 pub fn LanguageModelToolTokenizationOptions::new(
-  token_budget : Int,
-  count_tokens : async (String, CancellationToken?) -> Int,
+  token_budget : Int32,
+  count_tokens : async (String, CancellationToken?) -> Int32,
 ) -> LanguageModelToolTokenizationOptions {
   lm_language_model_tool_tokenization_options_ffi(token_budget, (text, token) => {
     @js_async.Promise::from_async(async fn() {
@@ -1229,7 +1269,7 @@ pub async fn LanguageModelToolTokenizationOptions::count_tokens(
   self : LanguageModelToolTokenizationOptions,
   text : String,
   token? : CancellationToken,
-) -> Int {
+) -> Int32 {
   @js_async.Promise::wait(
     language_model_tool_tokenization_options_count_tokens_ffi(
       self,
@@ -1408,7 +1448,7 @@ pub fn LanguageModelToolCalling::supported(
 
 ///|
 pub fn LanguageModelToolCalling::max_tools(
-  value : Int,
+  value : Int32,
 ) -> LanguageModelToolCalling {
   @v.JsValue::make(value).cast()
 }
@@ -1438,8 +1478,8 @@ pub fn LanguageModelChatInformation::new(
   name : String,
   family : String,
   version : String,
-  max_input_tokens : Int,
-  max_output_tokens : Int,
+  max_input_tokens : Int32,
+  max_output_tokens : Int32,
   capabilities : LanguageModelChatCapabilities,
   tooltip? : String,
   detail? : String,
@@ -1694,7 +1734,7 @@ pub fn LanguageModelChatProvider::new(
     LanguageModelChatInformation,
     LanguageModelTokenCountInput,
     CancellationToken,
-  ) -> Int,
+  ) -> Int32,
   on_did_change_language_model_chat_information? : Event[Unit],
 ) -> LanguageModelChatProvider {
   lm_language_model_chat_provider_ffi(
@@ -1738,8 +1778,19 @@ extern "js" fn language_model_chat_message_user_text_ffi(
   #|   )
 
 ///|
-extern "js" fn language_model_chat_message_user_parts_ffi(
+fn language_model_chat_message_user_parts_ffi(
   content : Array[LanguageModelInputPart],
+  name : @v.JsValue,
+) -> LanguageModelChatMessage {
+  language_model_chat_message_user_parts_ffi_fixedarray_ffi(
+    FixedArray::from_array(content[:]),
+    name,
+  )
+}
+
+///|
+extern "js" fn language_model_chat_message_user_parts_ffi_fixedarray_ffi(
+  content : FixedArray[LanguageModelInputPart],
   name : @v.JsValue,
 ) -> LanguageModelChatMessage =
   #| (content, name) =>
@@ -1760,8 +1811,19 @@ extern "js" fn language_model_chat_message_assistant_text_ffi(
   #|   )
 
 ///|
-extern "js" fn language_model_chat_message_assistant_parts_ffi(
+fn language_model_chat_message_assistant_parts_ffi(
   content : Array[LanguageModelInputPart],
+  name : @v.JsValue,
+) -> LanguageModelChatMessage {
+  language_model_chat_message_assistant_parts_ffi_fixedarray_ffi(
+    FixedArray::from_array(content[:]),
+    name,
+  )
+}
+
+///|
+extern "js" fn language_model_chat_message_assistant_parts_ffi_fixedarray_ffi(
+  content : FixedArray[LanguageModelInputPart],
   name : @v.JsValue,
 ) -> LanguageModelChatMessage =
   #| (content, name) =>
@@ -1790,9 +1852,24 @@ extern "js" fn language_model_chat_message_name_raw(
   #| (value) => value.name
 
 ///|
-extern "js" fn language_model_chat_send_request_ffi(
+fn language_model_chat_send_request_ffi(
   model : LanguageModelChat,
   messages : Array[LanguageModelChatMessage],
+  options : @v.JsValue,
+  token : @v.JsValue,
+) -> @js_async.Promise[LanguageModelChatResponse] {
+  language_model_chat_send_request_ffi_fixedarray_ffi(
+    model,
+    FixedArray::from_array(messages[:]),
+    options,
+    token,
+  )
+}
+
+///|
+extern "js" fn language_model_chat_send_request_ffi_fixedarray_ffi(
+  model : LanguageModelChat,
+  messages : FixedArray[LanguageModelChatMessage],
   options : @v.JsValue,
   token : @v.JsValue,
 ) -> @js_async.Promise[LanguageModelChatResponse] =
@@ -1812,7 +1889,7 @@ extern "js" fn language_model_chat_count_tokens_text_ffi(
   model : LanguageModelChat,
   text : String,
   token : @v.JsValue,
-) -> @js_async.Promise[Int] =
+) -> @js_async.Promise[Int32] =
   #| (model, text, token) => {
   #|   return token === undefined || token === null
   #|     ? model.countTokens(text)
@@ -1824,7 +1901,7 @@ extern "js" fn language_model_chat_count_tokens_message_ffi(
   model : LanguageModelChat,
   message : LanguageModelChatMessage,
   token : @v.JsValue,
-) -> @js_async.Promise[Int] =
+) -> @js_async.Promise[Int32] =
   #| (model, message, token) => {
   #|   return token === undefined || token === null
   #|     ? model.countTokens(message)
@@ -1903,7 +1980,7 @@ extern "js" fn language_model_tool_tokenization_options_count_tokens_ffi(
   options : LanguageModelToolTokenizationOptions,
   text : String,
   token : @v.JsValue,
-) -> @js_async.Promise[Int] =
+) -> @js_async.Promise[Int32] =
   #| (options, text, token) => {
   #|   return token === undefined || token === null
   #|     ? options.countTokens(text)
@@ -1936,3 +2013,9 @@ extern "js" fn language_model_tool_prepare_invocation_ffi(
   #|   }
   #|   return tool.prepareInvocation(options, token);
   #| }
+
+///|
+pub extend LanguageModelChatMessageRole with Eq::{not_equal, equal}
+
+///|
+pub extend LanguageModelChatToolMode with Eq::{not_equal, equal}

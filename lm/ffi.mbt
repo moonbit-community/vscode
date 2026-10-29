@@ -50,7 +50,14 @@ extern "js" fn lm_register_tool_ffi(
   #| (name, tool) => require("vscode").lm.registerTool(name, tool)
 
 ///|
-extern "js" fn lm_tools_ffi() -> Array[LanguageModelToolInformation] =
+fn lm_tools_ffi() -> Array[LanguageModelToolInformation] {
+  Array::from_fixed_array(lm_tools_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn lm_tools_ffi_fixedarray_ffi() -> FixedArray[
+  LanguageModelToolInformation,
+] =
   #| () => {
   #|   const tools = require("vscode").lm.tools;
   #|   return Array.isArray(tools) ? tools : [];
@@ -153,8 +160,8 @@ extern "js" fn lm_language_model_tool_invocation_options_ffi(
 
 ///|
 extern "js" fn lm_language_model_tool_tokenization_options_ffi(
-  token_budget : Int,
-  count_tokens : (String, @v.JsValue) -> @js_async.Promise[Int],
+  token_budget : Int32,
+  count_tokens : (String, @v.JsValue) -> @js_async.Promise[Int32],
 ) -> LanguageModelToolTokenizationOptions =
   #| (tokenBudget, countTokens) => ({
   #|   tokenBudget,
@@ -296,7 +303,7 @@ extern "js" fn lm_language_model_chat_provider_ffi(
     LanguageModelChatInformation,
     @v.JsValue,
     CancellationToken,
-  ) -> @js_async.Promise[Int],
+  ) -> @js_async.Promise[Int32],
 ) -> LanguageModelChatProvider =
   #| (onDidChange, provideInformation, provideResponse, provideTokenCount) => {
   #|   const provider = {
@@ -333,8 +340,8 @@ extern "js" fn lm_language_model_chat_information_ffi(
   name : String,
   family : String,
   version : String,
-  max_input_tokens : Int,
-  max_output_tokens : Int,
+  max_input_tokens : Int32,
+  max_output_tokens : Int32,
   capabilities : LanguageModelChatCapabilities,
   tooltip : @v.JsValue,
   detail : @v.JsValue,
@@ -376,9 +383,22 @@ extern "js" fn lm_provide_language_model_chat_response_options_ffi(
   #| }
 
 ///|
-extern "js" fn lm_language_model_chat_request_message_ffi(
+fn lm_language_model_chat_request_message_ffi(
   role : LanguageModelChatMessageRole,
   content : Array[LanguageModelInputPart],
+  name : @v.JsValue,
+) -> LanguageModelChatRequestMessage {
+  lm_language_model_chat_request_message_ffi_fixedarray_ffi(
+    role,
+    FixedArray::from_array(content[:]),
+    name,
+  )
+}
+
+///|
+extern "js" fn lm_language_model_chat_request_message_ffi_fixedarray_ffi(
+  role : LanguageModelChatMessageRole,
+  content : FixedArray[LanguageModelInputPart],
   name : @v.JsValue,
 ) -> LanguageModelChatRequestMessage =
   #| (role, content, name) => ({

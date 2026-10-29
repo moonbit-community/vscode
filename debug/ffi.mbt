@@ -52,7 +52,7 @@ extern "js" fn debug_adapter_executable_options_cwd_raw(
 
 ///|
 extern "js" fn debug_adapter_server_new_ffi(
-  port : Int,
+  port : Int32,
   host : @v.JsValue,
 ) -> DebugAdapterServer =
   #| (port, host) =>
@@ -84,8 +84,13 @@ extern "js" fn debug_adapter_ffi(
   #| }
 
 ///|
-extern "js" fn debug_string_map_ffi(
-  entries : Array[(String, String)],
+fn debug_string_map_ffi(entries : Array[(String, String)]) -> @v.JsValue {
+  debug_string_map_ffi_fixedarray_ffi(FixedArray::from_array(entries[:]))
+}
+
+///|
+extern "js" fn debug_string_map_ffi_fixedarray_ffi(
+  entries : FixedArray[(String, String)],
 ) -> @v.JsValue =
   #| (entries) => {
   #|   const value = {};
@@ -98,9 +103,14 @@ extern "js" fn debug_string_map_ffi(
   #| }
 
 ///|
-extern "js" fn debug_string_map_to_pairs_ffi(
+fn debug_string_map_to_pairs_ffi(value : @v.JsValue) -> Array[(String, String)] {
+  Array::from_fixed_array(debug_string_map_to_pairs_ffi_fixedarray_ffi(value))
+}
+
+///|
+extern "js" fn debug_string_map_to_pairs_ffi_fixedarray_ffi(
   value : @v.JsValue,
-) -> Array[(String, String)] =
+) -> FixedArray[(String, String)] =
   #| (value) => {
   #|   if (value === undefined || value === null) {
   #|     return [];
@@ -185,7 +195,12 @@ extern "js" fn debug_adapter_tracker_factory_ffi(
   #| (createDebugAdapterTracker) => ({ createDebugAdapterTracker })
 
 ///|
-extern "js" fn debug_breakpoints_ffi() -> Array[Breakpoint] =
+fn debug_breakpoints_ffi() -> Array[Breakpoint] {
+  Array::from_fixed_array(debug_breakpoints_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn debug_breakpoints_ffi_fixedarray_ffi() -> FixedArray[Breakpoint] =
   #| () => require("vscode").debug.breakpoints
 
 ///|
@@ -273,38 +288,88 @@ extern "js" fn debug_as_debug_source_uri_ffi(
   #|   )
 
 ///|
-extern "js" fn debug_add_breakpoints_ffi(
-  breakpoints : Array[Breakpoint],
+fn debug_add_breakpoints_ffi(breakpoints : Array[Breakpoint]) -> Unit {
+  debug_add_breakpoints_ffi_fixedarray_ffi(
+    FixedArray::from_array(breakpoints[:]),
+  )
+}
+
+///|
+extern "js" fn debug_add_breakpoints_ffi_fixedarray_ffi(
+  breakpoints : FixedArray[Breakpoint],
 ) -> Unit =
   #| (breakpoints) => require("vscode").debug.addBreakpoints(breakpoints)
 
 ///|
-extern "js" fn debug_remove_breakpoints_ffi(
-  breakpoints : Array[Breakpoint],
+fn debug_remove_breakpoints_ffi(breakpoints : Array[Breakpoint]) -> Unit {
+  debug_remove_breakpoints_ffi_fixedarray_ffi(
+    FixedArray::from_array(breakpoints[:]),
+  )
+}
+
+///|
+extern "js" fn debug_remove_breakpoints_ffi_fixedarray_ffi(
+  breakpoints : FixedArray[Breakpoint],
 ) -> Unit =
   #| (breakpoints) => require("vscode").debug.removeBreakpoints(breakpoints)
 
 ///|
-extern "js" fn debug_add_source_breakpoints_ffi(
+fn debug_add_source_breakpoints_ffi(
   breakpoints : Array[SourceBreakpoint],
+) -> Unit {
+  debug_add_source_breakpoints_ffi_fixedarray_ffi(
+    FixedArray::from_array(breakpoints[:]),
+  )
+}
+
+///|
+extern "js" fn debug_add_source_breakpoints_ffi_fixedarray_ffi(
+  breakpoints : FixedArray[SourceBreakpoint],
 ) -> Unit =
   #| (breakpoints) => require("vscode").debug.addBreakpoints(breakpoints)
 
 ///|
-extern "js" fn debug_remove_source_breakpoints_ffi(
+fn debug_remove_source_breakpoints_ffi(
   breakpoints : Array[SourceBreakpoint],
+) -> Unit {
+  debug_remove_source_breakpoints_ffi_fixedarray_ffi(
+    FixedArray::from_array(breakpoints[:]),
+  )
+}
+
+///|
+extern "js" fn debug_remove_source_breakpoints_ffi_fixedarray_ffi(
+  breakpoints : FixedArray[SourceBreakpoint],
 ) -> Unit =
   #| (breakpoints) => require("vscode").debug.removeBreakpoints(breakpoints)
 
 ///|
-extern "js" fn debug_add_function_breakpoints_ffi(
+fn debug_add_function_breakpoints_ffi(
   breakpoints : Array[FunctionBreakpoint],
+) -> Unit {
+  debug_add_function_breakpoints_ffi_fixedarray_ffi(
+    FixedArray::from_array(breakpoints[:]),
+  )
+}
+
+///|
+extern "js" fn debug_add_function_breakpoints_ffi_fixedarray_ffi(
+  breakpoints : FixedArray[FunctionBreakpoint],
 ) -> Unit =
   #| (breakpoints) => require("vscode").debug.addBreakpoints(breakpoints)
 
 ///|
-extern "js" fn debug_remove_function_breakpoints_ffi(
+fn debug_remove_function_breakpoints_ffi(
   breakpoints : Array[FunctionBreakpoint],
+) -> Unit {
+  debug_remove_function_breakpoints_ffi_fixedarray_ffi(
+    FixedArray::from_array(breakpoints[:]),
+  )
+}
+
+///|
+extern "js" fn debug_remove_function_breakpoints_ffi_fixedarray_ffi(
+  breakpoints : FixedArray[FunctionBreakpoint],
 ) -> Unit =
   #| (breakpoints) => require("vscode").debug.removeBreakpoints(breakpoints)
 

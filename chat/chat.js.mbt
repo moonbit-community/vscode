@@ -133,7 +133,7 @@ pub type ChatFollowupProvider
 /// A reference to a value that the user added to their chat request.
 pub struct ChatPromptReference {
   id : String
-  range : (Int, Int)?
+  range : (Int32, Int32)?
   model_description : String?
   value : ChatPromptReferenceValue
 }
@@ -531,7 +531,7 @@ pub fn ChatParticipant::dispose(self : ChatParticipant) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for ChatParticipant with as_disposable(self) {
+pub impl @vscode.AsDisposable for ChatParticipant with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 
@@ -588,23 +588,44 @@ pub fn ChatRequestTurn::command(self : ChatRequestTurn) -> String? {
 
 ///|
 /// The references that were used in this message.
-pub extern "js" fn ChatRequestTurn::references(
+pub fn ChatRequestTurn::references(
   self : ChatRequestTurn,
-) -> Array[ChatPromptReference] =
+) -> Array[ChatPromptReference] {
+  Array::from_fixed_array(ChatRequestTurn::references_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn ChatRequestTurn::references_fixedarray_ffi(
+  self : ChatRequestTurn,
+) -> FixedArray[ChatPromptReference] =
   #| (turn) => turn.references
 
 ///|
 /// The list of tools were attached to this request.
-pub extern "js" fn ChatRequestTurn::tool_references(
+pub fn ChatRequestTurn::tool_references(
   self : ChatRequestTurn,
-) -> Array[ChatLanguageModelToolReference] =
+) -> Array[ChatLanguageModelToolReference] {
+  Array::from_fixed_array(ChatRequestTurn::tool_references_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn ChatRequestTurn::tool_references_fixedarray_ffi(
+  self : ChatRequestTurn,
+) -> FixedArray[ChatLanguageModelToolReference] =
   #| (turn) => turn.toolReferences
 
 ///|
 /// The content that was received from the chat participant. Only the stream parts that represent actual content (not metadata) are represented.
-pub extern "js" fn ChatResponseTurn::response(
+pub fn ChatResponseTurn::response(
   self : ChatResponseTurn,
-) -> Array[ChatResponsePart] =
+) -> Array[ChatResponsePart] {
+  Array::from_fixed_array(ChatResponseTurn::response_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn ChatResponseTurn::response_fixedarray_ffi(
+  self : ChatResponseTurn,
+) -> FixedArray[ChatResponsePart] =
   #| (turn) => turn.response
 
 ///|
@@ -883,9 +904,22 @@ pub extern "js" fn ChatResponseStream::button(
 ///
 /// @param value File tree data.
 /// @param baseUri The base uri to which this file tree is relative.
-pub extern "js" fn ChatResponseStream::filetree(
+pub fn ChatResponseStream::filetree(
   self : ChatResponseStream,
   value : Array[ChatResponseFileTree],
+  base_uri : Uri,
+) -> Unit {
+  ChatResponseStream::filetree_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+    base_uri,
+  )
+}
+
+///|
+extern "js" fn ChatResponseStream::filetree_fixedarray_ffi(
+  self : ChatResponseStream,
+  value : FixedArray[ChatResponseFileTree],
   base_uri : Uri,
 ) -> Unit =
   #| (response, value, baseUri) => response.filetree(value, baseUri)
@@ -1023,8 +1057,19 @@ pub extern "js" fn ChatResponseMarkdownPart::new(
 /// Create a new ChatResponseFileTreePart.
 /// @param value File tree data.
 /// @param baseUri The base uri to which this file tree is relative.
-pub extern "js" fn ChatResponseFileTreePart::new(
+pub fn ChatResponseFileTreePart::new(
   value : Array[ChatResponseFileTree],
+  base_uri : Uri,
+) -> ChatResponseFileTreePart {
+  ChatResponseFileTreePart::new_fixedarray_ffi(
+    FixedArray::from_array(value[:]),
+    base_uri,
+  )
+}
+
+///|
+extern "js" fn ChatResponseFileTreePart::new_fixedarray_ffi(
+  value : FixedArray[ChatResponseFileTree],
   base_uri : Uri,
 ) -> ChatResponseFileTreePart =
   #| (value, baseUri) => new (require("vscode").ChatResponseFileTreePart)(value, baseUri)
@@ -1171,15 +1216,33 @@ pub extern "js" fn ChatResponseMarkdownPart::set_value(
   #| (part, value) => { part.value = value; }
 
 ///|
-pub extern "js" fn ChatResponseFileTreePart::value(
+pub fn ChatResponseFileTreePart::value(
   self : ChatResponseFileTreePart,
-) -> Array[ChatResponseFileTree] =
+) -> Array[ChatResponseFileTree] {
+  Array::from_fixed_array(ChatResponseFileTreePart::value_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn ChatResponseFileTreePart::value_fixedarray_ffi(
+  self : ChatResponseFileTreePart,
+) -> FixedArray[ChatResponseFileTree] =
   #| (value) => value.value
 
 ///|
-pub extern "js" fn ChatResponseFileTreePart::set_value(
+pub fn ChatResponseFileTreePart::set_value(
   self : ChatResponseFileTreePart,
   value : Array[ChatResponseFileTree],
+) -> Unit {
+  ChatResponseFileTreePart::set_value_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn ChatResponseFileTreePart::set_value_fixedarray_ffi(
+  self : ChatResponseFileTreePart,
+  value : FixedArray[ChatResponseFileTree],
 ) -> Unit =
   #| (part, value) => { part.value = value; }
 
@@ -1292,3 +1355,9 @@ extern "js" fn chat_response_reference_part_set_icon_path_raw(
   #|   value.iconPath =
   #|     iconPath === undefined || iconPath === null ? undefined : iconPath;
   #| }
+
+///|
+pub extend ChatResultFeedbackKind with Eq::{not_equal, equal}
+
+///|
+pub extend ChatParticipant with @vscode.AsDisposable::{as_disposable}

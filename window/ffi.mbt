@@ -8,7 +8,14 @@ extern "js" fn window_active_text_editor_ffi() -> @v.JsValue =
   #| () => require("vscode").window.activeTextEditor
 
 ///|
-extern "js" fn window_visible_text_editors_ffi() -> Array[TextEditor] =
+fn window_visible_text_editors_ffi() -> Array[TextEditor] {
+  Array::from_fixed_array(window_visible_text_editors_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn window_visible_text_editors_ffi_fixedarray_ffi() -> FixedArray[
+  TextEditor,
+] =
   #| () => require("vscode").window.visibleTextEditors
 
 ///|
@@ -48,7 +55,14 @@ extern "js" fn window_on_did_change_text_editor_view_column_ffi() -> Event[
   #| () => require("vscode").window.onDidChangeTextEditorViewColumn
 
 ///|
-extern "js" fn window_visible_notebook_editors_ffi() -> Array[NotebookEditor] =
+fn window_visible_notebook_editors_ffi() -> Array[NotebookEditor] {
+  Array::from_fixed_array(window_visible_notebook_editors_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn window_visible_notebook_editors_ffi_fixedarray_ffi() -> FixedArray[
+  NotebookEditor,
+] =
   #| () => require("vscode").window.visibleNotebookEditors
 
 ///|
@@ -80,7 +94,12 @@ extern "js" fn window_on_did_change_notebook_editor_visible_ranges_ffi() -> Even
   #| () => require("vscode").window.onDidChangeNotebookEditorVisibleRanges
 
 ///|
-extern "js" fn window_terminals_ffi() -> Array[Terminal] =
+fn window_terminals_ffi() -> Array[Terminal] {
+  Array::from_fixed_array(window_terminals_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn window_terminals_ffi_fixedarray_ffi() -> FixedArray[Terminal] =
   #| () => require("vscode").window.terminals
 
 ///|
@@ -166,10 +185,23 @@ extern "js" fn window_create_text_editor_decoration_type_ffi(
   #| (options) => require("vscode").window.createTextEditorDecorationType(options)
 
 ///|
-extern "js" fn window_show_information_message_ffi(
+fn window_show_information_message_ffi(
   message : String,
   options : @v.JsValue,
   items : Array[@v.JsValue],
+) -> @js_async.Promise[@v.JsValue] {
+  window_show_information_message_ffi_fixedarray_ffi(
+    message,
+    options,
+    FixedArray::from_array(items[:]),
+  )
+}
+
+///|
+extern "js" fn window_show_information_message_ffi_fixedarray_ffi(
+  message : String,
+  options : @v.JsValue,
+  items : FixedArray[@v.JsValue],
 ) -> @js_async.Promise[@v.JsValue] =
   #| (message, options, items) => {
   #|   const vscode = require("vscode");
@@ -180,10 +212,23 @@ extern "js" fn window_show_information_message_ffi(
   #| }
 
 ///|
-extern "js" fn window_show_warning_message_ffi(
+fn window_show_warning_message_ffi(
   message : String,
   options : @v.JsValue,
   items : Array[@v.JsValue],
+) -> @js_async.Promise[@v.JsValue] {
+  window_show_warning_message_ffi_fixedarray_ffi(
+    message,
+    options,
+    FixedArray::from_array(items[:]),
+  )
+}
+
+///|
+extern "js" fn window_show_warning_message_ffi_fixedarray_ffi(
+  message : String,
+  options : @v.JsValue,
+  items : FixedArray[@v.JsValue],
 ) -> @js_async.Promise[@v.JsValue] =
   #| (message, options, items) => {
   #|   const vscode = require("vscode");
@@ -194,10 +239,23 @@ extern "js" fn window_show_warning_message_ffi(
   #| }
 
 ///|
-extern "js" fn window_show_error_message_ffi(
+fn window_show_error_message_ffi(
   message : String,
   options : @v.JsValue,
   items : Array[@v.JsValue],
+) -> @js_async.Promise[@v.JsValue] {
+  window_show_error_message_ffi_fixedarray_ffi(
+    message,
+    options,
+    FixedArray::from_array(items[:]),
+  )
+}
+
+///|
+extern "js" fn window_show_error_message_ffi_fixedarray_ffi(
+  message : String,
+  options : @v.JsValue,
+  items : FixedArray[@v.JsValue],
 ) -> @js_async.Promise[@v.JsValue] =
   #| (message, options, items) => {
   #|   const vscode = require("vscode");
@@ -329,7 +387,7 @@ extern "js" fn window_set_status_bar_message_ffi(
 
 ///|
 extern "js" fn window_with_scm_progress_ffi(
-  task : (Progress[Int]) -> @js_async.Promise[@v.JsValue],
+  task : (Progress[Int32]) -> @js_async.Promise[@v.JsValue],
 ) -> @js_async.Promise[@v.JsValue] =
   #| (task) => require("vscode").window.withScmProgress((progress) => task(progress))
 

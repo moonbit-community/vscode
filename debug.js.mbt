@@ -11,7 +11,7 @@ pub struct DebugProtocolBreakpoint {
 pub fn DebugProtocolBreakpoint::from_json(
   value : Any,
 ) -> DebugProtocolBreakpoint {
-  DebugProtocolBreakpoint::{ json: value }
+  DebugProtocolBreakpoint::{ json: value, }
 }
 
 ///|
@@ -65,11 +65,11 @@ pub fn Breakpoint::log_message(self : Breakpoint) -> String? {
 ///|
 /// Added breakpoints.
 pub fn BreakpointsChangeEvent::new(
-  added? : Array[Breakpoint] = [],
-  removed? : Array[Breakpoint] = [],
-  changed? : Array[Breakpoint] = [],
+  added~ : Array[Breakpoint] = [],
+  removed~ : Array[Breakpoint] = [],
+  changed~ : Array[Breakpoint] = [],
 ) -> BreakpointsChangeEvent {
-  BreakpointsChangeEvent::{ added, removed, changed }
+  BreakpointsChangeEvent::{ added, removed, changed, }
 }
 
 ///|
@@ -184,9 +184,16 @@ pub extern "js" fn DebugConfiguration::delete_entry(
 
 ///|
 /// Returns all own properties (including type/name/request) as key-value entries.
-pub extern "js" fn DebugConfiguration::entries(
+pub fn DebugConfiguration::entries(
   self : DebugConfiguration,
-) -> Array[(String, Any)] =
+) -> Array[(String, Any)] {
+  Array::from_fixed_array(DebugConfiguration::entries_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn DebugConfiguration::entries_fixedarray_ffi(
+  self : DebugConfiguration,
+) -> FixedArray[(String, Any)] =
   #| (configuration) => {
   #|   const entries = [];
   #|   for (const key of Object.keys(configuration)) {
@@ -348,7 +355,10 @@ pub async fn DebugSession::get_debug_protocol_breakpoint(
 
 ///|
 /// Debug session for thread.
-pub fn DebugThread::new(session : DebugSession, thread_id : Int) -> DebugThread {
+pub fn DebugThread::new(
+  session : DebugSession,
+  thread_id : Int32,
+) -> DebugThread {
   debug_thread_ffi(session, thread_id)
 }
 
@@ -359,15 +369,15 @@ pub extern "js" fn DebugThread::session(self : DebugThread) -> DebugSession =
 
 ///|
 /// ID of the associated thread in the debug protocol.
-pub extern "js" fn DebugThread::thread_id(self : DebugThread) -> Int =
+pub extern "js" fn DebugThread::thread_id(self : DebugThread) -> Int32 =
   #| (thread) => thread.threadId
 
 ///|
 /// Debug session for thread.
 pub fn DebugStackFrame::new(
   session : DebugSession,
-  thread_id : Int,
-  frame_id : Int,
+  thread_id : Int32,
+  frame_id : Int32,
 ) -> DebugStackFrame {
   debug_stack_frame_ffi(session, thread_id, frame_id)
 }
@@ -381,12 +391,12 @@ pub extern "js" fn DebugStackFrame::session(
 
 ///|
 /// ID of the associated thread in the debug protocol.
-pub extern "js" fn DebugStackFrame::thread_id(self : DebugStackFrame) -> Int =
+pub extern "js" fn DebugStackFrame::thread_id(self : DebugStackFrame) -> Int32 =
   #| (frame) => frame.threadId
 
 ///|
 /// ID of the stack frame in the debug protocol.
-pub extern "js" fn DebugStackFrame::frame_id(self : DebugStackFrame) -> Int =
+pub extern "js" fn DebugStackFrame::frame_id(self : DebugStackFrame) -> Int32 =
   #| (frame) => frame.frameId
 
 ///|
@@ -434,15 +444,15 @@ extern "js" fn breakpoint_log_message_raw(breakpoint : Breakpoint) -> JsValue =
 ///|
 extern "js" fn debug_thread_ffi(
   session : DebugSession,
-  thread_id : Int,
+  thread_id : Int32,
 ) -> DebugThread =
   #| (session, threadId) => ({ session, threadId })
 
 ///|
 extern "js" fn debug_stack_frame_ffi(
   session : DebugSession,
-  thread_id : Int,
-  frame_id : Int,
+  thread_id : Int32,
+  frame_id : Int32,
 ) -> DebugStackFrame =
   #| (session, threadId, frameId) => ({ session, threadId, frameId })
 
@@ -513,3 +523,6 @@ extern "js" fn debug_stack_item_thread_raw(item : DebugStackItem) -> JsValue =
 ///|
 extern "js" fn debug_stack_item_frame_raw(item : DebugStackItem) -> JsValue =
   #| (item) => (item && item.frameId !== undefined) ? item : undefined
+
+///|
+pub extend DebugConsoleMode with Eq::{not_equal, equal}

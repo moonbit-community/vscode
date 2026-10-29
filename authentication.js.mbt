@@ -32,7 +32,14 @@ pub extern "js" fn AuthenticationSession::account(
   #| (value) => value.account
 
 ///|
-pub extern "js" fn AuthenticationSession::scopes(
+pub fn AuthenticationSession::scopes(
   self : AuthenticationSession,
-) -> Array[String] =
+) -> Array[String] {
+  Array::from_fixed_array(AuthenticationSession::scopes_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn AuthenticationSession::scopes_fixedarray_ffi(
+  self : AuthenticationSession,
+) -> FixedArray[String] =
   #| (value) => value.scopes

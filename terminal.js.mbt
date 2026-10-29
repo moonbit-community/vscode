@@ -33,7 +33,7 @@ pub(all) enum TerminalLocationValue {
 pub(all) struct Pseudoterminal {
   mut on_did_write : Event[String]
   mut on_did_override_dimensions : Event[TerminalDimensions?]?
-  mut on_did_close : Event[Int?]?
+  mut on_did_close : Event[Int32?]?
   mut on_did_change_name : Event[String]?
   open : (TerminalDimensions?) -> Unit
   close : () -> Unit
@@ -46,7 +46,7 @@ pub fn TerminalEditorLocationOptions::new(
   view_column : ViewColumn,
   preserve_focus? : Bool,
 ) -> TerminalEditorLocationOptions {
-  TerminalEditorLocationOptions::{ view_column, preserve_focus }
+  TerminalEditorLocationOptions::{ view_column, preserve_focus, }
 }
 
 ///|
@@ -221,7 +221,7 @@ pub fn TerminalState::new(
   is_interacted_with : Bool,
   shell? : String,
 ) -> TerminalState {
-  TerminalState::{ isInteractedWith: is_interacted_with, shell }
+  TerminalState::{ isInteractedWith: is_interacted_with, shell, }
 }
 
 ///|
@@ -276,8 +276,13 @@ extern "js" fn terminal_split_location_options_to_js_ffi(
   #| (parentTerminal) => ({ parentTerminal })
 
 ///|
-extern "js" fn terminal_env_map_ffi(
-  entries : Array[(String, String?)],
+fn terminal_env_map_ffi(entries : Array[(String, String?)]) -> JsValue {
+  terminal_env_map_ffi_fixedarray_ffi(FixedArray::from_array(entries[:]))
+}
+
+///|
+extern "js" fn terminal_env_map_ffi_fixedarray_ffi(
+  entries : FixedArray[(String, String?)],
 ) -> JsValue =
   #| (entries) => {
   #|   const env = {};
@@ -350,3 +355,6 @@ extern "js" fn extension_terminal_options_ffi(
 ///|
 extern "js" fn terminal_creation_options_is_extension(value : JsValue) -> Bool =
   #| (value) => value && typeof value === 'object' && value.pty !== undefined
+
+///|
+pub extend TerminalLocation with Eq::{not_equal, equal}

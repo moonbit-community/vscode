@@ -4,8 +4,8 @@
 ///|
 /// Represents the dimensions of a terminal.
 pub struct TerminalDimensions {
-  columns : Int
-  rows : Int
+  columns : Int32
+  rows : Int32
 }
 
 ///|
@@ -33,8 +33,11 @@ pub(all) enum TerminalExitReason {
 } derive(Eq)
 
 ///|
-pub fn TerminalDimensions::new(columns : Int, rows : Int) -> TerminalDimensions {
-  TerminalDimensions::{ columns, rows }
+pub fn TerminalDimensions::new(
+  columns : Int32,
+  rows : Int32,
+) -> TerminalDimensions {
+  TerminalDimensions::{ columns, rows, }
 }
 
 ///|
@@ -62,9 +65,9 @@ fn terminal_dimensions_from_js(value : JsValue) -> TerminalDimensions? {
 ///   without providing an exit code.
 pub fn TerminalExitStatus::new(
   reason : TerminalExitReason,
-  code? : Int,
+  code? : Int32,
 ) -> TerminalExitStatus {
-  TerminalExitStatus::{ code, reason }
+  TerminalExitStatus::{ code, reason, }
 }
 
 ///|
@@ -135,7 +138,7 @@ pub fn TerminalShellExecution::new(
   command_line : TerminalShellExecutionCommandLine,
   cwd? : Uri,
 ) -> TerminalShellExecution {
-  TerminalShellExecution::{ commandLine: command_line, cwd }
+  TerminalShellExecution::{ commandLine: command_line, cwd, }
 }
 
 ///|
@@ -246,10 +249,23 @@ pub extern "js" fn TerminalShellIntegration::execute_command_line(
 ///   // Without shell integration, we can't know when the command has finished or what the
 ///   // exit code was.
 /// }
-pub extern "js" fn TerminalShellIntegration::execute_command(
+pub fn TerminalShellIntegration::execute_command(
   self : TerminalShellIntegration,
   executable : String,
   args : Array[String],
+) -> TerminalShellExecution {
+  TerminalShellIntegration::execute_command_fixedarray_ffi(
+    self,
+    executable,
+    FixedArray::from_array(args[:]),
+  )
+}
+
+///|
+extern "js" fn TerminalShellIntegration::execute_command_fixedarray_ffi(
+  self : TerminalShellIntegration,
+  executable : String,
+  args : FixedArray[String],
 ) -> TerminalShellExecution =
   #| (integration, executable, args) => integration.executeCommand(executable, args)
 
@@ -292,8 +308,8 @@ extern "js" fn terminal_profile_from_extension_ffi(
 /// how to trigger the link, such as `{0} (ctrl + click)`. The specific instructions vary
 /// depending on OS, user settings, and localization.
 pub fn TerminalLink::new(
-  start_index : Int,
-  length : Int,
+  start_index : Int32,
+  length : Int32,
   tooltip? : String,
 ) -> TerminalLink {
   terminal_link_ffi(start_index, length, option_to_js(tooltip))
@@ -301,12 +317,12 @@ pub fn TerminalLink::new(
 
 ///|
 /// The start index of the link on {@link TerminalLinkContext.line}.
-pub extern "js" fn TerminalLink::start_index(self : TerminalLink) -> Int =
+pub extern "js" fn TerminalLink::start_index(self : TerminalLink) -> Int32 =
   #| (value) => value.startIndex
 
 ///|
 /// The length of the link on {@link TerminalLinkContext.line}.
-pub extern "js" fn TerminalLink::length(self : TerminalLink) -> Int =
+pub extern "js" fn TerminalLink::length(self : TerminalLink) -> Int32 =
   #| (value) => value.length
 
 ///|
@@ -349,13 +365,13 @@ pub fn TerminalLinkContext::new(
   line : String,
   terminal : Terminal,
 ) -> TerminalLinkContext {
-  TerminalLinkContext::{ line, terminal }
+  TerminalLinkContext::{ line, terminal, }
 }
 
 ///|
 extern "js" fn terminal_link_ffi(
-  start_index : Int,
-  length : Int,
+  start_index : Int32,
+  length : Int32,
   tooltip : JsValue,
 ) -> TerminalLink =
   #| (startIndex, length, tooltip) =>
@@ -388,7 +404,7 @@ pub fn Pseudoterminal::new(
   open : (TerminalDimensions?) -> Unit,
   close : () -> Unit,
   on_did_override_dimensions? : Event[TerminalDimensions?],
-  on_did_close? : Event[Int?],
+  on_did_close? : Event[Int32?],
   on_did_change_name? : Event[String],
   handle_input? : (String) -> Unit,
   set_dimensions? : (TerminalDimensions) -> Unit,
@@ -466,3 +482,12 @@ extern "js" fn terminal_dimensions_columns_raw(value : JsValue) -> JsValue =
 ///|
 extern "js" fn terminal_dimensions_rows_raw(value : JsValue) -> JsValue =
   #| (value) => value === undefined || value === null ? undefined : value.rows
+
+///|
+pub extend TerminalShellExecutionCommandLineConfidence with Eq::{
+  not_equal,
+  equal,
+}
+
+///|
+pub extend TerminalExitReason with Eq::{not_equal, equal}

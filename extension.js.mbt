@@ -137,3 +137,6 @@ extern "js" fn extension_kind_set_raw(
 ///|
 extern "js" fn extension_exports_raw(ext : Extension[JsValue]) -> JsValue =
   #| (ext) => ext.exports
+
+///|
+pub extend ExtensionKind with Eq::{not_equal, equal}

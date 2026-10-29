@@ -827,7 +827,10 @@ pub fn DocumentRangeFormattingEditProviderObject::new(
     @js_async.Promise::from_async(async fn() {
       @v.option_to_js(
         provide_edits(
-          document, range, formatting_options_from_js(options), token,
+          document,
+          range,
+          formatting_options_from_js(options),
+          token,
         ),
       )
     })
@@ -1879,29 +1882,31 @@ pub fn CommentingRangeProviderObject::new_ranges_with_details(
 
 ///|
 pub(open) trait AuthenticationProvider {
-  on_did_change_sessions(Self) -> Event[
+  fn on_did_change_sessions(Self) -> Event[
     AuthenticationProviderAuthenticationSessionsChangeEvent,
   ]
-  async get_sessions(Self, Array[String]?, AuthenticationProviderSessionOptions) -> Array[
-    AuthenticationSession,
-  ]
-  async create_session(
+  async fn get_sessions(
+    Self,
+    Array[String]?,
+    AuthenticationProviderSessionOptions,
+  ) -> Array[AuthenticationSession]
+  async fn create_session(
     Self,
     Array[String],
     AuthenticationProviderSessionOptions,
   ) -> AuthenticationSession
-  async remove_session(Self, String) -> Unit
+  async fn remove_session(Self, String) -> Unit
 }
 
 ///|
-pub impl AuthenticationProvider for AuthenticationProviderObject with on_did_change_sessions(
+pub impl AuthenticationProvider for AuthenticationProviderObject with fn on_did_change_sessions(
   self,
 ) {
   authentication_provider_on_did_change_sessions(self)
 }
 
 ///|
-pub impl AuthenticationProvider for AuthenticationProviderObject with get_sessions(
+pub impl AuthenticationProvider for AuthenticationProviderObject with fn get_sessions(
   self,
   scopes,
   options,
@@ -1918,7 +1923,7 @@ pub impl AuthenticationProvider for AuthenticationProviderObject with get_sessio
 }
 
 ///|
-pub impl AuthenticationProvider for AuthenticationProviderObject with create_session(
+pub impl AuthenticationProvider for AuthenticationProviderObject with fn create_session(
   self,
   scopes,
   options,
@@ -1937,7 +1942,7 @@ pub impl AuthenticationProvider for AuthenticationProviderObject with create_ses
 }
 
 ///|
-pub impl AuthenticationProvider for AuthenticationProviderObject with remove_session(
+pub impl AuthenticationProvider for AuthenticationProviderObject with fn remove_session(
   self,
   session_id,
 ) {
@@ -2175,17 +2180,17 @@ fn authentication_session_account_information_from_js(
 
 ///|
 pub(open) trait TaskProvider {
-  async provide_tasks(Self, CancellationToken) -> Array[Task]?
-  async resolve_task(Self, Task, CancellationToken) -> Task?
+  async fn provide_tasks(Self, CancellationToken) -> Array[Task]?
+  async fn resolve_task(Self, Task, CancellationToken) -> Task?
 }
 
 ///|
-pub impl TaskProvider for TaskProviderObject with provide_tasks(self, token) {
+pub impl TaskProvider for TaskProviderObject with fn provide_tasks(self, token) {
   TaskProviderObject::provide_tasks(self, token)
 }
 
 ///|
-pub impl TaskProvider for TaskProviderObject with resolve_task(
+pub impl TaskProvider for TaskProviderObject with fn resolve_task(
   self,
   task,
   token,
@@ -2446,9 +2451,22 @@ extern "js" fn authentication_provider_get_sessions_promise(
   #| }
 
 ///|
-extern "js" fn authentication_provider_create_session_promise(
+fn authentication_provider_create_session_promise(
   provider : AuthenticationProviderObject,
   scopes : Array[String],
+  options : @v.JsValue,
+) -> @js_async.Promise[@v.JsValue] {
+  authentication_provider_create_session_promise_fixedarray_ffi(
+    provider,
+    FixedArray::from_array(scopes[:]),
+    options,
+  )
+}
+
+///|
+extern "js" fn authentication_provider_create_session_promise_fixedarray_ffi(
+  provider : AuthenticationProviderObject,
+  scopes : FixedArray[String],
   options : @v.JsValue,
 ) -> @js_async.Promise[@v.JsValue] =
   #| (provider, scopes, options) => provider.createSession(scopes, options)
@@ -2462,10 +2480,23 @@ extern "js" fn authentication_provider_map_event_ffi(
   #|   event((value) => listener.call(thisArg, mapper(value)), thisArg, disposables)
 
 ///|
-extern "js" fn authentication_provider_auth_sessions_change_event_to_js_ffi(
+fn authentication_provider_auth_sessions_change_event_to_js_ffi(
   added : Array[@v.JsValue],
   removed : Array[@v.JsValue],
   changed : Array[@v.JsValue],
+) -> @v.JsValue {
+  authentication_provider_auth_sessions_change_event_to_js_ffi_fixedarray_ffi(
+    FixedArray::from_array(added[:]),
+    FixedArray::from_array(removed[:]),
+    FixedArray::from_array(changed[:]),
+  )
+}
+
+///|
+extern "js" fn authentication_provider_auth_sessions_change_event_to_js_ffi_fixedarray_ffi(
+  added : FixedArray[@v.JsValue],
+  removed : FixedArray[@v.JsValue],
+  changed : FixedArray[@v.JsValue],
 ) -> @v.JsValue =
   #| (added, removed, changed) => ({ added, removed, changed })
 
@@ -2488,11 +2519,26 @@ extern "js" fn authentication_provider_auth_sessions_change_event_changed_raw(
   #| (value) => value === undefined || value === null ? undefined : value.changed
 
 ///|
-extern "js" fn authentication_session_to_js_ffi(
+fn authentication_session_to_js_ffi(
   id : String,
   access_token : String,
   account : @v.JsValue,
   scopes : Array[String],
+) -> @v.JsValue {
+  authentication_session_to_js_ffi_fixedarray_ffi(
+    id,
+    access_token,
+    account,
+    FixedArray::from_array(scopes[:]),
+  )
+}
+
+///|
+extern "js" fn authentication_session_to_js_ffi_fixedarray_ffi(
+  id : String,
+  access_token : String,
+  account : @v.JsValue,
+  scopes : FixedArray[String],
 ) -> @v.JsValue =
   #| (id, accessToken, account, scopes) => ({ id, accessToken, account, scopes })
 
@@ -2512,8 +2558,16 @@ extern "js" fn providers_js_value_is_array_ffi(value : @v.JsValue) -> Bool =
   #| (value) => Array.isArray(value)
 
 ///|
-extern "js" fn hover_to_js_ffi(
+fn hover_to_js_ffi(
   contents : Array[@v.JsValue],
+  range : @v.JsValue,
+) -> @v.JsValue {
+  hover_to_js_ffi_fixedarray_ffi(FixedArray::from_array(contents[:]), range)
+}
+
+///|
+extern "js" fn hover_to_js_ffi_fixedarray_ffi(
+  contents : FixedArray[@v.JsValue],
   range : @v.JsValue,
 ) -> @v.JsValue =
   #| (contents, range) => {
@@ -2523,8 +2577,8 @@ extern "js" fn hover_to_js_ffi(
 
 ///|
 extern "js" fn parameter_label_range_to_js_ffi(
-  start : Int,
-  end : Int,
+  start : Int32,
+  end : Int32,
 ) -> @v.JsValue =
   #| (start, end) => [start, end]
 
@@ -2541,10 +2595,25 @@ extern "js" fn parameter_information_to_js_ffi(
   #| }
 
 ///|
-extern "js" fn signature_information_to_js_ffi(
+fn signature_information_to_js_ffi(
   label : String,
   documentation : @v.JsValue,
   parameters : Array[@v.JsValue],
+  active_parameter : @v.JsValue,
+) -> @v.JsValue {
+  signature_information_to_js_ffi_fixedarray_ffi(
+    label,
+    documentation,
+    FixedArray::from_array(parameters[:]),
+    active_parameter,
+  )
+}
+
+///|
+extern "js" fn signature_information_to_js_ffi_fixedarray_ffi(
+  label : String,
+  documentation : @v.JsValue,
+  parameters : FixedArray[@v.JsValue],
   active_parameter : @v.JsValue,
 ) -> @v.JsValue =
   #| (label, documentation, parameters, activeParameter) => {
@@ -2560,10 +2629,23 @@ extern "js" fn signature_information_to_js_ffi(
   #| }
 
 ///|
-extern "js" fn signature_help_to_js_ffi(
+fn signature_help_to_js_ffi(
   signatures : Array[@v.JsValue],
-  active_signature : Int,
-  active_parameter : Int,
+  active_signature : Int32,
+  active_parameter : Int32,
+) -> @v.JsValue {
+  signature_help_to_js_ffi_fixedarray_ffi(
+    FixedArray::from_array(signatures[:]),
+    active_signature,
+    active_parameter,
+  )
+}
+
+///|
+extern "js" fn signature_help_to_js_ffi_fixedarray_ffi(
+  signatures : FixedArray[@v.JsValue],
+  active_signature : Int32,
+  active_parameter : Int32,
 ) -> @v.JsValue =
   #| (signatures, activeSignature, activeParameter) => {
   #|   const value = new (require("vscode").SignatureHelp)();
@@ -2627,8 +2709,15 @@ extern "js" fn inline_completion_item_to_js_ffi(
   #| }
 
 ///|
-extern "js" fn inline_completion_list_to_js_ffi(
-  items : Array[@v.JsValue],
+fn inline_completion_list_to_js_ffi(items : Array[@v.JsValue]) -> @v.JsValue {
+  inline_completion_list_to_js_ffi_fixedarray_ffi(
+    FixedArray::from_array(items[:]),
+  )
+}
+
+///|
+extern "js" fn inline_completion_list_to_js_ffi_fixedarray_ffi(
+  items : FixedArray[@v.JsValue],
 ) -> @v.JsValue =
   #| (items) => new (require("vscode").InlineCompletionList)(items)
 
@@ -2741,16 +2830,38 @@ extern "js" fn call_hierarchy_item_to_js_ffi(
   #| })
 
 ///|
-extern "js" fn call_hierarchy_incoming_call_to_js_ffi(
+fn call_hierarchy_incoming_call_to_js_ffi(
   from_item : @v.JsValue,
   from_ranges : Array[Range],
+) -> @v.JsValue {
+  call_hierarchy_incoming_call_to_js_ffi_fixedarray_ffi(
+    from_item,
+    FixedArray::from_array(from_ranges[:]),
+  )
+}
+
+///|
+extern "js" fn call_hierarchy_incoming_call_to_js_ffi_fixedarray_ffi(
+  from_item : @v.JsValue,
+  from_ranges : FixedArray[Range],
 ) -> @v.JsValue =
   #| (fromItem, fromRanges) => ({ from: fromItem, fromRanges })
 
 ///|
-extern "js" fn call_hierarchy_outgoing_call_to_js_ffi(
+fn call_hierarchy_outgoing_call_to_js_ffi(
   to_item : @v.JsValue,
   from_ranges : Array[Range],
+) -> @v.JsValue {
+  call_hierarchy_outgoing_call_to_js_ffi_fixedarray_ffi(
+    to_item,
+    FixedArray::from_array(from_ranges[:]),
+  )
+}
+
+///|
+extern "js" fn call_hierarchy_outgoing_call_to_js_ffi_fixedarray_ffi(
+  to_item : @v.JsValue,
+  from_ranges : FixedArray[Range],
 ) -> @v.JsValue =
   #| (toItem, fromRanges) => ({ to: toItem, fromRanges })
 
@@ -3165,9 +3276,20 @@ extern "js" fn inline_values_provider_ffi(
   #| (provideInlineValues) => ({ provideInlineValues })
 
 ///|
-extern "js" fn providers_document_drop_edit_provider_metadata_to_js_ffi(
+fn providers_document_drop_edit_provider_metadata_to_js_ffi(
   provided_kind_values : @v.JsValue,
   drop_mime_types : Array[String],
+) -> @v.JsValue {
+  providers_document_drop_edit_provider_metadata_to_js_ffi_fixedarray_ffi(
+    provided_kind_values,
+    FixedArray::from_array(drop_mime_types[:]),
+  )
+}
+
+///|
+extern "js" fn providers_document_drop_edit_provider_metadata_to_js_ffi_fixedarray_ffi(
+  provided_kind_values : @v.JsValue,
+  drop_mime_types : FixedArray[String],
 ) -> @v.JsValue =
   #| (providedKindValues, dropMimeTypes) => {
   #|   const kind = require("vscode").DocumentDropOrPasteEditKind;
@@ -3193,8 +3315,21 @@ extern "js" fn providers_document_drop_edit_provider_metadata_to_js_ffi(
   #| }
 
 ///|
-extern "js" fn providers_document_paste_provider_metadata_to_js_ffi(
+fn providers_document_paste_provider_metadata_to_js_ffi(
   provided_kind_values : Array[String],
+  copy_mime_types : @v.JsValue,
+  paste_mime_types : @v.JsValue,
+) -> @v.JsValue {
+  providers_document_paste_provider_metadata_to_js_ffi_fixedarray_ffi(
+    FixedArray::from_array(provided_kind_values[:]),
+    copy_mime_types,
+    paste_mime_types,
+  )
+}
+
+///|
+extern "js" fn providers_document_paste_provider_metadata_to_js_ffi_fixedarray_ffi(
+  provided_kind_values : FixedArray[String],
   copy_mime_types : @v.JsValue,
   paste_mime_types : @v.JsValue,
 ) -> @v.JsValue =
@@ -3521,11 +3656,26 @@ extern "js" fn file_system_provider_on_did_change_file_event_ffi(
   #|   )
 
 ///|
-pub extern "js" fn FileSystemProviderObject::watch(
+pub fn FileSystemProviderObject::watch(
   self : FileSystemProviderObject,
   uri : @vscode.Uri,
   recursive : Bool,
   excludes : Array[String],
+) -> @vscode.Disposable {
+  FileSystemProviderObject::watch_fixedarray_ffi(
+    self,
+    uri,
+    recursive,
+    FixedArray::from_array(excludes[:]),
+  )
+}
+
+///|
+extern "js" fn FileSystemProviderObject::watch_fixedarray_ffi(
+  self : FileSystemProviderObject,
+  uri : @vscode.Uri,
+  recursive : Bool,
+  excludes : FixedArray[String],
 ) -> @vscode.Disposable =
   #| (provider, uri, recursive, excludes) =>
   #|   provider.watch(uri, { recursive, excludes })
@@ -3877,9 +4027,9 @@ extern "js" fn file_system_provider_ffi(
 ///|
 extern "js" fn file_stat_to_js_ffi(
   file_type : @vscode.FileType,
-  ctime : Int,
-  mtime : Int,
-  size : Int,
+  ctime : Int32,
+  mtime : Int32,
+  size : Int32,
   permissions : @v.JsValue,
 ) -> @v.JsValue =
   #| (type, ctime, mtime, size, permissions) => ({
@@ -3895,15 +4045,15 @@ extern "js" fn file_stat_type_raw(value : @v.JsValue) -> @vscode.FileType =
   #| (value) => value.type
 
 ///|
-extern "js" fn file_stat_ctime_raw(value : @v.JsValue) -> Int =
+extern "js" fn file_stat_ctime_raw(value : @v.JsValue) -> Int32 =
   #| (value) => value.ctime
 
 ///|
-extern "js" fn file_stat_mtime_raw(value : @v.JsValue) -> Int =
+extern "js" fn file_stat_mtime_raw(value : @v.JsValue) -> Int32 =
   #| (value) => value.mtime
 
 ///|
-extern "js" fn file_stat_size_raw(value : @v.JsValue) -> Int =
+extern "js" fn file_stat_size_raw(value : @v.JsValue) -> Int32 =
   #| (value) => value.size
 
 ///|
@@ -3911,14 +4061,14 @@ extern "js" fn file_stat_permissions_raw(value : @v.JsValue) -> @v.JsValue =
   #| (value) => value.permissions
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with on_did_change_file(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn on_did_change_file(
   self,
 ) {
   FileSystemProviderObject::on_did_change_file(self)
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with watch(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn watch(
   self,
   uri,
   recursive,
@@ -3928,7 +4078,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with watch(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with stat(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn stat(
   self,
   uri,
 ) {
@@ -3936,7 +4086,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with stat(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with read_directory(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn read_directory(
   self,
   uri,
 ) {
@@ -3944,7 +4094,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with read_direc
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with create_directory(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn create_directory(
   self,
   uri,
 ) {
@@ -3952,7 +4102,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with create_dir
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with read_file(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn read_file(
   self,
   uri,
 ) {
@@ -3960,7 +4110,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with read_file(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with write_file(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn write_file(
   self,
   uri,
   content,
@@ -3971,7 +4121,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with write_file
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with delete(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn delete(
   self,
   uri,
   recursive,
@@ -3980,7 +4130,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with delete(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with rename(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn rename(
   self,
   old_uri,
   new_uri,
@@ -3990,7 +4140,7 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with rename(
 }
 
 ///|
-pub impl @vscode.FileSystemProvider for FileSystemProviderObject with copy(
+pub impl @vscode.FileSystemProvider for FileSystemProviderObject with fn copy(
   self,
   source,
   destination,
@@ -3998,3 +4148,14 @@ pub impl @vscode.FileSystemProvider for FileSystemProviderObject with copy(
 ) {
   FileSystemProviderObject::copy(self, source, destination, overwrite)
 }
+
+///|
+pub extend AuthenticationProviderObject with AuthenticationProvider::{
+  create_session,
+  remove_session,
+  get_sessions,
+  on_did_change_sessions,
+}
+
+///|
+pub extend TaskProviderObject with TaskProvider::{provide_tasks, resolve_task}

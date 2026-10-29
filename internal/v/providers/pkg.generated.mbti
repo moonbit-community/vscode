@@ -11,7 +11,11 @@ import {
 
 // Types and methods
 pub type AuthenticationProviderObject
+pub async fn AuthenticationProviderObject::create_session(Self, Array[String], @vscode.AuthenticationProviderSessionOptions) -> @vscode.AuthenticationSession
+pub async fn AuthenticationProviderObject::get_sessions(Self, Array[String]?, @vscode.AuthenticationProviderSessionOptions) -> Array[@vscode.AuthenticationSession]
 pub fn AuthenticationProviderObject::new(@vscode.Event[@vscode.AuthenticationProviderAuthenticationSessionsChangeEvent], async (Array[String]?, @vscode.AuthenticationProviderSessionOptions) -> Array[@vscode.AuthenticationSession], async (Array[String], @vscode.AuthenticationProviderSessionOptions) -> @vscode.AuthenticationSession, async (String) -> Unit) -> Self
+pub fn AuthenticationProviderObject::on_did_change_sessions(Self) -> @vscode.Event[@vscode.AuthenticationProviderAuthenticationSessionsChangeEvent]
+pub async fn AuthenticationProviderObject::remove_session(Self, String) -> Unit
 pub impl AuthenticationProvider for AuthenticationProviderObject
 
 pub type CallHierarchyProviderObject
@@ -161,6 +165,8 @@ pub fn SignatureHelpProviderObject::new(async (@vscode.TextDocument, @vscode.Pos
 
 pub type TaskProviderObject
 pub fn TaskProviderObject::new(async (@vscode.CancellationToken) -> Array[@vscode.Task]?, resolve_task? : async (@vscode.Task, @vscode.CancellationToken) -> @vscode.Task?) -> Self
+pub async fn TaskProviderObject::provide_tasks(Self, @vscode.CancellationToken) -> Array[@vscode.Task]?
+pub async fn TaskProviderObject::resolve_task(Self, @vscode.Task, @vscode.CancellationToken) -> @vscode.Task?
 pub impl TaskProvider for TaskProviderObject
 
 pub type TerminalLinkProviderObject

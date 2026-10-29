@@ -22,4 +22,3 @@ pub fn SelectionStatusBar::update(Self) -> Unit
 // Type aliases
 
 // Traits
-

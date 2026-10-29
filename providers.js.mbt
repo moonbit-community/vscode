@@ -93,24 +93,26 @@ pub fn AuthenticationProviderSessionOptions::new(
 
 ///|
 pub(open) trait AuthenticationProvider {
-  on_did_change_sessions(Self) -> Event[
+  fn on_did_change_sessions(Self) -> Event[
     AuthenticationProviderAuthenticationSessionsChangeEvent,
   ]
-  async get_sessions(Self, Array[String]?, AuthenticationProviderSessionOptions) -> Array[
-    AuthenticationSession,
-  ]
-  async create_session(
+  async fn get_sessions(
+    Self,
+    Array[String]?,
+    AuthenticationProviderSessionOptions,
+  ) -> Array[AuthenticationSession]
+  async fn create_session(
     Self,
     Array[String],
     AuthenticationProviderSessionOptions,
   ) -> AuthenticationSession
-  async remove_session(Self, String) -> Unit
+  async fn remove_session(Self, String) -> Unit
 }
 
 ///|
 pub(open) trait TaskProvider {
-  async provide_tasks(Self, CancellationToken) -> Array[Task]?
-  async resolve_task(Self, Task, CancellationToken) -> Task?
+  async fn provide_tasks(Self, CancellationToken) -> Array[Task]?
+  async fn resolve_task(Self, Task, CancellationToken) -> Task?
 }
 
 ///|

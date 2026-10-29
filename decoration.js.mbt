@@ -227,7 +227,7 @@ pub fn ThemableDecorationInstanceRenderOptions::new(
   before? : ThemableDecorationAttachmentRenderOptions,
   after? : ThemableDecorationAttachmentRenderOptions,
 ) -> ThemableDecorationInstanceRenderOptions {
-  ThemableDecorationInstanceRenderOptions::{ before, after }
+  ThemableDecorationInstanceRenderOptions::{ before, after, }
 }
 
 ///|
@@ -237,7 +237,7 @@ pub fn DecorationInstanceRenderOptions::new(
   light? : ThemableDecorationInstanceRenderOptions,
   dark? : ThemableDecorationInstanceRenderOptions,
 ) -> DecorationInstanceRenderOptions {
-  DecorationInstanceRenderOptions::{ before, after, light, dark }
+  DecorationInstanceRenderOptions::{ before, after, light, dark, }
 }
 
 ///|
@@ -491,3 +491,9 @@ extern "js" fn themable_decoration_render_options_to_js_ffi(
   value : ThemableDecorationRenderOptions,
 ) -> JsValue =
   #| (value) => value
+
+///|
+pub extend OverviewRulerLane with Eq::{not_equal, equal}
+
+///|
+pub extend DecorationRangeBehavior with Eq::{not_equal, equal}

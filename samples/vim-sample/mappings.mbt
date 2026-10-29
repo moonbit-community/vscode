@@ -1,14 +1,14 @@
 ///|
 pub struct NumberAndString {
   has_repeat_count : Bool
-  repeat_count : Int
+  repeat_count : Int32
   input : String
 }
 
 ///|
 pub struct FoundOperator {
   operator : OperatorKind
-  repeat_count : Int
+  repeat_count : Int32
   args : String
 }
 
@@ -25,7 +25,11 @@ fn is_non_zero_digit(ch : UInt16) -> Bool {
 }
 
 ///|
-fn parse_positive_int(input : String, start : Int, end_index : Int) -> Int {
+fn parse_positive_int(
+  input : String,
+  start : Int32,
+  end_index : Int32,
+) -> Int32 {
   let mut value = 0
   for i in start..<end_index {
     value = value * 10 + input[i].to_int() - '0'.to_int()
@@ -34,7 +38,7 @@ fn parse_positive_int(input : String, start : Int, end_index : Int) -> Int {
 }
 
 ///|
-fn slice_string(input : String, start : Int, end_index : Int) -> String {
+fn slice_string(input : String, start : Int32, end_index : Int32) -> String {
   let len = input.length()
   let safe_start = if start < 0 { 0 } else if start > len { len } else { start }
   let safe_end = if end_index < safe_start {
@@ -50,7 +54,7 @@ fn slice_string(input : String, start : Int, end_index : Int) -> String {
 ///|
 fn parse_number_and_string(
   input : String,
-  number_at_beginning? : Bool = true,
+  number_at_beginning~ : Bool = true,
 ) -> NumberAndString {
   if number_at_beginning {
     if input.length() > 0 && is_non_zero_digit(input[0]) {
@@ -64,7 +68,7 @@ fn parse_number_and_string(
         input: input[end_index:].to_owned(),
       }
     } else {
-      NumberAndString::{ has_repeat_count: false, repeat_count: 1, input }
+      NumberAndString::{ has_repeat_count: false, repeat_count: 1, input, }
     }
   } else {
     let len = input.length()
@@ -79,7 +83,7 @@ fn parse_number_and_string(
         input: input[:start].to_owned(),
       }
     } else {
-      NumberAndString::{ has_repeat_count: false, repeat_count: 1, input }
+      NumberAndString::{ has_repeat_count: false, repeat_count: 1, input, }
     }
   }
 }

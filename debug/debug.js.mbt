@@ -173,7 +173,7 @@ fn debug_adapter_executable_options_from_js(
   let cwd : String? = js_to_option(
     debug_adapter_executable_options_cwd_raw(raw),
   )
-  DebugAdapterExecutableOptions::{ env, cwd }
+  DebugAdapterExecutableOptions::{ env, cwd, }
 }
 
 ///|
@@ -254,9 +254,16 @@ pub extern "js" fn DebugAdapterExecutable::command(
 
 ///|
 /// The arguments passed to the debug adapter executable. Defaults to an empty array.
-pub extern "js" fn DebugAdapterExecutable::args(
+pub fn DebugAdapterExecutable::args(
   self : DebugAdapterExecutable,
-) -> Array[String] =
+) -> Array[String] {
+  Array::from_fixed_array(DebugAdapterExecutable::args_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn DebugAdapterExecutable::args_fixedarray_ffi(
+  self : DebugAdapterExecutable,
+) -> FixedArray[String] =
   #| (value) => value.args
 
 ///|
@@ -276,7 +283,7 @@ pub fn DebugAdapterExecutable::options(
 ///|
 /// Create a description for a debug adapter running as a socket based server.
 pub fn DebugAdapterServer::new(
-  port : Int,
+  port : Int32,
   host? : String,
 ) -> DebugAdapterServer {
   debug_adapter_server_new_ffi(port, option_to_js(host))
@@ -284,7 +291,7 @@ pub fn DebugAdapterServer::new(
 
 ///|
 /// The port.
-pub extern "js" fn DebugAdapterServer::port(self : DebugAdapterServer) -> Int =
+pub extern "js" fn DebugAdapterServer::port(self : DebugAdapterServer) -> Int32 =
   #| (value) => value.port
 
 ///|
@@ -346,7 +353,7 @@ pub fn DebugAdapter::dispose(self : DebugAdapter) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for DebugAdapter with as_disposable(self) {
+pub impl @vscode.AsDisposable for DebugAdapter with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 
@@ -480,7 +487,7 @@ pub fn DebugAdapterTracker::new(
   on_did_send_message? : (String) -> Unit,
   on_will_stop_session? : () -> Unit,
   on_error? : (String) -> Unit,
-  on_exit? : (Int?, String?) -> Unit,
+  on_exit? : (Int32?, String?) -> Unit,
 ) -> DebugAdapterTracker {
   let exit_callback : ((@v.JsValue, @v.JsValue) -> Unit)? = match on_exit {
     None => None
@@ -802,3 +809,9 @@ pub async fn start_debugging_configuration_with_options(
 pub async fn stop_debugging(session? : DebugSession) -> Unit {
   @js_async.Promise::wait(debug_stop_debugging_ffi(option_to_js(session)))
 }
+
+///|
+pub extend DebugConfigurationProviderTriggerKind with Eq::{not_equal, equal}
+
+///|
+pub extend DebugAdapter with @vscode.AsDisposable::{as_disposable}

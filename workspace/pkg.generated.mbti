@@ -26,9 +26,9 @@ pub async fn encode_with_encoding(String, String) -> Bytes
 
 pub async fn encode_with_uri(String, @vscode.Uri) -> Bytes
 
-pub async fn find_files(@vscode.GlobPattern, exclude? : @vscode.GlobPattern, max_results? : Int, token? : @vscode.CancellationToken) -> Array[@vscode.Uri]
+pub async fn find_files(@vscode.GlobPattern, exclude? : @vscode.GlobPattern, max_results? : Int32, token? : @vscode.CancellationToken) -> Array[@vscode.Uri]
 
-pub async fn find_files_no_excludes(@vscode.GlobPattern, max_results? : Int, token? : @vscode.CancellationToken) -> Array[@vscode.Uri]
+pub async fn find_files_no_excludes(@vscode.GlobPattern, max_results? : Int32, token? : @vscode.CancellationToken) -> Array[@vscode.Uri]
 
 pub fn fs() -> @vscode.FileSystem
 
@@ -110,7 +110,7 @@ pub async fn save_as(@vscode.Uri) -> @vscode.Uri?
 
 pub fn text_documents() -> Array[@vscode.TextDocument]
 
-pub fn update_workspace_folders(Int, delete_count? : Int, folders_to_add? : Array[@vscode.WorkspaceFolderInput]) -> Bool
+pub fn update_workspace_folders(Int32, delete_count? : Int32, folders_to_add? : Array[@vscode.WorkspaceFolderInput]) -> Bool
 
 pub fn workspace_file() -> @vscode.Uri?
 

@@ -161,7 +161,7 @@ pub fn NotebookController::dispose(self : NotebookController) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for NotebookController with as_disposable(self) {
+pub impl @vscode.AsDisposable for NotebookController with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 
@@ -240,7 +240,7 @@ pub extern "js" fn NotebookCellExecution::token(
 /// Set and unset the order of this cell execution.
 pub fn NotebookCellExecution::execution_order(
   self : NotebookCellExecution,
-) -> Int? {
+) -> Int32? {
   let raw = NotebookCellExecution::execution_order_raw(self)
   if raw.is_null_or_undefined() {
     None
@@ -253,7 +253,7 @@ pub fn NotebookCellExecution::execution_order(
 /// Set and unset the order of this cell execution.
 pub fn NotebookCellExecution::set_execution_order(
   self : NotebookCellExecution,
-  value : Int,
+  value : Int32,
 ) -> Unit {
   NotebookCellExecution::set_execution_order_raw(self, @v.JsValue::make(value))
 }
@@ -288,7 +288,7 @@ extern "js" fn NotebookCellExecution::set_execution_order_raw(
 /// that shows for how long a cell has been running. If not given, the clock won't be shown.
 pub fn NotebookCellExecution::start(
   self : NotebookCellExecution,
-  start_time? : Int,
+  start_time? : Int32,
 ) -> Unit {
   notebooks_cell_execution_start_ffi(self, option_to_js(start_time))
 }
@@ -303,7 +303,7 @@ pub fn NotebookCellExecution::start(
 pub fn NotebookCellExecution::end(
   self : NotebookCellExecution,
   success? : Bool,
-  end_time? : Int,
+  end_time? : Int32,
 ) -> Unit {
   notebooks_cell_execution_end_ffi(
     self,
@@ -588,3 +588,12 @@ pub fn[T] NotebookRendererMessageEvent::message(
 ) -> T {
   @v.JsValue::make(notebooks_renderer_message_event_message_raw(self)).cast()
 }
+
+///|
+pub extend NotebookCellStatusBarAlignment with Eq::{not_equal, equal}
+
+///|
+pub extend NotebookControllerAffinity with Eq::{not_equal, equal}
+
+///|
+pub extend NotebookController with @vscode.AsDisposable::{as_disposable}

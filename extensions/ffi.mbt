@@ -8,7 +8,14 @@ extern "js" fn extensions_get_extension_ffi(
   #| (extensionId) => require("vscode").extensions.getExtension(extensionId)
 
 ///|
-extern "js" fn extensions_all_ffi() -> Array[Extension[@v.JsValue]] =
+fn extensions_all_ffi() -> Array[Extension[@v.JsValue]] {
+  Array::from_fixed_array(extensions_all_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn extensions_all_ffi_fixedarray_ffi() -> FixedArray[
+  Extension[@v.JsValue],
+] =
   #| () => require("vscode").extensions.all
 
 ///|

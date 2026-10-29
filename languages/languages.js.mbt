@@ -155,7 +155,7 @@ pub(all) enum IndentAction {
 pub(all) struct EnterAction {
   mut indent_action : IndentAction
   mut append_text : String?
-  mut remove_text : Int?
+  mut remove_text : Int32?
 }
 
 ///|
@@ -606,8 +606,19 @@ fn signature_help_provider_metadata_to_js(
 }
 
 ///|
-extern "js" fn languages_signature_help_provider_metadata_to_js_ffi(
+fn languages_signature_help_provider_metadata_to_js_ffi(
   trigger_characters : Array[String],
+  retrigger_characters : @v.JsValue,
+) -> @v.JsValue {
+  languages_signature_help_provider_metadata_to_js_ffi_fixedarray_ffi(
+    FixedArray::from_array(trigger_characters[:]),
+    retrigger_characters,
+  )
+}
+
+///|
+extern "js" fn languages_signature_help_provider_metadata_to_js_ffi_fixedarray_ffi(
+  trigger_characters : FixedArray[String],
   retrigger_characters : @v.JsValue,
 ) -> @v.JsValue =
   #| (triggerCharacters, retriggerCharacters) => {
@@ -827,9 +838,20 @@ fn document_paste_provider_metadata_to_js(
 }
 
 ///|
-extern "js" fn languages_document_drop_edit_provider_metadata_to_js_ffi(
+fn languages_document_drop_edit_provider_metadata_to_js_ffi(
   provided_kind_values : @v.JsValue,
   drop_mime_types : Array[String],
+) -> @v.JsValue {
+  languages_document_drop_edit_provider_metadata_to_js_ffi_fixedarray_ffi(
+    provided_kind_values,
+    FixedArray::from_array(drop_mime_types[:]),
+  )
+}
+
+///|
+extern "js" fn languages_document_drop_edit_provider_metadata_to_js_ffi_fixedarray_ffi(
+  provided_kind_values : @v.JsValue,
+  drop_mime_types : FixedArray[String],
 ) -> @v.JsValue =
   #| (providedKindValues, dropMimeTypes) => {
   #|   const kind = require("vscode").DocumentDropOrPasteEditKind;
@@ -855,8 +877,21 @@ extern "js" fn languages_document_drop_edit_provider_metadata_to_js_ffi(
   #| }
 
 ///|
-extern "js" fn languages_document_paste_provider_metadata_to_js_ffi(
+fn languages_document_paste_provider_metadata_to_js_ffi(
   provided_kind_values : Array[String],
+  copy_mime_types : @v.JsValue,
+  paste_mime_types : @v.JsValue,
+) -> @v.JsValue {
+  languages_document_paste_provider_metadata_to_js_ffi_fixedarray_ffi(
+    FixedArray::from_array(provided_kind_values[:]),
+    copy_mime_types,
+    paste_mime_types,
+  )
+}
+
+///|
+extern "js" fn languages_document_paste_provider_metadata_to_js_ffi_fixedarray_ffi(
+  provided_kind_values : FixedArray[String],
   copy_mime_types : @v.JsValue,
   paste_mime_types : @v.JsValue,
 ) -> @v.JsValue =
@@ -950,7 +985,7 @@ pub fn LanguageConfiguration::empty() -> LanguageConfiguration {
 
 ///|
 pub fn CharacterPair::new(open : String, close : String) -> CharacterPair {
-  CharacterPair::{ open, close }
+  CharacterPair::{ open, close, }
 }
 
 ///|
@@ -962,7 +997,7 @@ pub fn CommentRule::new(
   line_comment? : String,
   block_comment? : CharacterPair,
 ) -> CommentRule {
-  CommentRule::{ line_comment, block_comment }
+  CommentRule::{ line_comment, block_comment, }
 }
 
 ///|
@@ -1002,9 +1037,9 @@ pub fn IndentationRule::new(
 pub fn EnterAction::new(
   indent_action : IndentAction,
   append_text? : String,
-  remove_text? : Int,
+  remove_text? : Int32,
 ) -> EnterAction {
-  EnterAction::{ indent_action, append_text, remove_text }
+  EnterAction::{ indent_action, append_text, remove_text, }
 }
 
 ///|
@@ -1023,7 +1058,7 @@ pub fn OnEnterRule::new(
   after_text? : RegExp,
   previous_line_text? : RegExp,
 ) -> OnEnterRule {
-  OnEnterRule::{ before_text, action, after_text, previous_line_text }
+  OnEnterRule::{ before_text, action, after_text, previous_line_text, }
 }
 
 ///|
@@ -1044,7 +1079,7 @@ pub fn AutoClosingPair::new(
   close : String,
   not_in? : Array[SyntaxTokenType],
 ) -> AutoClosingPair {
-  AutoClosingPair::{ open, close, not_in }
+  AutoClosingPair::{ open, close, not_in, }
 }
 
 ///|
@@ -1307,7 +1342,7 @@ pub fn create_language_status_item(
 pub fn match_document(
   selector : DocumentSelector,
   document : TextDocument,
-) -> Int {
+) -> Int32 {
   languages_match_ffi(document_selector_to_js(selector), document)
 }
 
@@ -2072,3 +2107,9 @@ pub fn set_language_configuration(
     language_configuration_to_js(configuration),
   )
 }
+
+///|
+pub extend IndentAction with Eq::{not_equal, equal}
+
+///|
+pub extend SyntaxTokenType with Eq::{not_equal, equal}

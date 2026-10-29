@@ -25,12 +25,12 @@ pub async fn NotebookCellExecution::append_output_items(Self, NotebookCellOutput
 pub fn NotebookCellExecution::cell(Self) -> @vscode.NotebookCell
 pub fn NotebookCellExecution::clear_execution_order(Self) -> Unit
 pub async fn NotebookCellExecution::clear_output(Self, cell? : @vscode.NotebookCell) -> Unit
-pub fn NotebookCellExecution::end(Self, success? : Bool, end_time? : Int) -> Unit
-pub fn NotebookCellExecution::execution_order(Self) -> Int?
+pub fn NotebookCellExecution::end(Self, success? : Bool, end_time? : Int32) -> Unit
+pub fn NotebookCellExecution::execution_order(Self) -> Int32?
 pub async fn NotebookCellExecution::replace_output(Self, NotebookCellOutputOrMany, cell? : @vscode.NotebookCell) -> Unit
 pub async fn NotebookCellExecution::replace_output_items(Self, NotebookCellOutputItemOrMany, @vscode.NotebookCellOutput) -> Unit
-pub fn NotebookCellExecution::set_execution_order(Self, Int) -> Unit
-pub fn NotebookCellExecution::start(Self, start_time? : Int) -> Unit
+pub fn NotebookCellExecution::set_execution_order(Self, Int32) -> Unit
+pub fn NotebookCellExecution::start(Self, start_time? : Int32) -> Unit
 pub fn NotebookCellExecution::token(Self) -> @vscode.CancellationToken
 
 pub(all) enum NotebookCellOutputItemOrMany {
@@ -47,6 +47,8 @@ pub(all) enum NotebookCellStatusBarAlignment {
   Left
   Right
 } derive(Eq)
+pub fn NotebookCellStatusBarAlignment::equal(Self, Self) -> Bool
+pub fn NotebookCellStatusBarAlignment::not_equal(Self, Self) -> Bool
 
 pub type NotebookCellStatusBarItem
 pub fn NotebookCellStatusBarItem::alignment(Self) -> NotebookCellStatusBarAlignment
@@ -64,6 +66,7 @@ pub(all) struct NotebookCellStatusBarItemProvider {
 pub fn NotebookCellStatusBarItemProvider::new(async (@vscode.NotebookCell, @vscode.CancellationToken) -> Array[NotebookCellStatusBarItem]?, on_did_change_cell_status_bar_items? : @vscode.Event[Unit]) -> Self
 
 pub type NotebookController
+pub fn NotebookController::as_disposable(Self) -> @vscode.Disposable
 pub fn NotebookController::create_notebook_cell_execution(Self, @vscode.NotebookCell) -> NotebookCellExecution
 pub fn NotebookController::dispose(Self) -> Unit
 pub fn NotebookController::id(Self) -> String
@@ -76,6 +79,8 @@ pub(all) enum NotebookControllerAffinity {
   Default
   Preferred
 } derive(Eq)
+pub fn NotebookControllerAffinity::equal(Self, Self) -> Bool
+pub fn NotebookControllerAffinity::not_equal(Self, Self) -> Bool
 
 pub type NotebookRendererMessageEvent
 pub fn NotebookRendererMessageEvent::editor(Self) -> @vscode.NotebookEditor

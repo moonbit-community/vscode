@@ -22,9 +22,9 @@ pub fn create_output_channel(String, language_id? : String) -> @vscode.OutputCha
 
 pub fn create_quick_pick() -> @vscode.QuickPick[@vscode.QuickPickItem]
 
-pub fn create_status_bar_item(alignment? : @vscode.StatusBarAlignment, priority? : Int) -> @vscode.StatusBarItem
+pub fn create_status_bar_item(alignment? : @vscode.StatusBarAlignment, priority? : Int32) -> @vscode.StatusBarItem
 
-pub fn create_status_bar_item_with_id(String, alignment? : @vscode.StatusBarAlignment, priority? : Int) -> @vscode.StatusBarItem
+pub fn create_status_bar_item_with_id(String, alignment? : @vscode.StatusBarAlignment, priority? : Int32) -> @vscode.StatusBarItem
 
 pub fn create_terminal() -> @vscode.Terminal
 
@@ -88,7 +88,7 @@ pub fn progress_location_window() -> @vscode.ProgressLocationValue
 
 pub fn progress_options(@vscode.ProgressLocationValue, title? : String, cancellable? : Bool) -> @vscode.ProgressOptions
 
-pub fn[T] progress_report_message_increment(@vscode.Progress[T], String, increment? : Int) -> Unit
+pub fn[T] progress_report_message_increment(@vscode.Progress[T], String, increment? : Int32) -> Unit
 
 pub fn[T : @vscode.CustomEditorProvider] register_custom_editor_provider(String, T, options? : @vscode.CustomEditorProviderOptions) -> @vscode.Disposable
 
@@ -112,7 +112,7 @@ pub fn[T : @vscode.WebviewViewProvider] register_webview_view_provider(String, T
 
 pub fn set_status_bar_message(String) -> @vscode.Disposable
 
-pub fn set_status_bar_message_timeout(String, Int) -> @vscode.Disposable
+pub fn set_status_bar_message_timeout(String, Int32) -> @vscode.Disposable
 
 pub fn[X] set_status_bar_message_until(String, async () -> X) -> @vscode.Disposable
 
@@ -164,7 +164,7 @@ pub fn visible_text_editors() -> Array[@vscode.TextEditor]
 
 pub async fn[T] with_progress(@vscode.ProgressOptions, async (@vscode.Progress[T], @vscode.CancellationToken) -> T) -> T
 
-pub async fn[T] with_scm_progress(async (@vscode.Progress[Int]) -> T) -> T
+pub async fn[T] with_scm_progress(async (@vscode.Progress[Int32]) -> T) -> T
 
 // Errors
 
