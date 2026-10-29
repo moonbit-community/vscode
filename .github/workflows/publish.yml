@@ -1,0 +1,34 @@
+name: Publish Mooncakes module
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    uses: ./.github/workflows/smoke-tests.yml
+  publish:
+    needs: validate
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - uses: moonbit-community/setup-moonbit@main
+        with:
+          version: latest
+      - run: moon check --target js --deny-warn
+      - run: moon build --target js --deny-warn
+      - run: moon fmt --check
+      - name: Publish
+        env:
+          MOONCAKES_TOKEN: ${{ secrets.MOONCAKES_MOONBIT_COMMUNITY_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "$MOONCAKES_TOKEN" ]; then
+            echo 'The organization Mooncakes publishing secret is unavailable.' >&2
+            exit 1
+          fi
+          trap 'rm -f "$HOME/.moon/credentials.json"' EXIT
+          printf '%s' "$MOONCAKES_TOKEN" > "$HOME/.moon/credentials.json"
+          moon publish
