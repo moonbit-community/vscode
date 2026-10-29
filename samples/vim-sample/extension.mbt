@@ -6,7 +6,7 @@ pub struct ContextKey {
 
 ///|
 pub fn ContextKey::new(name : String) -> ContextKey {
-  ContextKey::{ name, last_value: None }
+  ContextKey::{ name, last_value: None, }
 }
 
 ///|
@@ -30,7 +30,7 @@ pub fn StatusBar::new() -> StatusBar {
     alignment=@vscode.StatusBarAlignment::Left,
   )
   actual.show()
-  StatusBar::{ actual, last_text: None }
+  StatusBar::{ actual, last_text: None, }
 }
 
 ///|
@@ -131,7 +131,7 @@ pub async fn VimExt::replace_prev_char(
   self : VimExt,
   editor : @vscode.TextEditor,
   text : String,
-  replace_char_cnt : Int,
+  replace_char_cnt : Int32,
 ) -> Unit {
   if self.controller.replace_prev_char(editor, text, replace_char_cnt) {
     self.ensure_state()

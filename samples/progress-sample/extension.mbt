@@ -1,19 +1,19 @@
 ///|
 pub struct ProgressStep {
-  increment : Int?
+  increment : Int32?
   message : String?
 }
 
 ///|
-fn step(increment? : Int, message? : String) -> ProgressStep {
-  ProgressStep::{ increment, message }
+fn step(increment? : Int32, message? : String) -> ProgressStep {
+  ProgressStep::{ increment, message, }
 }
 
 ///|
 fn progress_options(title : String) -> @vscode.ProgressOptions {
   @vscode.ProgressOptions::new(
     @window.progress_location_notification(),
-    title=title,
+    title~,
     cancellable=true,
   )
 }
@@ -52,9 +52,9 @@ pub async fn run_progress_demo() -> Unit {
 
 ///|
 pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
-  ctx.subscribe(@commands.register_command_async("extension.startTask", async fn(
-    _args,
-  ) {
-    run_progress_demo()
-  }))
+  ctx.subscribe(
+    @commands.register_command_async("extension.startTask", async fn(_args) {
+      run_progress_demo()
+    }),
+  )
 }

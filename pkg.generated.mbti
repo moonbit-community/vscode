@@ -145,6 +145,7 @@ pub(all) struct CancellationToken {
 }
 
 pub type CancellationTokenSource
+pub fn CancellationTokenSource::as_disposable(Self) -> Disposable
 pub fn CancellationTokenSource::cancel(Self) -> Unit
 pub fn CancellationTokenSource::dispose(Self) -> Unit
 pub fn CancellationTokenSource::new() -> Self
@@ -198,7 +199,9 @@ pub(all) enum CodeActionKind {
 } derive(Eq)
 pub fn CodeActionKind::append(Self, String) -> Self
 pub fn CodeActionKind::contains(Self, Self) -> Bool
+pub fn CodeActionKind::equal(Self, Self) -> Bool
 pub fn CodeActionKind::intersects(Self, Self) -> Bool
+pub fn CodeActionKind::not_equal(Self, Self) -> Bool
 pub fn CodeActionKind::value(Self) -> String
 
 pub struct CodeActionProviderMetadata {
@@ -210,6 +213,8 @@ pub(all) enum CodeActionTriggerKind {
   Invoke
   Automatic
 } derive(Eq)
+pub fn CodeActionTriggerKind::equal(Self, Self) -> Bool
+pub fn CodeActionTriggerKind::not_equal(Self, Self) -> Bool
 
 pub type CodeLens
 pub fn CodeLens::clear_command(Self) -> Unit
@@ -261,6 +266,8 @@ pub(all) enum ColorThemeKind {
   HighContrast
   HighContrastLight
 } derive(Eq)
+pub fn ColorThemeKind::equal(Self, Self) -> Bool
+pub fn ColorThemeKind::not_equal(Self, Self) -> Bool
 
 pub(all) enum ColorValue {
   Text(String)
@@ -303,6 +310,7 @@ pub(all) struct CommentAuthorInformation {
 pub fn CommentAuthorInformation::new(String, icon_path? : Uri) -> Self
 
 pub type CommentController
+pub fn CommentController::as_disposable(Self) -> Disposable
 pub fn CommentController::clear_commenting_range_provider(Self) -> Unit
 pub fn CommentController::clear_options(Self) -> Unit
 pub fn CommentController::clear_reaction_handler(Self) -> Unit
@@ -320,6 +328,8 @@ pub(all) enum CommentMode {
   Editing
   Preview
 } derive(Eq)
+pub fn CommentMode::equal(Self, Self) -> Bool
+pub fn CommentMode::not_equal(Self, Self) -> Bool
 
 pub(all) struct CommentOptions {
   mut prompt : String?
@@ -330,10 +340,10 @@ pub fn CommentOptions::new(prompt? : String, place_holder? : String) -> Self
 pub struct CommentReaction {
   label : String
   iconPath : StringOrUri
-  count : Int
+  count : Int32
   authorHasReacted : Bool
 }
-pub fn CommentReaction::new(String, StringOrUri, Int, Bool) -> Self
+pub fn CommentReaction::new(String, StringOrUri, Int32, Bool) -> Self
 
 pub(all) struct CommentReply {
   mut thread : CommentThread
@@ -342,6 +352,7 @@ pub(all) struct CommentReply {
 pub fn CommentReply::new(CommentThread, String) -> Self
 
 pub type CommentThread
+pub fn CommentThread::as_disposable(Self) -> Disposable
 pub fn CommentThread::can_reply(Self) -> CommentThreadCanReply
 pub fn CommentThread::clear_context_value(Self) -> Unit
 pub fn CommentThread::clear_label(Self) -> Unit
@@ -372,11 +383,15 @@ pub(all) enum CommentThreadCollapsibleState {
   Collapsed
   Expanded
 } derive(Eq)
+pub fn CommentThreadCollapsibleState::equal(Self, Self) -> Bool
+pub fn CommentThreadCollapsibleState::not_equal(Self, Self) -> Bool
 
 pub(all) enum CommentThreadState {
   Unresolved
   Resolved
 } derive(Eq)
+pub fn CommentThreadState::equal(Self, Self) -> Bool
+pub fn CommentThreadState::not_equal(Self, Self) -> Bool
 
 pub(all) struct CommentingRanges {
   mut enableFileComments : Bool
@@ -439,6 +454,8 @@ pub(all) enum CompletionItemKind {
   User
   Issue
 } derive(Eq)
+pub fn CompletionItemKind::equal(Self, Self) -> Bool
+pub fn CompletionItemKind::not_equal(Self, Self) -> Bool
 
 pub(all) struct CompletionItemLabel {
   mut label : String
@@ -455,6 +472,8 @@ pub(all) enum CompletionItemLabelValue {
 pub(all) enum CompletionItemTag {
   Deprecated
 } derive(Eq)
+pub fn CompletionItemTag::equal(Self, Self) -> Bool
+pub fn CompletionItemTag::not_equal(Self, Self) -> Bool
 
 pub type CompletionList[T]
 pub fn[T] CompletionList::is_incomplete(Self[T]) -> Bool
@@ -467,6 +486,8 @@ pub(all) enum CompletionTriggerKind {
   TriggerCharacter
   TriggerForIncompleteCompletions
 } derive(Eq)
+pub fn CompletionTriggerKind::equal(Self, Self) -> Bool
+pub fn CompletionTriggerKind::not_equal(Self, Self) -> Bool
 
 pub type ConfigurationChangeEvent
 pub fn ConfigurationChangeEvent::affects_configuration(Self, String, scope? : ConfigurationScope) -> Bool
@@ -509,6 +530,8 @@ pub(all) enum ConfigurationTarget {
   Workspace
   WorkspaceFolder
 } derive(Eq)
+pub fn ConfigurationTarget::equal(Self, Self) -> Bool
+pub fn ConfigurationTarget::not_equal(Self, Self) -> Bool
 
 pub(all) enum ConfigurationTargetValue {
   Target(ConfigurationTarget)
@@ -516,6 +539,7 @@ pub(all) enum ConfigurationTargetValue {
 }
 
 pub type CustomDocument
+pub fn CustomDocument::as_disposable(Self) -> Disposable
 pub fn CustomDocument::dispose(Self) -> Unit
 pub fn CustomDocument::new(Uri, () -> Unit) -> Self
 pub fn CustomDocument::uri(Self) -> Uri
@@ -609,6 +633,8 @@ pub(all) enum DebugConsoleMode {
   Separate
   MergeWithParent
 } derive(Eq)
+pub fn DebugConsoleMode::equal(Self, Self) -> Bool
+pub fn DebugConsoleMode::not_equal(Self, Self) -> Bool
 
 pub struct DebugProtocolBreakpoint {
   json : Any
@@ -649,10 +675,10 @@ pub(all) struct DebugSessionOptions {
 pub fn DebugSessionOptions::new(parent_session? : DebugSession, lifecycle_managed_by_parent? : Bool, console_mode? : DebugConsoleMode, no_debug? : Bool, compact? : Bool, suppress_save_before_start? : Bool, suppress_debug_toolbar? : Bool, suppress_debug_statusbar? : Bool, suppress_debug_view? : Bool, test_run? : Any) -> Self
 
 pub type DebugStackFrame
-pub fn DebugStackFrame::frame_id(Self) -> Int
-pub fn DebugStackFrame::new(DebugSession, Int, Int) -> Self
+pub fn DebugStackFrame::frame_id(Self) -> Int32
+pub fn DebugStackFrame::new(DebugSession, Int32, Int32) -> Self
 pub fn DebugStackFrame::session(Self) -> DebugSession
-pub fn DebugStackFrame::thread_id(Self) -> Int
+pub fn DebugStackFrame::thread_id(Self) -> Int32
 
 pub type DebugStackItem
 pub fn DebugStackItem::as_frame(Self) -> DebugStackFrame?
@@ -661,9 +687,9 @@ pub fn DebugStackItem::from_frame(DebugStackFrame) -> Self
 pub fn DebugStackItem::from_thread(DebugThread) -> Self
 
 pub type DebugThread
-pub fn DebugThread::new(DebugSession, Int) -> Self
+pub fn DebugThread::new(DebugSession, Int32) -> Self
 pub fn DebugThread::session(Self) -> DebugSession
-pub fn DebugThread::thread_id(Self) -> Int
+pub fn DebugThread::thread_id(Self) -> Int32
 
 pub(all) enum Declaration {
   LocationValue(Location)
@@ -688,6 +714,8 @@ pub(all) enum DecorationRangeBehavior {
   OpenClosed
   ClosedOpen
 } derive(Eq)
+pub fn DecorationRangeBehavior::equal(Self, Self) -> Bool
+pub fn DecorationRangeBehavior::not_equal(Self, Self) -> Bool
 
 pub type DecorationRenderOptions
 pub fn DecorationRenderOptions::new(background_color? : ColorValue, outline? : String, outline_color? : ColorValue, outline_style? : String, outline_width? : String, border? : String, border_color? : ColorValue, border_radius? : String, border_spacing? : String, border_style? : String, border_width? : String, font_style? : String, font_weight? : String, text_decoration? : String, cursor? : String, color? : ColorValue, opacity? : String, letter_spacing? : String, gutter_icon_path? : UriOrString, gutter_icon_size? : String, overview_ruler_color? : ColorValue, before? : ThemableDecorationAttachmentRenderOptions, after? : ThemableDecorationAttachmentRenderOptions, is_whole_line? : Bool, range_behavior? : DecorationRangeBehavior, overview_ruler_lane? : OverviewRulerLane, light? : ThemableDecorationRenderOptions, dark? : ThemableDecorationRenderOptions) -> Self
@@ -730,21 +758,22 @@ pub fn DiagnosticChangeEvent::new(Array[Uri]) -> Self
 
 pub(all) enum DiagnosticCode {
   Text(String)
-  Numeric(Int)
+  Numeric(Int32)
   ValueAndTarget(DiagnosticCodeValue, Uri)
 }
-pub fn DiagnosticCode::as_int(Self) -> Int?
+pub fn DiagnosticCode::as_int(Self) -> Int32?
 pub fn DiagnosticCode::as_text(Self) -> String?
 pub fn DiagnosticCode::target(Self) -> Uri?
 
 pub(all) enum DiagnosticCodeValue {
   Text(String)
-  Numeric(Int)
+  Numeric(Int32)
 }
-pub fn DiagnosticCodeValue::as_int(Self) -> Int?
+pub fn DiagnosticCodeValue::as_int(Self) -> Int32?
 pub fn DiagnosticCodeValue::as_text(Self) -> String?
 
 pub type DiagnosticCollection
+pub fn DiagnosticCollection::as_disposable(Self) -> Disposable
 pub fn DiagnosticCollection::clear(Self) -> Unit
 pub fn DiagnosticCollection::delete(Self, Uri) -> Unit
 pub fn DiagnosticCollection::dispose(Self) -> Unit
@@ -766,11 +795,15 @@ pub(all) enum DiagnosticSeverity {
   Information
   Hint
 } derive(Eq)
+pub fn DiagnosticSeverity::equal(Self, Self) -> Bool
+pub fn DiagnosticSeverity::not_equal(Self, Self) -> Bool
 
 pub(all) enum DiagnosticTag {
   Unnecessary
   Deprecated
 } derive(Eq)
+pub fn DiagnosticTag::equal(Self, Self) -> Bool
+pub fn DiagnosticTag::not_equal(Self, Self) -> Bool
 
 pub struct DialogFilters {
   pairs : Array[(String, Array[String])]
@@ -784,6 +817,7 @@ pub(all) struct DirectoryEntry {
 pub fn DirectoryEntry::new(String, FileType) -> Self
 
 pub type Disposable
+pub fn Disposable::as_disposable(Self) -> Self
 pub fn Disposable::dispose(Self) -> Unit
 pub fn Disposable::from(Array[Self]) -> Self
 pub fn Disposable::new(() -> Unit) -> Self
@@ -835,6 +869,8 @@ pub(all) enum DocumentHighlightKind {
   Read
   Write
 } derive(Eq)
+pub fn DocumentHighlightKind::equal(Self, Self) -> Bool
+pub fn DocumentHighlightKind::not_equal(Self, Self) -> Bool
 
 pub type DocumentLink
 pub fn DocumentLink::clear_target(Self) -> Unit
@@ -871,6 +907,8 @@ pub(all) enum DocumentPasteTriggerKind {
   Automatic
   PasteAs
 } derive(Eq)
+pub fn DocumentPasteTriggerKind::equal(Self, Self) -> Bool
+pub fn DocumentPasteTriggerKind::not_equal(Self, Self) -> Bool
 
 pub(all) enum DocumentSelector {
   Filter(DocumentFilter)
@@ -897,6 +935,8 @@ pub(all) enum EndOfLine {
   LF
   CRLF
 } derive(Eq)
+pub fn EndOfLine::equal(Self, Self) -> Bool
+pub fn EndOfLine::not_equal(Self, Self) -> Bool
 
 pub type EnvironmentVariableCollection
 pub fn EnvironmentVariableCollection::append(Self, String, String, options? : EnvironmentVariableMutatorOptions) -> Unit
@@ -929,6 +969,8 @@ pub(all) enum EnvironmentVariableMutatorType {
   Append
   Prepend
 } derive(Eq)
+pub fn EnvironmentVariableMutatorType::equal(Self, Self) -> Bool
+pub fn EnvironmentVariableMutatorType::not_equal(Self, Self) -> Bool
 
 pub(all) struct EnvironmentVariableScope {
   mut workspace_folder : WorkspaceFolder?
@@ -940,6 +982,7 @@ pub fn[T] Event::subscribe(Self[T], (T) -> Unit) -> Disposable
 pub fn[T] Event::subscribe_async(Self[T], async (T) -> Unit) -> Disposable
 
 pub type EventEmitter[T]
+pub fn[T] EventEmitter::as_disposable(Self[T]) -> Disposable
 pub fn[T] EventEmitter::dispose(Self[T]) -> Unit
 pub fn[T] EventEmitter::event(Self[T]) -> Event[T]
 pub fn[T] EventEmitter::fire(Self[T], T) -> Unit
@@ -972,12 +1015,16 @@ pub(all) enum ExtensionKind {
   UI
   Workspace
 } derive(Eq)
+pub fn ExtensionKind::equal(Self, Self) -> Bool
+pub fn ExtensionKind::not_equal(Self, Self) -> Bool
 
 pub(all) enum ExtensionMode {
   Production
   Development
   Test
 } derive(Eq)
+pub fn ExtensionMode::equal(Self, Self) -> Bool
+pub fn ExtensionMode::not_equal(Self, Self) -> Bool
 
 pub type ExtensionTerminalOptions
 pub fn ExtensionTerminalOptions::new(String, Pseudoterminal, icon_path? : IconPath, color? : ThemeColor, location? : TerminalLocationValue, is_transient? : Bool, shell_integration_nonce? : String) -> Self
@@ -993,6 +1040,8 @@ pub(all) enum FileChangeType {
   Changed
   Deleted
 } derive(Eq)
+pub fn FileChangeType::equal(Self, Self) -> Bool
+pub fn FileChangeType::not_equal(Self, Self) -> Bool
 
 pub struct FileCreateEvent {
   files : Array[Uri]
@@ -1031,6 +1080,8 @@ pub fn FileDeleteEvent::new(Array[Uri]) -> Self
 pub(all) enum FilePermission {
   Readonly
 } derive(Eq)
+pub fn FilePermission::equal(Self, Self) -> Bool
+pub fn FilePermission::not_equal(Self, Self) -> Bool
 
 pub struct FileRenameEvent {
   files : Array[FileRenameEventEntry]
@@ -1045,12 +1096,12 @@ pub fn FileRenameEventEntry::new(Uri, Uri) -> Self
 
 pub(all) struct FileStat {
   file_type : FileType
-  mut ctime : Int
-  mut mtime : Int
-  mut size : Int
+  mut ctime : Int32
+  mut mtime : Int32
+  mut size : Int32
   mut permissions : FilePermission?
 }
-pub fn FileStat::new(FileType, Int, Int, Int, permissions? : FilePermission) -> Self
+pub fn FileStat::new(FileType, Int32, Int32, Int32, permissions? : FilePermission) -> Self
 
 pub type FileSystem
 pub async fn FileSystem::copy(Self, Uri, Uri, overwrite? : Bool) -> Unit
@@ -1074,6 +1125,7 @@ pub fn FileSystemError::no_permissions(message_or_uri? : StringOrUri) -> Self
 pub fn FileSystemError::unavailable(message_or_uri? : StringOrUri) -> Self
 
 pub type FileSystemWatcher
+pub fn FileSystemWatcher::as_disposable(Self) -> Disposable
 pub fn FileSystemWatcher::dispose(Self) -> Unit
 pub fn FileSystemWatcher::ignore_change_events(Self) -> Bool
 pub fn FileSystemWatcher::ignore_create_events(Self) -> Bool
@@ -1089,6 +1141,8 @@ pub(all) enum FileType {
   Directory
   SymbolicLink
 } derive(Eq)
+pub fn FileType::equal(Self, Self) -> Bool
+pub fn FileType::not_equal(Self, Self) -> Bool
 
 pub struct FileWillCreateEvent {
   files : Array[Uri]
@@ -1112,31 +1166,33 @@ pub fn FileWillRenameEvent::wait_until(Self, async () -> WorkspaceEdit) -> Unit
 pub fn FileWillRenameEvent::wait_until_edit(Self, WorkspaceEdit) -> Unit
 
 pub struct FoldingContext {
-  max_ranges : Int
+  max_ranges : Int32
 }
-pub fn FoldingContext::new(Int) -> Self
+pub fn FoldingContext::new(Int32) -> Self
 
 pub type FoldingRange
 pub fn FoldingRange::clear_kind(Self) -> Unit
-pub fn FoldingRange::end(Self) -> Int
+pub fn FoldingRange::end(Self) -> Int32
 pub fn FoldingRange::kind(Self) -> FoldingRangeKind?
-pub fn FoldingRange::new(Int, Int, kind? : FoldingRangeKind) -> Self
-pub fn FoldingRange::set_end(Self, Int) -> Unit
+pub fn FoldingRange::new(Int32, Int32, kind? : FoldingRangeKind) -> Self
+pub fn FoldingRange::set_end(Self, Int32) -> Unit
 pub fn FoldingRange::set_kind(Self, FoldingRangeKind) -> Unit
-pub fn FoldingRange::set_start(Self, Int) -> Unit
-pub fn FoldingRange::start(Self) -> Int
+pub fn FoldingRange::set_start(Self, Int32) -> Unit
+pub fn FoldingRange::start(Self) -> Int32
 
 pub(all) enum FoldingRangeKind {
   Comment
   Imports
   Region
 } derive(Eq)
+pub fn FoldingRangeKind::equal(Self, Self) -> Bool
+pub fn FoldingRangeKind::not_equal(Self, Self) -> Bool
 
 pub(all) struct FormattingOptions {
-  mut tab_size : Int
+  mut tab_size : Int32
   mut insert_spaces : Bool
 }
-pub fn FormattingOptions::new(Int, Bool) -> Self
+pub fn FormattingOptions::new(Int32, Bool) -> Self
 
 pub type FunctionBreakpoint
 pub fn FunctionBreakpoint::function_name(Self) -> String
@@ -1207,6 +1263,8 @@ pub(all) enum InlayHintKind {
   Type
   Parameter
 } derive(Eq)
+pub fn InlayHintKind::equal(Self, Self) -> Bool
+pub fn InlayHintKind::not_equal(Self, Self) -> Bool
 
 pub type InlayHintLabelPart
 pub fn InlayHintLabelPart::new(String) -> Self
@@ -1237,6 +1295,8 @@ pub(all) enum InlineCompletionTriggerKind {
   Invoke
   Automatic
 } derive(Eq)
+pub fn InlineCompletionTriggerKind::equal(Self, Self) -> Bool
+pub fn InlineCompletionTriggerKind::not_equal(Self, Self) -> Bool
 
 pub(all) enum InlineValue {
   Text(InlineValueText)
@@ -1248,10 +1308,10 @@ pub fn InlineValue::from_text(InlineValueText) -> Self
 pub fn InlineValue::from_variable_lookup(InlineValueVariableLookup) -> Self
 
 pub struct InlineValueContext {
-  frame_id : Int
+  frame_id : Int32
   stopped_location : Range
 }
-pub fn InlineValueContext::new(Int, Range) -> Self
+pub fn InlineValueContext::new(Int32, Range) -> Self
 
 pub type InlineValueEvaluatableExpression
 pub fn InlineValueEvaluatableExpression::expression(Self) -> String?
@@ -1270,6 +1330,7 @@ pub fn InlineValueVariableLookup::range(Self) -> Range
 pub fn InlineValueVariableLookup::variable_name(Self) -> String?
 
 pub type InputBox
+pub fn InputBox::as_disposable(Self) -> Disposable
 pub fn InputBox::busy(Self) -> Bool
 pub fn InputBox::buttons(Self) -> Array[QuickInputButton]
 pub fn InputBox::clear_placeholder(Self) -> Unit
@@ -1296,33 +1357,33 @@ pub fn InputBox::set_ignore_focus_out(Self, Bool) -> Unit
 pub fn InputBox::set_password(Self, Bool) -> Unit
 pub fn InputBox::set_placeholder(Self, String) -> Unit
 pub fn InputBox::set_prompt(Self, String) -> Unit
-pub fn InputBox::set_step(Self, Int) -> Unit
+pub fn InputBox::set_step(Self, Int32) -> Unit
 pub fn InputBox::set_title(Self, String) -> Unit
-pub fn InputBox::set_total_steps(Self, Int) -> Unit
+pub fn InputBox::set_total_steps(Self, Int32) -> Unit
 pub fn InputBox::set_validation_message(Self, InputBoxValidationResult) -> Unit
 pub fn InputBox::set_value(Self, String) -> Unit
-pub fn InputBox::set_value_selection(Self, Array[Int]) -> Unit
+pub fn InputBox::set_value_selection(Self, Array[Int32]) -> Unit
 pub fn InputBox::show(Self) -> Unit
-pub fn InputBox::step(Self) -> Int?
+pub fn InputBox::step(Self) -> Int32?
 pub fn InputBox::title(Self) -> String?
-pub fn InputBox::total_steps(Self) -> Int?
+pub fn InputBox::total_steps(Self) -> Int32?
 pub fn InputBox::validation_message(Self) -> InputBoxValidationResult?
 pub fn InputBox::value(Self) -> String
-pub fn InputBox::value_selection(Self) -> Array[Int]?
+pub fn InputBox::value_selection(Self) -> Array[Int32]?
 pub impl AsDisposable for InputBox
 
 pub(all) struct InputBoxOptions {
   mut title : String?
   mut value : String?
-  mut value_selection : Array[Int]?
+  mut value_selection : Array[Int32]?
   mut prompt : String?
   mut place_holder : String?
   mut password : Bool?
   mut ignore_focus_out : Bool?
   validate_input : InputBoxValidateInput?
 }
-pub fn InputBoxOptions::new(title? : String, value? : String, value_selection? : Array[Int], prompt? : String, place_holder? : String, password? : Bool, ignore_focus_out? : Bool, validate_input? : (String) -> InputBoxValidationResult?) -> Self
-pub fn InputBoxOptions::new_async(title? : String, value? : String, value_selection? : Array[Int], prompt? : String, place_holder? : String, password? : Bool, ignore_focus_out? : Bool, validate_input? : async (String) -> InputBoxValidationResult?) -> Self
+pub fn InputBoxOptions::new(title? : String, value? : String, value_selection? : Array[Int32], prompt? : String, place_holder? : String, password? : Bool, ignore_focus_out? : Bool, validate_input? : (String) -> InputBoxValidationResult?) -> Self
+pub fn InputBoxOptions::new_async(title? : String, value? : String, value_selection? : Array[Int32], prompt? : String, place_holder? : String, password? : Bool, ignore_focus_out? : Bool, validate_input? : async (String) -> InputBoxValidationResult?) -> Self
 
 pub(all) enum InputBoxValidateInput {
   Sync((String) -> InputBoxValidationResult?)
@@ -1345,6 +1406,8 @@ pub(all) enum InputBoxValidationSeverity {
   Warning
   Error
 } derive(Eq)
+pub fn InputBoxValidationSeverity::equal(Self, Self) -> Bool
+pub fn InputBoxValidationSeverity::not_equal(Self, Self) -> Bool
 
 pub type JsError
 pub fn JsError::new(String) -> Self
@@ -1356,6 +1419,7 @@ pub fn LanguageSelector::as_document_selector(Self) -> DocumentSelector
 
 pub type LanguageStatusItem
 pub fn LanguageStatusItem::accessibility_information(Self) -> AccessibilityInformation?
+pub fn LanguageStatusItem::as_disposable(Self) -> Disposable
 pub fn LanguageStatusItem::clear_accessibility_information(Self) -> Unit
 pub fn LanguageStatusItem::dispose(Self) -> Unit
 pub fn LanguageStatusItem::selector(Self) -> DocumentSelector
@@ -1372,6 +1436,8 @@ pub(all) enum LanguageStatusSeverity {
   Warning
   Error
 } derive(Eq)
+pub fn LanguageStatusSeverity::equal(Self, Self) -> Bool
+pub fn LanguageStatusSeverity::not_equal(Self, Self) -> Bool
 
 pub type LinkedEditingRanges
 pub fn LinkedEditingRanges::new(Array[Range], word_pattern? : RegExp) -> Self
@@ -1402,8 +1468,11 @@ pub(all) enum LogLevel {
   Warning
   Error
 } derive(Eq)
+pub fn LogLevel::equal(Self, Self) -> Bool
+pub fn LogLevel::not_equal(Self, Self) -> Bool
 
 pub type LogOutputChannel
+pub fn LogOutputChannel::as_disposable(Self) -> Disposable
 pub fn LogOutputChannel::debug(Self, String) -> Unit
 pub fn LogOutputChannel::dispose(Self) -> Unit
 pub fn LogOutputChannel::error(Self, String) -> Unit
@@ -1478,7 +1547,7 @@ pub fn MessageOptions::new(modal? : Bool, detail? : String) -> Self
 pub type NotebookCell
 pub fn NotebookCell::document(Self) -> TextDocument
 pub fn NotebookCell::execution_summary(Self) -> NotebookCellExecutionSummary?
-pub fn NotebookCell::index(Self) -> Int
+pub fn NotebookCell::index(Self) -> Int32
 pub fn NotebookCell::kind(Self) -> NotebookCellKind
 pub fn NotebookCell::metadata(Self) -> Any
 pub fn NotebookCell::notebook(Self) -> NotebookDocument
@@ -1503,22 +1572,24 @@ pub fn NotebookCellData::set_value(Self, String) -> Unit
 pub fn NotebookCellData::value(Self) -> String
 
 pub struct NotebookCellExecutionSummary {
-  executionOrder : Int?
+  executionOrder : Int32?
   success : Bool?
   timing : NotebookCellExecutionTiming?
 }
-pub fn NotebookCellExecutionSummary::new(execution_order? : Int, success? : Bool, timing? : NotebookCellExecutionTiming) -> Self
+pub fn NotebookCellExecutionSummary::new(execution_order? : Int32, success? : Bool, timing? : NotebookCellExecutionTiming) -> Self
 
 pub struct NotebookCellExecutionTiming {
-  startTime : Int
-  endTime : Int
+  startTime : Int32
+  endTime : Int32
 }
-pub fn NotebookCellExecutionTiming::new(Int, Int) -> Self
+pub fn NotebookCellExecutionTiming::new(Int32, Int32) -> Self
 
 pub(all) enum NotebookCellKind {
   Markup
   Code
 } derive(Eq)
+pub fn NotebookCellKind::equal(Self, Self) -> Bool
+pub fn NotebookCellKind::not_equal(Self, Self) -> Bool
 
 pub type NotebookCellOutput
 pub fn NotebookCellOutput::clear_metadata(Self) -> Unit
@@ -1549,8 +1620,8 @@ pub fn NotebookData::set_cells(Self, Array[NotebookCellData]) -> Unit
 pub fn NotebookData::set_metadata(Self, Any) -> Unit
 
 pub type NotebookDocument
-pub fn NotebookDocument::cell_at(Self, Int) -> NotebookCell
-pub fn NotebookDocument::cell_count(Self) -> Int
+pub fn NotebookDocument::cell_at(Self, Int32) -> NotebookCell
+pub fn NotebookDocument::cell_count(Self) -> Int32
 pub fn NotebookDocument::get_cells(Self, range? : NotebookRange) -> Array[NotebookCell]
 pub fn NotebookDocument::is_closed(Self) -> Bool
 pub fn NotebookDocument::is_dirty(Self) -> Bool
@@ -1559,7 +1630,7 @@ pub fn NotebookDocument::metadata(Self) -> Any
 pub fn NotebookDocument::notebook_type(Self) -> String
 pub async fn NotebookDocument::save(Self) -> Bool
 pub fn NotebookDocument::uri(Self) -> Uri
-pub fn NotebookDocument::version(Self) -> Int
+pub fn NotebookDocument::version(Self) -> Int32
 
 pub struct NotebookDocumentCellChange {
   cell : NotebookCell
@@ -1612,7 +1683,7 @@ pub type NotebookEdit
 pub fn NotebookEdit::clear_new_cell_metadata(Self) -> Unit
 pub fn NotebookEdit::clear_new_notebook_metadata(Self) -> Unit
 pub fn NotebookEdit::delete_cells(NotebookRange) -> Self
-pub fn NotebookEdit::insert_cells(Int, Array[NotebookCellData]) -> Self
+pub fn NotebookEdit::insert_cells(Int32, Array[NotebookCellData]) -> Self
 pub fn NotebookEdit::new(NotebookRange, Array[NotebookCellData]) -> Self
 pub fn NotebookEdit::new_cell_metadata(Self) -> Any?
 pub fn NotebookEdit::new_cells(Self) -> Array[NotebookCellData]
@@ -1623,7 +1694,7 @@ pub fn NotebookEdit::set_new_cell_metadata(Self, Any) -> Unit
 pub fn NotebookEdit::set_new_cells(Self, Array[NotebookCellData]) -> Unit
 pub fn NotebookEdit::set_new_notebook_metadata(Self, Any) -> Unit
 pub fn NotebookEdit::set_range(Self, NotebookRange) -> Unit
-pub fn NotebookEdit::update_cell_metadata(Int, Any) -> Self
+pub fn NotebookEdit::update_cell_metadata(Int32, Any) -> Self
 pub fn NotebookEdit::update_notebook_metadata(Any) -> Self
 
 pub(all) type NotebookEditor
@@ -1642,6 +1713,8 @@ pub(all) enum NotebookEditorRevealType {
   InCenterIfOutsideViewport
   AtTop
 } derive(Eq)
+pub fn NotebookEditorRevealType::equal(Self, Self) -> Bool
+pub fn NotebookEditorRevealType::not_equal(Self, Self) -> Bool
 
 pub struct NotebookEditorSelectionChangeEvent {
   notebookEditor : NotebookEditor
@@ -1656,11 +1729,11 @@ pub struct NotebookEditorVisibleRangesChangeEvent {
 pub fn NotebookEditorVisibleRangesChangeEvent::new(NotebookEditor, Array[NotebookRange]) -> Self
 
 pub type NotebookRange
-pub fn NotebookRange::end(Self) -> Int
+pub fn NotebookRange::end(Self) -> Int32
 pub fn NotebookRange::is_empty(Self) -> Bool
-pub fn NotebookRange::new(Int, Int) -> Self
-pub fn NotebookRange::start(Self) -> Int
-pub fn NotebookRange::with_values(Self, start? : Int, end? : Int) -> Self
+pub fn NotebookRange::new(Int32, Int32) -> Self
+pub fn NotebookRange::start(Self) -> Int32
+pub fn NotebookRange::with_values(Self, start? : Int32, end? : Int32) -> Self
 
 pub type NotebookSerializer
 pub fn NotebookSerializer::new(async (Bytes, CancellationToken) -> NotebookData, async (NotebookData, CancellationToken) -> Bytes) -> Self
@@ -1679,6 +1752,7 @@ pub fn OpenDialogOptions::new(default_uri? : Uri, open_label? : String, can_sele
 pub type OutputChannel
 pub fn OutputChannel::append(Self, String) -> Unit
 pub fn OutputChannel::append_line(Self, String) -> Unit
+pub fn OutputChannel::as_disposable(Self) -> Disposable
 pub fn OutputChannel::clear(Self) -> Unit
 pub fn OutputChannel::dispose(Self) -> Unit
 pub fn OutputChannel::hide(Self) -> Unit
@@ -1693,6 +1767,8 @@ pub(all) enum OverviewRulerLane {
   Right
   Full
 } derive(Eq)
+pub fn OverviewRulerLane::equal(Self, Self) -> Bool
+pub fn OverviewRulerLane::not_equal(Self, Self) -> Bool
 
 pub type ParameterInformation
 pub fn ParameterInformation::clear_documentation(Self) -> Unit
@@ -1704,23 +1780,23 @@ pub fn ParameterInformation::set_label(Self, ParameterLabel) -> Unit
 
 pub(all) enum ParameterLabel {
   Text(String)
-  Range((Int, Int))
+  Range((Int32, Int32))
 }
 
 pub type Position
-pub fn Position::character(Self) -> Int
-pub fn Position::compare_to(Self, Self) -> Int
+pub fn Position::character(Self) -> Int32
+pub fn Position::compare_to(Self, Self) -> Int32
 pub fn Position::is_after(Self, Self) -> Bool
 pub fn Position::is_after_or_equal(Self, Self) -> Bool
 pub fn Position::is_before(Self, Self) -> Bool
 pub fn Position::is_before_or_equal(Self, Self) -> Bool
 pub fn Position::is_equal(Self, Self) -> Bool
-pub fn Position::line(Self) -> Int
-pub fn Position::new(Int, Int) -> Self
-pub fn Position::translate(Self, line_delta? : Int, character_delta? : Int) -> Self
-pub fn Position::with_character(Self, Int) -> Self
-pub fn Position::with_line(Self, Int) -> Self
-pub fn Position::with_values(Self, Int, Int) -> Self
+pub fn Position::line(Self) -> Int32
+pub fn Position::new(Int32, Int32) -> Self
+pub fn Position::translate(Self, line_delta? : Int32, character_delta? : Int32) -> Self
+pub fn Position::with_character(Self, Int32) -> Self
+pub fn Position::with_line(Self, Int32) -> Self
+pub fn Position::with_values(Self, Int32, Int32) -> Self
 
 pub type ProcessExecution
 pub fn ProcessExecution::args(Self) -> Array[String]
@@ -1743,6 +1819,8 @@ pub(all) enum ProgressLocation {
   Window
   Notification
 } derive(Eq)
+pub fn ProgressLocation::equal(Self, Self) -> Bool
+pub fn ProgressLocation::not_equal(Self, Self) -> Bool
 
 pub(all) enum ProgressLocationValue {
   Location(ProgressLocation)
@@ -1766,16 +1844,17 @@ pub fn[T] ProviderResult::from_async(async () -> T?) -> Self[T]
 pub(all) struct Pseudoterminal {
   mut on_did_write : Event[String]
   mut on_did_override_dimensions : Event[TerminalDimensions?]?
-  mut on_did_close : Event[Int?]?
+  mut on_did_close : Event[Int32?]?
   mut on_did_change_name : Event[String]?
   open : (TerminalDimensions?) -> Unit
   close : () -> Unit
   handle_input : ((String) -> Unit)?
   set_dimensions : ((TerminalDimensions) -> Unit)?
 }
-pub fn Pseudoterminal::new(Event[String], (TerminalDimensions?) -> Unit, () -> Unit, on_did_override_dimensions? : Event[TerminalDimensions?], on_did_close? : Event[Int?], on_did_change_name? : Event[String], handle_input? : (String) -> Unit, set_dimensions? : (TerminalDimensions) -> Unit) -> Self
+pub fn Pseudoterminal::new(Event[String], (TerminalDimensions?) -> Unit, () -> Unit, on_did_override_dimensions? : Event[TerminalDimensions?], on_did_close? : Event[Int32?], on_did_change_name? : Event[String], handle_input? : (String) -> Unit, set_dimensions? : (TerminalDimensions) -> Unit) -> Self
 
 pub type QuickInput
+pub fn QuickInput::as_disposable(Self) -> Disposable
 pub fn QuickInput::dispose(Self) -> Unit
 pub fn QuickInput::hide(Self) -> Unit
 pub fn QuickInput::show(Self) -> Unit
@@ -1793,6 +1872,7 @@ pub fn QuickInputButtons::new(QuickInputButton) -> Self
 
 pub type QuickPick[T]
 pub fn[T] QuickPick::active_items(Self[T]) -> Array[T]
+pub fn[T] QuickPick::as_disposable(Self[T]) -> Disposable
 pub fn QuickPick::busy(Self[QuickPickItem]) -> Bool
 pub fn QuickPick::buttons(Self[QuickPickItem]) -> Array[QuickInputButton]
 pub fn QuickPick::can_select_many(Self[QuickPickItem]) -> Bool
@@ -1833,14 +1913,14 @@ pub fn QuickPick::set_match_on_detail(Self[QuickPickItem], Bool) -> Unit
 pub fn[T] QuickPick::set_placeholder(Self[T], String) -> Unit
 pub fn[T] QuickPick::set_prompt(Self[T], String) -> Unit
 pub fn[T] QuickPick::set_selected_items(Self[T], Array[T]) -> Unit
-pub fn QuickPick::set_step(Self[QuickPickItem], Int) -> Unit
+pub fn QuickPick::set_step(Self[QuickPickItem], Int32) -> Unit
 pub fn QuickPick::set_title(Self[QuickPickItem], String) -> Unit
-pub fn QuickPick::set_total_steps(Self[QuickPickItem], Int) -> Unit
+pub fn QuickPick::set_total_steps(Self[QuickPickItem], Int32) -> Unit
 pub fn[T] QuickPick::set_value(Self[T], String) -> Unit
 pub fn QuickPick::show(Self[QuickPickItem]) -> Unit
-pub fn QuickPick::step(Self[QuickPickItem]) -> Int?
+pub fn QuickPick::step(Self[QuickPickItem]) -> Int32?
 pub fn QuickPick::title(Self[QuickPickItem]) -> String?
-pub fn QuickPick::total_steps(Self[QuickPickItem]) -> Int?
+pub fn QuickPick::total_steps(Self[QuickPickItem]) -> Int32?
 pub fn[T] QuickPick::value(Self[T]) -> String
 pub impl[T] AsDisposable for QuickPick[T]
 
@@ -1892,7 +1972,7 @@ pub type Range
 pub fn Range::contains_position(Self, Position) -> Bool
 pub fn Range::contains_range(Self, Self) -> Bool
 pub fn Range::end(Self) -> Position
-pub fn Range::from_numbers(Int, Int, Int, Int) -> Self
+pub fn Range::from_numbers(Int32, Int32, Int32, Int32) -> Self
 pub fn Range::intersection(Self, Self) -> Self?
 pub fn Range::is_empty(Self) -> Bool
 pub fn Range::is_equal(Self, Self) -> Bool
@@ -1957,7 +2037,7 @@ pub fn SelectedCompletionInfo::new(Range, String) -> Self
 pub type Selection
 pub fn Selection::active(Self) -> Position
 pub fn Selection::anchor(Self) -> Position
-pub fn Selection::from_numbers(Int, Int, Int, Int) -> Self
+pub fn Selection::from_numbers(Int32, Int32, Int32, Int32) -> Self
 pub fn Selection::is_reversed(Self) -> Bool
 pub fn Selection::new(Position, Position) -> Self
 
@@ -1967,21 +2047,21 @@ pub fn SelectionRange::parent(Self) -> Self?
 pub fn SelectionRange::range(Self) -> Range
 
 pub type SemanticTokens
-pub fn SemanticTokens::data(Self) -> Array[Int]
-pub fn SemanticTokens::new(Array[Int], result_id? : String) -> Self
+pub fn SemanticTokens::data(Self) -> Array[Int32]
+pub fn SemanticTokens::new(Array[Int32], result_id? : String) -> Self
 pub fn SemanticTokens::result_id(Self) -> String?
 
 pub type SemanticTokensBuilder
 pub fn SemanticTokensBuilder::build(Self, result_id? : String) -> SemanticTokens
 pub fn SemanticTokensBuilder::new(legend? : SemanticTokensLegend) -> Self
 pub fn SemanticTokensBuilder::push_range(Self, Range, String, token_modifiers? : Array[String]) -> Unit
-pub fn SemanticTokensBuilder::push_raw(Self, Int, Int, Int, Int, token_modifiers? : Int) -> Unit
+pub fn SemanticTokensBuilder::push_raw(Self, Int32, Int32, Int32, Int32, token_modifiers? : Int32) -> Unit
 
 pub type SemanticTokensEdit
-pub fn SemanticTokensEdit::data(Self) -> Array[Int]?
-pub fn SemanticTokensEdit::delete_count(Self) -> Int
-pub fn SemanticTokensEdit::new(Int, Int, data? : Array[Int]) -> Self
-pub fn SemanticTokensEdit::start(Self) -> Int
+pub fn SemanticTokensEdit::data(Self) -> Array[Int32]?
+pub fn SemanticTokensEdit::delete_count(Self) -> Int32
+pub fn SemanticTokensEdit::new(Int32, Int32, data? : Array[Int32]) -> Self
+pub fn SemanticTokensEdit::start(Self) -> Int32
 
 pub type SemanticTokensEdits
 pub fn SemanticTokensEdits::edits(Self) -> Array[SemanticTokensEdit]
@@ -2026,6 +2106,8 @@ pub(all) enum ShellQuoting {
   Strong
   Weak
 } derive(Eq)
+pub fn ShellQuoting::equal(Self, Self) -> Bool
+pub fn ShellQuoting::not_equal(Self, Self) -> Bool
 
 pub(all) enum ShellQuotingEscape {
   EscapeString(String)
@@ -2040,11 +2122,11 @@ pub(all) struct ShellQuotingOptions {
 pub fn ShellQuotingOptions::new(escape? : ShellQuotingEscape, strong? : String, weak? : String) -> Self
 
 pub type SignatureHelp
-pub fn SignatureHelp::active_parameter(Self) -> Int
-pub fn SignatureHelp::active_signature(Self) -> Int
+pub fn SignatureHelp::active_parameter(Self) -> Int32
+pub fn SignatureHelp::active_signature(Self) -> Int32
 pub fn SignatureHelp::new() -> Self
-pub fn SignatureHelp::set_active_parameter(Self, Int) -> Unit
-pub fn SignatureHelp::set_active_signature(Self, Int) -> Unit
+pub fn SignatureHelp::set_active_parameter(Self, Int32) -> Unit
+pub fn SignatureHelp::set_active_signature(Self, Int32) -> Unit
 pub fn SignatureHelp::set_signatures(Self, Array[SignatureInformation]) -> Unit
 pub fn SignatureHelp::signatures(Self) -> Array[SignatureInformation]
 
@@ -2067,25 +2149,27 @@ pub(all) enum SignatureHelpTriggerKind {
   TriggerCharacter
   ContentChange
 } derive(Eq)
+pub fn SignatureHelpTriggerKind::equal(Self, Self) -> Bool
+pub fn SignatureHelpTriggerKind::not_equal(Self, Self) -> Bool
 
 pub type SignatureInformation
-pub fn SignatureInformation::active_parameter(Self) -> Int?
+pub fn SignatureInformation::active_parameter(Self) -> Int32?
 pub fn SignatureInformation::clear_active_parameter(Self) -> Unit
 pub fn SignatureInformation::clear_documentation(Self) -> Unit
 pub fn SignatureInformation::documentation(Self) -> MarkdownStringValue?
 pub fn SignatureInformation::label(Self) -> String
 pub fn SignatureInformation::new(String, documentation? : MarkdownStringValue) -> Self
 pub fn SignatureInformation::parameters(Self) -> Array[ParameterInformation]
-pub fn SignatureInformation::set_active_parameter(Self, Int) -> Unit
+pub fn SignatureInformation::set_active_parameter(Self, Int32) -> Unit
 pub fn SignatureInformation::set_documentation(Self, MarkdownStringValue) -> Unit
 pub fn SignatureInformation::set_label(Self, String) -> Unit
 pub fn SignatureInformation::set_parameters(Self, Array[ParameterInformation]) -> Unit
 
 pub type SnippetString
-pub fn SnippetString::append_choice(Self, Array[String], number? : Int) -> Self
-pub fn SnippetString::append_placeholder_snippet(Self, (Self) -> Unit, number? : Int) -> Self
-pub fn SnippetString::append_placeholder_text(Self, String, number? : Int) -> Self
-pub fn SnippetString::append_tabstop(Self, number? : Int) -> Self
+pub fn SnippetString::append_choice(Self, Array[String], number? : Int32) -> Self
+pub fn SnippetString::append_placeholder_snippet(Self, (Self) -> Unit, number? : Int32) -> Self
+pub fn SnippetString::append_placeholder_text(Self, String, number? : Int32) -> Self
+pub fn SnippetString::append_tabstop(Self, number? : Int32) -> Self
 pub fn SnippetString::append_text(Self, String) -> Self
 pub fn SnippetString::append_variable_snippet(Self, String, (Self) -> Unit) -> Self
 pub fn SnippetString::append_variable_text(Self, String, String) -> Self
@@ -2107,12 +2191,13 @@ pub fn SourceBreakpoint::new(Location, enabled? : Bool, condition? : String, hit
 
 pub type SourceControl
 pub fn SourceControl::accept_input_command(Self) -> Command?
+pub fn SourceControl::as_disposable(Self) -> Disposable
 pub fn SourceControl::clear_accept_input_command(Self) -> Unit
 pub fn SourceControl::clear_commit_template(Self) -> Unit
 pub fn SourceControl::clear_count(Self) -> Unit
 pub fn SourceControl::clear_quick_diff_provider(Self) -> Unit
 pub fn SourceControl::commit_template(Self) -> String?
-pub fn SourceControl::count(Self) -> Int?
+pub fn SourceControl::count(Self) -> Int32?
 pub fn SourceControl::create_resource_group(Self, String, String) -> SourceControlResourceGroup
 pub fn SourceControl::dispose(Self) -> Unit
 pub fn SourceControl::id(Self) -> String
@@ -2121,7 +2206,7 @@ pub fn SourceControl::label(Self) -> String
 pub fn SourceControl::root_uri(Self) -> Uri?
 pub fn SourceControl::set_accept_input_command(Self, Command) -> Unit
 pub fn SourceControl::set_commit_template(Self, String) -> Unit
-pub fn SourceControl::set_count(Self, Int) -> Unit
+pub fn SourceControl::set_count(Self, Int32) -> Unit
 pub fn[T : QuickDiffProvider] SourceControl::set_quick_diff_provider(Self, T) -> Unit
 pub impl AsDisposable for SourceControl
 
@@ -2139,6 +2224,7 @@ pub type SourceControlResourceDecorations
 pub fn SourceControlResourceDecorations::new(strike_through? : Bool, faded? : Bool, tooltip? : String, light? : SourceControlResourceThemableDecorations, dark? : SourceControlResourceThemableDecorations, icon_path? : IconPath) -> Self
 
 pub type SourceControlResourceGroup
+pub fn SourceControlResourceGroup::as_disposable(Self) -> Disposable
 pub fn SourceControlResourceGroup::clear_context_value(Self) -> Unit
 pub fn SourceControlResourceGroup::clear_hide_when_empty(Self) -> Unit
 pub fn SourceControlResourceGroup::context_value(Self) -> String?
@@ -2172,6 +2258,7 @@ pub(all) enum StatusBarAlignment {
 pub type StatusBarItem
 pub fn StatusBarItem::accessibility_information(Self) -> AccessibilityInformation?
 pub fn StatusBarItem::alignment(Self) -> StatusBarAlignment
+pub fn StatusBarItem::as_disposable(Self) -> Disposable
 pub fn StatusBarItem::background_color(Self) -> ThemeColor?
 pub fn StatusBarItem::clear_accessibility_information(Self) -> Unit
 pub fn StatusBarItem::clear_background_color(Self) -> Unit
@@ -2185,7 +2272,7 @@ pub fn StatusBarItem::dispose(Self) -> Unit
 pub fn StatusBarItem::hide(Self) -> Unit
 pub fn StatusBarItem::id(Self) -> String
 pub fn StatusBarItem::name(Self) -> String?
-pub fn StatusBarItem::priority(Self) -> Int?
+pub fn StatusBarItem::priority(Self) -> Int32?
 pub fn StatusBarItem::set_accessibility_information(Self, AccessibilityInformation) -> Unit
 pub fn StatusBarItem::set_background_color(Self, ThemeColor) -> Unit
 pub fn StatusBarItem::set_color(Self, ColorValue) -> Unit
@@ -2205,7 +2292,7 @@ pub(all) enum StringOrBool {
 
 pub(all) enum StringOrInt {
   Text(String)
-  Numeric(Int)
+  Numeric(Int32)
 }
 
 pub(all) enum StringOrShellQuotedString {
@@ -2255,10 +2342,14 @@ pub(all) enum SymbolKind {
   Operator
   TypeParameter
 } derive(Eq)
+pub fn SymbolKind::equal(Self, Self) -> Bool
+pub fn SymbolKind::not_equal(Self, Self) -> Bool
 
 pub(all) enum SymbolTag {
   Deprecated
 } derive(Eq)
+pub fn SymbolTag::equal(Self, Self) -> Bool
+pub fn SymbolTag::not_equal(Self, Self) -> Bool
 
 pub type Tab
 pub fn Tab::group(Self) -> TabGroup
@@ -2412,6 +2503,8 @@ pub(all) enum TaskPanelKind {
   Dedicated
   New
 } derive(Eq)
+pub fn TaskPanelKind::equal(Self, Self) -> Bool
+pub fn TaskPanelKind::not_equal(Self, Self) -> Bool
 
 pub(all) struct TaskPresentationOptions {
   mut reveal : TaskRevealKind?
@@ -2426,21 +2519,23 @@ pub fn TaskPresentationOptions::new(reveal? : TaskRevealKind, echo? : Bool, focu
 
 pub struct TaskProcessEndEvent {
   execution : TaskExecution
-  exitCode : Int?
+  exitCode : Int32?
 }
-pub fn TaskProcessEndEvent::new(TaskExecution, exit_code? : Int) -> Self
+pub fn TaskProcessEndEvent::new(TaskExecution, exit_code? : Int32) -> Self
 
 pub struct TaskProcessStartEvent {
   execution : TaskExecution
-  processId : Int
+  processId : Int32
 }
-pub fn TaskProcessStartEvent::new(TaskExecution, Int) -> Self
+pub fn TaskProcessStartEvent::new(TaskExecution, Int32) -> Self
 
 pub(all) enum TaskRevealKind {
   Always
   Silent
   Never
 } derive(Eq)
+pub fn TaskRevealKind::equal(Self, Self) -> Bool
+pub fn TaskRevealKind::not_equal(Self, Self) -> Bool
 
 pub(all) enum TaskScope {
   ScopeKind(TaskScopeKind)
@@ -2451,6 +2546,8 @@ pub(all) enum TaskScopeKind {
   Global
   Workspace
 } derive(Eq)
+pub fn TaskScopeKind::equal(Self, Self) -> Bool
+pub fn TaskScopeKind::not_equal(Self, Self) -> Bool
 
 pub struct TaskStartEvent {
   execution : TaskExecution
@@ -2458,6 +2555,7 @@ pub struct TaskStartEvent {
 pub fn TaskStartEvent::new(TaskExecution) -> Self
 
 pub type TelemetryLogger
+pub fn TelemetryLogger::as_disposable(Self) -> Disposable
 pub fn TelemetryLogger::dispose(Self) -> Unit
 pub fn TelemetryLogger::is_errors_enabled(Self) -> Bool
 pub fn TelemetryLogger::is_usage_enabled(Self) -> Bool
@@ -2484,12 +2582,13 @@ pub fn TelemetryTrustedValue::new(Any) -> Self
 pub fn TelemetryTrustedValue::value(Self) -> Any
 
 pub type Terminal
+pub fn Terminal::as_disposable(Self) -> Disposable
 pub fn Terminal::creation_options(Self) -> TerminalCreationOptions?
 pub fn Terminal::dispose(Self) -> Unit
 pub fn Terminal::exit_status(Self) -> TerminalExitStatus?
 pub fn Terminal::hide(Self) -> Unit
 pub fn Terminal::name(Self) -> String
-pub async fn Terminal::process_id(Self) -> Int?
+pub async fn Terminal::process_id(Self) -> Int32?
 pub fn Terminal::send_text(Self, String, should_execute? : Bool) -> Unit
 pub fn Terminal::shell_integration(Self) -> TerminalShellIntegration?
 pub fn Terminal::show(Self, preserve_focus? : Bool) -> Unit
@@ -2504,10 +2603,10 @@ pub fn TerminalCreationOptions::as_extension(Self) -> ExtensionTerminalOptions?
 pub fn TerminalCreationOptions::as_terminal(Self) -> TerminalOptions?
 
 pub struct TerminalDimensions {
-  columns : Int
-  rows : Int
+  columns : Int32
+  rows : Int32
 }
-pub fn TerminalDimensions::new(Int, Int) -> Self
+pub fn TerminalDimensions::new(Int32, Int32) -> Self
 
 pub(all) struct TerminalEditorLocationOptions {
   mut view_column : ViewColumn
@@ -2522,19 +2621,21 @@ pub(all) enum TerminalExitReason {
   User
   Extension
 } derive(Eq)
+pub fn TerminalExitReason::equal(Self, Self) -> Bool
+pub fn TerminalExitReason::not_equal(Self, Self) -> Bool
 
 pub struct TerminalExitStatus {
-  code : Int?
+  code : Int32?
   reason : TerminalExitReason
 }
-pub fn TerminalExitStatus::new(TerminalExitReason, code? : Int) -> Self
+pub fn TerminalExitStatus::new(TerminalExitReason, code? : Int32) -> Self
 
 pub type TerminalLink
 pub fn TerminalLink::clear_tooltip(Self) -> Unit
-pub fn TerminalLink::length(Self) -> Int
-pub fn TerminalLink::new(Int, Int, tooltip? : String) -> Self
+pub fn TerminalLink::length(Self) -> Int32
+pub fn TerminalLink::new(Int32, Int32, tooltip? : String) -> Self
 pub fn TerminalLink::set_tooltip(Self, String) -> Unit
-pub fn TerminalLink::start_index(Self) -> Int
+pub fn TerminalLink::start_index(Self) -> Int32
 pub fn TerminalLink::tooltip(Self) -> String?
 
 pub(all) struct TerminalLinkContext {
@@ -2547,6 +2648,8 @@ pub(all) enum TerminalLocation {
   Panel
   Editor
 } derive(Eq)
+pub fn TerminalLocation::equal(Self, Self) -> Bool
+pub fn TerminalLocation::not_equal(Self, Self) -> Bool
 
 pub(all) enum TerminalLocationValue {
   Location(TerminalLocation)
@@ -2579,14 +2682,16 @@ pub(all) enum TerminalShellExecutionCommandLineConfidence {
   Medium
   High
 } derive(Eq)
+pub fn TerminalShellExecutionCommandLineConfidence::equal(Self, Self) -> Bool
+pub fn TerminalShellExecutionCommandLineConfidence::not_equal(Self, Self) -> Bool
 
 pub struct TerminalShellExecutionEndEvent {
   terminal : Terminal
   shellIntegration : TerminalShellIntegration
   execution : TerminalShellExecution
-  exitCode : Int?
+  exitCode : Int32?
 }
-pub fn TerminalShellExecutionEndEvent::new(Terminal, TerminalShellIntegration, TerminalShellExecution, exit_code? : Int) -> Self
+pub fn TerminalShellExecutionEndEvent::new(Terminal, TerminalShellIntegration, TerminalShellExecution, exit_code? : Int32) -> Self
 
 pub struct TerminalShellExecutionStartEvent {
   terminal : Terminal
@@ -2629,16 +2734,16 @@ pub fn TextDocument::is_closed(Self) -> Bool
 pub fn TextDocument::is_dirty(Self) -> Bool
 pub fn TextDocument::is_untitled(Self) -> Bool
 pub fn TextDocument::language_id(Self) -> String
-pub fn TextDocument::line_at_line(Self, Int) -> TextLine
+pub fn TextDocument::line_at_line(Self, Int32) -> TextLine
 pub fn TextDocument::line_at_position(Self, Position) -> TextLine
-pub fn TextDocument::line_count(Self) -> Int
-pub fn TextDocument::offset_at(Self, Position) -> Int
-pub fn TextDocument::position_at(Self, Int) -> Position
+pub fn TextDocument::line_count(Self) -> Int32
+pub fn TextDocument::offset_at(Self, Position) -> Int32
+pub fn TextDocument::position_at(Self, Int32) -> Position
 pub async fn TextDocument::save(Self) -> Bool
 pub fn TextDocument::uri(Self) -> Uri
 pub fn TextDocument::validate_position(Self, Position) -> Position
 pub fn TextDocument::validate_range(Self, Range) -> Range
-pub fn TextDocument::version(Self) -> Int
+pub fn TextDocument::version(Self) -> Int32
 
 pub struct TextDocumentChangeEvent {
   document : TextDocument
@@ -2651,20 +2756,24 @@ pub(all) enum TextDocumentChangeReason {
   Undo
   Redo
 } derive(Eq)
+pub fn TextDocumentChangeReason::equal(Self, Self) -> Bool
+pub fn TextDocumentChangeReason::not_equal(Self, Self) -> Bool
 
 pub struct TextDocumentContentChangeEvent {
   range : Range
-  rangeOffset : Int
-  rangeLength : Int
+  rangeOffset : Int32
+  rangeLength : Int32
   text : String
 }
-pub fn TextDocumentContentChangeEvent::new(Range, Int, Int, String) -> Self
+pub fn TextDocumentContentChangeEvent::new(Range, Int32, Int32, String) -> Self
 
 pub(all) enum TextDocumentSaveReason {
   Manual
   AfterDelay
   FocusOut
 } derive(Eq)
+pub fn TextDocumentSaveReason::equal(Self, Self) -> Bool
+pub fn TextDocumentSaveReason::not_equal(Self, Self) -> Bool
 
 pub(all) struct TextDocumentShowOptions {
   mut view_column : ViewColumn?
@@ -2722,10 +2831,13 @@ pub(all) enum TextEditorCursorStyle {
   BlockOutline
   UnderlineThin
 } derive(Eq)
+pub fn TextEditorCursorStyle::equal(Self, Self) -> Bool
+pub fn TextEditorCursorStyle::not_equal(Self, Self) -> Bool
 
 pub struct TextEditorDecorationType {
   key : String
 }
+pub fn TextEditorDecorationType::as_disposable(Self) -> Disposable
 pub fn TextEditorDecorationType::dispose(Self) -> Unit
 pub impl AsDisposable for TextEditorDecorationType
 
@@ -2757,6 +2869,8 @@ pub(all) enum TextEditorLineNumbersStyle {
   Relative
   Interval
 } derive(Eq)
+pub fn TextEditorLineNumbersStyle::equal(Self, Self) -> Bool
+pub fn TextEditorLineNumbersStyle::not_equal(Self, Self) -> Bool
 
 pub(all) struct TextEditorOptions {
   mut tab_size : StringOrInt?
@@ -2779,6 +2893,8 @@ pub(all) enum TextEditorRevealType {
   InCenterIfOutsideViewport
   AtTop
 } derive(Eq)
+pub fn TextEditorRevealType::equal(Self, Self) -> Bool
+pub fn TextEditorRevealType::not_equal(Self, Self) -> Bool
 
 pub struct TextEditorSelectionChangeEvent {
   textEditor : TextEditor
@@ -2792,6 +2908,8 @@ pub(all) enum TextEditorSelectionChangeKind {
   Mouse
   Command
 } derive(Eq)
+pub fn TextEditorSelectionChangeKind::equal(Self, Self) -> Bool
+pub fn TextEditorSelectionChangeKind::not_equal(Self, Self) -> Bool
 
 pub struct TextEditorViewColumnChangeEvent {
   textEditor : TextEditor
@@ -2806,14 +2924,14 @@ pub struct TextEditorVisibleRangesChangeEvent {
 pub fn TextEditorVisibleRangesChangeEvent::new(TextEditor, Array[Range]) -> Self
 
 pub struct TextLine {
-  lineNumber : Int
+  lineNumber : Int32
   text : String
   range : Range
   rangeIncludingLineBreak : Range
-  firstNonWhitespaceCharacterIndex : Int
+  firstNonWhitespaceCharacterIndex : Int32
   isEmptyOrWhitespace : Bool
 }
-pub fn TextLine::new(Int, String, Range, Range, Int, Bool) -> Self
+pub fn TextLine::new(Int32, String, Range, Range, Int32, Bool) -> Self
 
 pub type ThemableDecorationAttachmentRenderOptions
 pub fn ThemableDecorationAttachmentRenderOptions::new(content_text? : String, content_icon_path? : UriOrString, border? : String, border_color? : ColorValue, font_style? : String, font_weight? : String, text_decoration? : String, color? : ColorValue, background_color? : ColorValue, margin? : String, width? : String, height? : String) -> Self
@@ -2917,6 +3035,8 @@ pub(all) enum TreeItemCheckboxState {
   Unchecked
   Checked
 } derive(Eq)
+pub fn TreeItemCheckboxState::equal(Self, Self) -> Bool
+pub fn TreeItemCheckboxState::not_equal(Self, Self) -> Bool
 
 pub(all) enum TreeItemCheckboxValue {
   State(TreeItemCheckboxState)
@@ -2928,12 +3048,14 @@ pub(all) enum TreeItemCollapsibleState {
   Collapsed
   Expanded
 } derive(Eq)
+pub fn TreeItemCollapsibleState::equal(Self, Self) -> Bool
+pub fn TreeItemCollapsibleState::not_equal(Self, Self) -> Bool
 
 pub(all) struct TreeItemLabel {
   mut label : String
-  mut highlights : Array[(Int, Int)]?
+  mut highlights : Array[(Int32, Int32)]?
 }
-pub fn TreeItemLabel::new(String, highlights? : Array[(Int, Int)]) -> Self
+pub fn TreeItemLabel::new(String, highlights? : Array[(Int32, Int32)]) -> Self
 
 pub(all) enum TreeItemLabelValue {
   Text(String)
@@ -2941,6 +3063,7 @@ pub(all) enum TreeItemLabelValue {
 }
 
 pub type TreeView[T]
+pub fn[T] TreeView::as_disposable(Self[T]) -> Disposable
 pub fn[T] TreeView::badge(Self[T]) -> ViewBadge?
 pub fn[T] TreeView::clear_badge(Self[T]) -> Unit
 pub fn[T] TreeView::clear_description(Self[T]) -> Unit
@@ -2954,7 +3077,7 @@ pub fn[T] TreeView::on_did_change_selection(Self[T]) -> Event[TreeViewSelectionC
 pub fn[T] TreeView::on_did_change_visibility(Self[T]) -> Event[TreeViewVisibilityChangeEvent]
 pub fn[T] TreeView::on_did_collapse_element(Self[T]) -> Event[TreeViewExpansionEvent[T]]
 pub fn[T] TreeView::on_did_expand_element(Self[T]) -> Event[TreeViewExpansionEvent[T]]
-pub async fn[T] TreeView::reveal(Self[T], T, select? : Bool, focus? : Bool, expand? : Bool, expand_levels? : Int) -> Unit
+pub async fn[T] TreeView::reveal(Self[T], T, select? : Bool, focus? : Bool, expand? : Bool, expand_levels? : Int32) -> Unit
 pub fn[T] TreeView::selection(Self[T]) -> Array[T]
 pub fn[T] TreeView::set_badge(Self[T], ViewBadge) -> Unit
 pub fn[T] TreeView::set_description(Self[T], String) -> Unit
@@ -2996,6 +3119,8 @@ pub(all) enum UIKind {
   Desktop
   Web
 } derive(Eq)
+pub fn UIKind::equal(Self, Self) -> Bool
+pub fn UIKind::not_equal(Self, Self) -> Bool
 
 pub type Uri
 pub fn Uri::authority(Self) -> String
@@ -3022,10 +3147,10 @@ pub(all) enum UriOrString {
 }
 
 pub struct ViewBadge {
-  value : Int
+  value : Int32
   tooltip : String
 }
-pub fn ViewBadge::new(Int, String) -> Self
+pub fn ViewBadge::new(Int32, String) -> Self
 
 pub(all) enum ViewColumn {
   Active
@@ -3039,8 +3164,10 @@ pub(all) enum ViewColumn {
   Seven
   Eight
   Nine
-  Custom(Int)
+  Custom(Int32)
 } derive(Eq)
+pub fn ViewColumn::equal(Self, Self) -> Bool
+pub fn ViewColumn::not_equal(Self, Self) -> Bool
 
 pub type Webview
 pub fn Webview::as_webview_uri(Self, Uri) -> Uri
@@ -3063,6 +3190,7 @@ pub fn WebviewOptions::new(enable_scripts? : Bool, enable_forms? : Bool, enable_
 
 pub type WebviewPanel
 pub fn WebviewPanel::active(Self) -> Bool
+pub fn WebviewPanel::as_disposable(Self) -> Disposable
 pub fn WebviewPanel::clear_icon_path(Self) -> Unit
 pub fn WebviewPanel::dispose(Self) -> Unit
 pub fn WebviewPanel::icon_path(Self) -> IconPath?
@@ -3095,10 +3223,10 @@ pub async fn WebviewPanelSerializer::deserialize_webview_panel(Self, WebviewPane
 pub fn WebviewPanelSerializer::new(async (WebviewPanel, Any) -> Unit) -> Self
 
 pub struct WebviewPortMapping {
-  webview_port : Int
-  extension_host_port : Int
+  webview_port : Int32
+  extension_host_port : Int32
 }
-pub fn WebviewPortMapping::new(Int, Int) -> Self
+pub fn WebviewPortMapping::new(Int32, Int32) -> Self
 
 pub type WebviewView
 pub fn WebviewView::badge(Self) -> ViewBadge?
@@ -3161,7 +3289,7 @@ pub fn WorkspaceEdit::replace(Self, Uri, Range, String, metadata? : WorkspaceEdi
 pub fn WorkspaceEdit::set_notebook_edits(Self, Uri, Array[NotebookEdit]) -> Unit
 pub fn WorkspaceEdit::set_snippet_edits(Self, Uri, Array[SnippetTextEdit]) -> Unit
 pub fn WorkspaceEdit::set_text_edits(Self, Uri, Array[TextEdit]) -> Unit
-pub fn WorkspaceEdit::size(Self) -> Int
+pub fn WorkspaceEdit::size(Self) -> Int32
 
 pub struct WorkspaceEditCreateFileOptions {
   overwrite : Bool?
@@ -3201,9 +3329,9 @@ pub struct WorkspaceEditRenameFileOptions {
 pub fn WorkspaceEditRenameFileOptions::new(overwrite? : Bool, ignore_if_exists? : Bool) -> Self
 
 pub type WorkspaceFolder
-pub fn WorkspaceFolder::index(Self) -> Int
+pub fn WorkspaceFolder::index(Self) -> Int32
 pub fn WorkspaceFolder::name(Self) -> String
-pub fn WorkspaceFolder::new(Uri, String, Int) -> Self
+pub fn WorkspaceFolder::new(Uri, String, Int32) -> Self
 pub fn WorkspaceFolder::uri(Self) -> Uri
 
 pub struct WorkspaceFolderInput {

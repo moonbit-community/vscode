@@ -4,8 +4,8 @@
 ///|
 /// Defines a port mapping used for localhost inside the webview.
 pub struct WebviewPortMapping {
-  webview_port : Int
-  extension_host_port : Int
+  webview_port : Int32
+  extension_host_port : Int32
 }
 
 ///|
@@ -16,10 +16,10 @@ pub(all) enum CommandUrisValue {
 
 ///|
 pub fn WebviewPortMapping::new(
-  webview_port : Int,
-  extension_host_port : Int,
+  webview_port : Int32,
+  extension_host_port : Int32,
 ) -> WebviewPortMapping {
-  WebviewPortMapping::{ webview_port, extension_host_port }
+  WebviewPortMapping::{ webview_port, extension_host_port, }
 }
 
 ///|
@@ -44,7 +44,7 @@ pub fn WebviewPanelOptions::new(
   enable_find_widget? : Bool,
   retain_context_when_hidden? : Bool,
 ) -> WebviewPanelOptions {
-  WebviewPanelOptions::{ enable_find_widget, retain_context_when_hidden }
+  WebviewPanelOptions::{ enable_find_widget, retain_context_when_hidden, }
 }
 
 ///|
@@ -316,7 +316,7 @@ pub extern "js" fn WebviewPanel::on_did_dispose(
 pub fn WebviewPanel::reveal(
   self : WebviewPanel,
   view_column? : ViewColumn,
-  preserve_focus? : Bool = false,
+  preserve_focus~ : Bool = false,
 ) -> Unit {
   webview_panel_reveal_raw(
     self,
@@ -390,7 +390,7 @@ pub fn WebviewPanel::dispose(self : WebviewPanel) -> Unit {
 }
 
 ///|
-pub impl AsDisposable for WebviewPanel with as_disposable(self) {
+pub impl AsDisposable for WebviewPanel with fn as_disposable(self) {
   disposable_from_js(self)
 }
 
@@ -405,7 +405,7 @@ pub struct WebviewPanelOnDidChangeViewStateEvent {
 pub fn WebviewPanelOnDidChangeViewStateEvent::new(
   webview_panel : WebviewPanel,
 ) -> WebviewPanelOnDidChangeViewStateEvent {
-  WebviewPanelOnDidChangeViewStateEvent::{ webviewPanel: webview_panel }
+  WebviewPanelOnDidChangeViewStateEvent::{ webviewPanel: webview_panel, }
 }
 
 ///|
@@ -528,7 +528,7 @@ pub extern "js" fn WebviewView::on_did_change_visibility(
 /// @param preserveFocus When `true` the view will not take focus.
 pub extern "js" fn WebviewView::show(
   self : WebviewView,
-  preserve_focus? : Bool = false,
+  preserve_focus~ : Bool = false,
 ) -> Unit =
   #| (view, preserveFocus) => view.show(preserveFocus)
 
@@ -634,3 +634,6 @@ extern "js" fn webview_post_message_ffi(
   message : JsValue,
 ) -> @js_async.Promise[Bool] =
   #| (webview, message) => webview.postMessage(message)
+
+///|
+pub extend WebviewPanel with AsDisposable::{as_disposable}

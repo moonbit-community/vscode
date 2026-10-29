@@ -10,22 +10,22 @@ pub fn SelectionStatusBar::new() -> SelectionStatusBar {
     priority=100,
   )
   item.set_command(@vscode.CommandOrString::Id("sample.showSelectionCount"))
-  SelectionStatusBar::{ item }
+  SelectionStatusBar::{ item, }
 }
 
 ///|
-fn selected_line_count(editor : @vscode.TextEditor?) -> Int {
+fn selected_line_count(editor : @vscode.TextEditor?) -> Int32 {
   match editor {
     None => 0
     Some(editor) =>
-      editor.selections().fold(init=0, fn(acc, selection) {
-        acc + selection_line_count(selection)
-      })
+      editor
+      .selections()
+      .fold(init=0, fn(acc, selection) { acc + selection_line_count(selection) })
   }
 }
 
 ///|
-fn selection_line_count(selection : @vscode.Selection) -> Int {
+fn selection_line_count(selection : @vscode.Selection) -> Int32 {
   let anchor_line = selection.anchor().line()
   let active_line = selection.active().line()
   if anchor_line > active_line {
@@ -58,16 +58,18 @@ pub async fn show_selection_count() -> Unit {
 pub fn activate(ctx : @vscode.ExtensionContext) -> Unit {
   let status = SelectionStatusBar::new()
   ctx.subscribe(status.item)
-  ctx.subscribe(@commands.register_command_async("sample.showSelectionCount", async fn(
-    _args,
-  ) {
-    show_selection_count()
-  }))
-  ctx.subscribe(@window.on_did_change_active_text_editor().subscribe(_ => {
-    status.update()
-  }))
-  ctx.subscribe(@window.on_did_change_text_editor_selection().subscribe(_ => {
-    status.update()
-  }))
+  ctx.subscribe(
+    @commands.register_command_async("sample.showSelectionCount", async fn(
+      _args,
+    ) {
+      show_selection_count()
+    }),
+  )
+  ctx.subscribe(
+    @window.on_did_change_active_text_editor().subscribe(_ => status.update()),
+  )
+  ctx.subscribe(
+    @window.on_did_change_text_editor_selection().subscribe(_ => status.update()),
+  )
   status.update()
 }

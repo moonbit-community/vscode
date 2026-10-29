@@ -208,8 +208,15 @@ extern "js" fn workspace_notebook_document_content_options_to_js_ffi(
   #| }
 
 ///|
-extern "js" fn workspace_string_bool_map_ffi(
-  entries : Array[(String, Bool)],
+fn workspace_string_bool_map_ffi(entries : Array[(String, Bool)]) -> @v.JsValue {
+  workspace_string_bool_map_ffi_fixedarray_ffi(
+    FixedArray::from_array(entries[:]),
+  )
+}
+
+///|
+extern "js" fn workspace_string_bool_map_ffi_fixedarray_ffi(
+  entries : FixedArray[(String, Bool)],
 ) -> @v.JsValue =
   #| (pairs) => {
   #|   const result = {};
@@ -439,8 +446,8 @@ pub fn as_relative_path_uri(
 /// @returns true if the operation was successfully started and false otherwise if arguments were used that would result
 /// in invalid workspace folder state (e.g. 2 folders with the same URI).
 pub fn update_workspace_folders(
-  start : Int,
-  delete_count? : Int,
+  start : Int32,
+  delete_count? : Int32,
   folders_to_add? : Array[WorkspaceFolderInput],
 ) -> Bool {
   let additions = match folders_to_add {
@@ -589,7 +596,7 @@ pub fn create_file_system_watcher(
 fn find_files_promise(
   include_pattern : GlobPattern,
   exclude : GlobPattern?,
-  max_results : Int?,
+  max_results : Int32?,
   token : CancellationToken?,
 ) -> @js_async.Promise[Array[Uri]] {
   workspace_find_files_ffi(
@@ -619,7 +626,7 @@ fn find_files_promise(
 pub async fn find_files(
   include_pattern : GlobPattern,
   exclude? : GlobPattern,
-  max_results? : Int,
+  max_results? : Int32,
   token? : CancellationToken,
 ) -> Array[Uri] {
   @js_async.Promise::wait(
@@ -630,7 +637,7 @@ pub async fn find_files(
 ///|
 fn find_files_no_excludes_promise(
   include_pattern : GlobPattern,
-  max_results : Int?,
+  max_results : Int32?,
   token : CancellationToken?,
 ) -> @js_async.Promise[Array[Uri]] {
   workspace_find_files_no_excludes_ffi(
@@ -658,7 +665,7 @@ fn find_files_no_excludes_promise(
 /// {@link workspace.workspaceFolders workspace folders} are opened.
 pub async fn find_files_no_excludes(
   include_pattern : GlobPattern,
-  max_results? : Int,
+  max_results? : Int32,
   token? : CancellationToken,
 ) -> Array[Uri] {
   @js_async.Promise::wait(

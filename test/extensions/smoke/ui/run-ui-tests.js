@@ -6,10 +6,11 @@ const path = require('path');
 const { downloadAndUnzipVSCode } = require('@vscode/test-electron');
 
 const repoRoot = path.resolve(__dirname, '..', '..', '..', '..');
+const vscodeVersion = require(path.join(repoRoot, 'package.json')).config.vscodeTestVersion;
 const smokeRoot = path.resolve(__dirname, '..');
 const workspacePath = path.join(smokeRoot, 'fixture');
 const testRoot = path.join(repoRoot, '.vscode-test', 'smoke-ui');
-const userDataDir = path.join(testRoot, 'user-data');
+const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'vscode-mbt-ui-'));
 const extensionsDir = path.join(testRoot, 'extensions');
 const testHome = path.join(testRoot, 'home');
 const screenshotDir = path.join(testRoot, 'screenshots');
@@ -83,6 +84,7 @@ async function main() {
     throw error;
   } finally {
     await electronApp.close();
+    fs.rmSync(userDataDir, { recursive: true, force: true });
   }
 
   if (updateBaselines) {
@@ -148,7 +150,12 @@ async function resolveVSCodeExecutablePath() {
     return cached;
   }
 
-  return downloadAndUnzipVSCode();
+  const downloaded = await downloadAndUnzipVSCode(vscodeVersion);
+  if (process.platform === 'darwin' && !fs.existsSync(downloaded)) {
+    const codePath = path.join(path.dirname(downloaded), 'Code');
+    if (fs.existsSync(codePath)) return codePath;
+  }
+  return downloaded;
 }
 
 function findCachedVSCodeExecutablePath() {
@@ -158,6 +165,7 @@ function findCachedVSCodeExecutablePath() {
   }
 
   for (const entry of fs.readdirSync(cacheRoot)) {
+    if (!entry.endsWith(`-${vscodeVersion}`)) continue;
     const root = path.join(cacheRoot, entry);
     const executablePath = executablePathForVSCodeRoot(root);
     if (executablePath && fs.existsSync(executablePath)) {
@@ -170,7 +178,9 @@ function findCachedVSCodeExecutablePath() {
 
 function executablePathForVSCodeRoot(root) {
   if (process.platform === 'darwin') {
-    return path.join(root, 'Visual Studio Code.app', 'Contents', 'MacOS', 'Electron');
+    const binaryDir = path.join(root, 'Visual Studio Code.app', 'Contents', 'MacOS');
+    const codePath = path.join(binaryDir, 'Code');
+    return fs.existsSync(codePath) ? codePath : path.join(binaryDir, 'Electron');
   }
   if (process.platform === 'win32') {
     return path.join(root, 'Code.exe');

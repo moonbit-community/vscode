@@ -12,11 +12,11 @@ pub type Disposable
 ///|
 /// A value that can expose a VS Code disposable handle.
 pub(open) trait AsDisposable {
-  as_disposable(Self) -> Disposable
+  fn as_disposable(Self) -> Disposable
 }
 
 ///|
-pub impl AsDisposable for Disposable with as_disposable(self) {
+pub impl AsDisposable for Disposable with fn as_disposable(self) {
   self
 }
 
@@ -27,8 +27,13 @@ pub extern "js" fn Disposable::new(call_on_dispose : () -> Unit) -> Disposable =
 
 ///|
 /// Combine many disposables into one disposable.
-pub extern "js" fn Disposable::from(
-  disposables : Array[Disposable],
+pub fn Disposable::from(disposables : Array[Disposable]) -> Disposable {
+  Disposable::from_fixedarray_ffi(FixedArray::from_array(disposables[:]))
+}
+
+///|
+extern "js" fn Disposable::from_fixedarray_ffi(
+  disposables : FixedArray[Disposable],
 ) -> Disposable =
   #| (disposables) => require("vscode").Disposable.from(...disposables)
 
@@ -46,3 +51,6 @@ fn[T] disposable_from_js(value : T) -> Disposable {
 /// VS Code extension host version.
 pub extern "js" fn version() -> String =
   #| () => require("vscode").version
+
+///|
+pub extend Disposable with AsDisposable::{as_disposable}

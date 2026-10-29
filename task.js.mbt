@@ -212,7 +212,7 @@ fn process_execution_options_from_js(raw : JsValue) -> ProcessExecutionOptions {
     Some(task_string_map_to_pairs_ffi(env_raw))
   }
   let cwd : String? = task_js_to_option(process_execution_options_cwd_raw(raw))
-  ProcessExecutionOptions::{ cwd, env }
+  ProcessExecutionOptions::{ cwd, env, }
 }
 
 ///|
@@ -380,15 +380,30 @@ pub fn Task::clear_group(self : Task) -> Unit {
 ///|
 /// The problem matchers attached to the task. Defaults to an empty
 /// array.
-pub extern "js" fn Task::problem_matchers(self : Task) -> Array[String] =
+pub fn Task::problem_matchers(self : Task) -> Array[String] {
+  Array::from_fixed_array(Task::problem_matchers_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn Task::problem_matchers_fixedarray_ffi(
+  self : Task,
+) -> FixedArray[String] =
   #| (task) => task.problemMatchers
 
 ///|
 /// The problem matchers attached to the task. Defaults to an empty
 /// array.
-pub extern "js" fn Task::set_problem_matchers(
+pub fn Task::set_problem_matchers(self : Task, value : Array[String]) -> Unit {
+  Task::set_problem_matchers_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn Task::set_problem_matchers_fixedarray_ffi(
   self : Task,
-  value : Array[String],
+  value : FixedArray[String],
 ) -> Unit =
   #| (task, value) => { task.problemMatchers = value; }
 
@@ -495,9 +510,9 @@ pub fn TaskEndEvent::new(execution : TaskExecution) -> TaskEndEvent {
 /// The task execution for which the process got started.
 pub fn TaskProcessStartEvent::new(
   execution : TaskExecution,
-  process_id : Int,
+  process_id : Int32,
 ) -> TaskProcessStartEvent {
-  TaskProcessStartEvent::{ execution, processId: process_id }
+  TaskProcessStartEvent::{ execution, processId: process_id, }
 }
 
 ///|
@@ -510,9 +525,9 @@ pub fn TaskProcessStartEvent::new(
 /// The task execution for which the process got started.
 pub fn TaskProcessEndEvent::new(
   execution : TaskExecution,
-  exit_code? : Int,
+  exit_code? : Int32,
 ) -> TaskProcessEndEvent {
-  TaskProcessEndEvent::{ execution, exitCode: exit_code }
+  TaskProcessEndEvent::{ execution, exitCode: exit_code, }
 }
 
 ///|
@@ -523,7 +538,7 @@ pub fn TaskProcessEndEvent::new(
 
 ///|
 pub fn TaskFilter::new(version? : String, type_? : String) -> TaskFilter {
-  TaskFilter::{ version, type_ }
+  TaskFilter::{ version, type_, }
 }
 
 ///|
@@ -584,7 +599,7 @@ pub fn ProcessExecutionOptions::new(
   cwd? : String,
   env? : Array[(String, String)],
 ) -> ProcessExecutionOptions {
-  ProcessExecutionOptions::{ cwd, env }
+  ProcessExecutionOptions::{ cwd, env, }
 }
 
 ///|
@@ -631,9 +646,14 @@ pub extern "js" fn ProcessExecution::process(self : ProcessExecution) -> String 
 
 ///|
 /// The arguments passed to the process. Defaults to an empty array.
-pub extern "js" fn ProcessExecution::args(
+pub fn ProcessExecution::args(self : ProcessExecution) -> Array[String] {
+  Array::from_fixed_array(ProcessExecution::args_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn ProcessExecution::args_fixedarray_ffi(
   self : ProcessExecution,
-) -> Array[String] =
+) -> FixedArray[String] =
   #| (value) => value.args
 
 ///|
@@ -673,7 +693,7 @@ pub fn ShellQuotingOptions::new(
   strong? : String,
   weak? : String,
 ) -> ShellQuotingOptions {
-  ShellQuotingOptions::{ escape, strong, weak }
+  ShellQuotingOptions::{ escape, strong, weak, }
 }
 
 ///|
@@ -695,7 +715,7 @@ pub fn ShellExecutionOptions::new(
   cwd? : String,
   env? : Array[(String, String)],
 ) -> ShellExecutionOptions {
-  ShellExecutionOptions::{ executable, shell_args, shell_quoting, cwd, env }
+  ShellExecutionOptions::{ executable, shell_args, shell_quoting, cwd, env, }
 }
 
 ///|
@@ -724,7 +744,7 @@ pub fn ShellQuotedString::new(
   value : String,
   quoting : ShellQuoting,
 ) -> ShellQuotedString {
-  ShellQuotedString::{ value, quoting }
+  ShellQuotedString::{ value, quoting, }
 }
 
 ///|
@@ -986,9 +1006,22 @@ extern "js" fn process_execution_new_ffi(
   #|   )
 
 ///|
-extern "js" fn process_execution_new_with_args_ffi(
+fn process_execution_new_with_args_ffi(
   process : String,
   args : Array[String],
+  options : JsValue,
+) -> ProcessExecution {
+  process_execution_new_with_args_ffi_fixedarray_ffi(
+    process,
+    FixedArray::from_array(args[:]),
+    options,
+  )
+}
+
+///|
+extern "js" fn process_execution_new_with_args_ffi_fixedarray_ffi(
+  process : String,
+  args : FixedArray[String],
   options : JsValue,
 ) -> ProcessExecution =
   #| (process, args, options) =>
@@ -1070,9 +1103,22 @@ extern "js" fn shell_execution_new_command_line_ffi(
   #|   )
 
 ///|
-extern "js" fn shell_execution_new_command_ffi(
+fn shell_execution_new_command_ffi(
   command : JsValue,
   args : Array[JsValue],
+  options : JsValue,
+) -> ShellExecution {
+  shell_execution_new_command_ffi_fixedarray_ffi(
+    command,
+    FixedArray::from_array(args[:]),
+    options,
+  )
+}
+
+///|
+extern "js" fn shell_execution_new_command_ffi_fixedarray_ffi(
+  command : JsValue,
+  args : FixedArray[JsValue],
   options : JsValue,
 ) -> ShellExecution =
   #| (command, args, options) =>
@@ -1105,7 +1151,14 @@ extern "js" fn task_js_value_is_string_ffi(value : JsValue) -> Bool =
   #| (value) => typeof value === "string"
 
 ///|
-extern "js" fn task_js_value_array_ffi(value : JsValue) -> Array[JsValue] =
+fn task_js_value_array_ffi(value : JsValue) -> Array[JsValue] {
+  Array::from_fixed_array(task_js_value_array_ffi_fixedarray_ffi(value))
+}
+
+///|
+extern "js" fn task_js_value_array_ffi_fixedarray_ffi(
+  value : JsValue,
+) -> FixedArray[JsValue] =
   #| (value) => value
 
 ///|
@@ -1115,8 +1168,13 @@ extern "js" fn custom_execution_ffi(
   #| (callback) => new (require("vscode").CustomExecution)((resolvedDefinition) => callback(resolvedDefinition))
 
 ///|
-extern "js" fn task_string_map_ffi(
-  entries : Array[(String, String)],
+fn task_string_map_ffi(entries : Array[(String, String)]) -> JsValue {
+  task_string_map_ffi_fixedarray_ffi(FixedArray::from_array(entries[:]))
+}
+
+///|
+extern "js" fn task_string_map_ffi_fixedarray_ffi(
+  entries : FixedArray[(String, String)],
 ) -> JsValue =
   #| (entries) => {
   #|   const value = {};
@@ -1129,9 +1187,14 @@ extern "js" fn task_string_map_ffi(
   #| }
 
 ///|
-extern "js" fn task_string_map_to_pairs_ffi(
+fn task_string_map_to_pairs_ffi(value : JsValue) -> Array[(String, String)] {
+  Array::from_fixed_array(task_string_map_to_pairs_ffi_fixedarray_ffi(value))
+}
+
+///|
+extern "js" fn task_string_map_to_pairs_ffi_fixedarray_ffi(
   value : JsValue,
-) -> Array[(String, String)] =
+) -> FixedArray[(String, String)] =
   #| (value) => {
   #|   if (value === undefined || value === null) {
   #|     return [];
@@ -1146,3 +1209,15 @@ fn map_string_string_pairs(values : Array[(String, String)]?) -> JsValue {
     Some(entries) => task_string_map_ffi(entries)
   }
 }
+
+///|
+pub extend TaskScopeKind with Eq::{not_equal, equal}
+
+///|
+pub extend TaskRevealKind with Eq::{not_equal, equal}
+
+///|
+pub extend TaskPanelKind with Eq::{not_equal, equal}
+
+///|
+pub extend ShellQuoting with Eq::{not_equal, equal}

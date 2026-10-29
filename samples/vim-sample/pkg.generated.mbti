@@ -31,7 +31,7 @@ pub fn is_motion_prefix(String) -> Bool
 
 pub fn no_modifier_keys() -> ModifierKeys
 
-pub async fn run_operator_normal_mode(OperatorKind, Controller, @vscode.TextEditor, Int, String) -> Bool
+pub async fn run_operator_normal_mode(OperatorKind, Controller, @vscode.TextEditor, Int32, String) -> Bool
 
 pub async fn run_operator_visual_mode(OperatorKind, Controller, @vscode.TextEditor, String) -> Bool
 
@@ -45,6 +45,8 @@ pub(all) enum CharacterClass {
   WordSeparator
   Whitespace
 } derive(Eq)
+pub fn CharacterClass::equal(Self, Self) -> Bool
+pub fn CharacterClass::not_equal(Self, Self) -> Bool
 
 pub struct ContextKey {
   name : String
@@ -75,7 +77,7 @@ pub async fn Controller::handle_type(Self, @vscode.TextEditor, String, ModifierK
 pub fn Controller::has_input(Self) -> Bool
 pub fn Controller::is_motion_prefix(Self, String) -> Bool
 pub fn Controller::new() -> Self
-pub async fn Controller::replace_prev_char(Self, @vscode.TextEditor, String, Int) -> Bool
+pub async fn Controller::replace_prev_char(Self, @vscode.TextEditor, String, Int32) -> Bool
 pub fn Controller::set_mode(Self, Mode) -> Unit
 pub fn Controller::set_visual(Self, Bool) -> Unit
 pub fn Controller::set_word_separators(Self, String) -> Unit
@@ -83,7 +85,7 @@ pub fn Controller::set_word_separators(Self, String) -> Unit
 pub struct CursorMoveArgs {
   to : String
   by : String?
-  value : Int
+  value : Int32
   select : Bool
 }
 
@@ -100,18 +102,18 @@ pub struct EditorCommand {
 pub struct EditorScrollArgs {
   to : String
   by : String?
-  value : Int
+  value : Int32
   revealCursor : Bool
 }
 
 pub struct FoldCommandArgs {
-  levels : Int
+  levels : Int32
   direction : String
 }
 
 pub struct FoundOperator {
   operator : OperatorKind
-  repeat_count : Int
+  repeat_count : Int32
   args : String
 }
 
@@ -120,6 +122,8 @@ pub(all) enum Mode {
   Normal
   Replace
 } derive(Eq)
+pub fn Mode::equal(Self, Self) -> Bool
+pub fn Mode::not_equal(Self, Self) -> Bool
 
 pub struct ModifierKeys {
   ctrl : Bool
@@ -140,10 +144,10 @@ pub(all) enum Motion {
   GoToLineUndefined
   GoToFirstLine
   GoToLastLine
-  GoToLineDefined(Int)
-  Repeating(Motion, Int)
+  GoToLineDefined(Int32)
+  Repeating(Motion, Int32)
 }
-pub fn Motion::repeat(Self, Bool, Int) -> Self
+pub fn Motion::repeat(Self, Bool, Int32) -> Self
 pub fn Motion::run(Self, @vscode.TextDocument, @vscode.Position, MotionState) -> @vscode.Position
 
 pub(all) enum MotionCommandDescriptor {
@@ -159,24 +163,24 @@ pub fn MotionCommandDescriptor::create_command(Self, MotionCommandRequest) -> Ed
 
 pub struct MotionCommandRequest {
   is_visual : Bool
-  repeat : Int?
+  repeat : Int32?
 }
 
 pub struct MotionState {
   mut anchor : @vscode.Position?
-  mut cursor_desired_character : Int
+  mut cursor_desired_character : Int32
   mut word_character_class : Array[CharacterClass]
 }
 pub fn MotionState::new() -> Self
 
 pub struct MoveActiveEditorArgs {
   to : String
-  value : Int?
+  value : Int32?
 }
 
 pub struct NumberAndString {
   has_repeat_count : Bool
-  repeat_count : Int
+  repeat_count : Int32
   input : String
 }
 
@@ -196,11 +200,11 @@ pub(all) enum OperatorKind {
 
 pub struct ReplacePreviousCharCommandArgs {
   text : String
-  replaceCharCnt : Int
+  replaceCharCnt : Int32
 }
 
 pub struct RevealLineArgs {
-  lineNumber : Int
+  lineNumber : Int32
   at : String
 }
 
@@ -233,11 +237,11 @@ pub async fn VimExt::ensure_state(Self) -> Unit
 pub async fn VimExt::go_to_normal_mode(Self) -> Unit
 pub async fn VimExt::handle_type(Self, @vscode.TextEditor, String, ModifierKeys) -> Unit
 pub fn VimExt::new() -> Self
-pub async fn VimExt::replace_prev_char(Self, @vscode.TextEditor, String, Int) -> Unit
+pub async fn VimExt::replace_prev_char(Self, @vscode.TextEditor, String, Int32) -> Unit
 
 pub struct Word {
-  start : Int
-  end_index : Int
+  start : Int32
+  end_index : Int32
   word_type : WordType
 }
 
@@ -246,8 +250,9 @@ pub(all) enum WordType {
   Separator
   Regular
 } derive(Eq)
+pub fn WordType::equal(Self, Self) -> Bool
+pub fn WordType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 
 // Traits
-

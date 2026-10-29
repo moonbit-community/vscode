@@ -17,7 +17,7 @@ type TextEditorCommandHandler = (TextEditor, TextEditorEdit, Array[Any]) -> Any
 
 ///|
 fn command_args_from_js(args : Array[Any]) -> CommandArgs {
-  CommandArgs::{ values: args }
+  CommandArgs::{ values: args, }
 }
 
 ///|
@@ -68,12 +68,12 @@ pub fn[A, B, C] command_args3(first : A, second : B, third : C) -> CommandArgs {
 }
 
 ///|
-pub fn CommandArgs::length(self : CommandArgs) -> Int {
+pub fn CommandArgs::length(self : CommandArgs) -> Int32 {
   command_args_to_js(self).length()
 }
 
 ///|
-pub fn[X] CommandArgs::get(self : CommandArgs, index : Int) -> X? {
+pub fn[X] CommandArgs::get(self : CommandArgs, index : Int32) -> X? {
   let raw = command_args_to_js(self)
   if index < 0 || index >= raw.length() {
     None
@@ -210,7 +210,7 @@ pub async fn[X] execute_command(command : String, args? : CommandArgs) -> X {
 ///|
 /// Get all command ids, optionally including internal commands.
 fn get_commands_promise(
-  filter_internal? : Bool = false,
+  filter_internal~ : Bool = false,
 ) -> @js_async.Promise[Array[String]] {
   get_commands_ffi(filter_internal)
 }
@@ -221,7 +221,7 @@ fn get_commands_promise(
 ///
 /// @param filterInternal Set `true` to not see internal commands (starting with an underscore)
 /// @returns Thenable that resolves to a list of command ids.
-pub async fn get_commands(filter_internal? : Bool = false) -> Array[String] {
+pub async fn get_commands(filter_internal~ : Bool = false) -> Array[String] {
   @js_async.Promise::wait(get_commands_promise(filter_internal~))
 }
 
@@ -229,7 +229,7 @@ pub async fn get_commands(filter_internal? : Bool = false) -> Array[String] {
 /// Check if a command exists using the JS promise chain.
 fn get_commands_contains_promise(
   command : String,
-  filter_internal? : Bool = false,
+  filter_internal~ : Bool = false,
 ) -> @js_async.Promise[Bool] {
   get_commands_contains_ffi(command, filter_internal)
 }
@@ -242,7 +242,7 @@ fn get_commands_contains_promise(
 /// @returns Thenable that resolves to a list of command ids.
 pub async fn get_commands_contains(
   command : String,
-  filter_internal? : Bool = false,
+  filter_internal~ : Bool = false,
 ) -> Bool {
   @js_async.Promise::wait(
     get_commands_contains_promise(command, filter_internal~),

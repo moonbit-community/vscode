@@ -5,7 +5,7 @@
 /// Label describing the {@link TreeItem Tree item}
 pub(all) struct TreeItemLabel {
   mut label : String
-  mut highlights : Array[(Int, Int)]?
+  mut highlights : Array[(Int32, Int32)]?
 }
 
 ///|
@@ -22,9 +22,9 @@ pub(all) enum TreeItemCollapsibleState {
 ///|
 pub fn TreeItemLabel::new(
   label : String,
-  highlights? : Array[(Int, Int)],
+  highlights? : Array[(Int32, Int32)],
 ) -> TreeItemLabel {
-  TreeItemLabel::{ label, highlights }
+  TreeItemLabel::{ label, highlights, }
 }
 
 ///|
@@ -296,8 +296,8 @@ pub fn[T] TreeDragAndDropController::new(
 }
 
 ///|
-pub fn ViewBadge::new(value : Int, tooltip : String) -> ViewBadge {
-  ViewBadge::{ value, tooltip }
+pub fn ViewBadge::new(value : Int32, tooltip : String) -> ViewBadge {
+  ViewBadge::{ value, tooltip, }
 }
 
 ///|
@@ -659,3 +659,6 @@ extern "js" fn tree_drag_and_drop_controller_ffi(
   #|   if (handleDrop !== undefined && handleDrop !== null) controller.handleDrop = handleDrop;
   #|   return controller;
   #| }
+
+///|
+pub extend TreeItemCollapsibleState with Eq::{not_equal, equal}

@@ -14,11 +14,10 @@ pub async fn run_progress_demo() -> Unit
 
 // Types and methods
 pub struct ProgressStep {
-  increment : Int?
+  increment : Int32?
   message : String?
 }
 
 // Type aliases
 
 // Traits
-

@@ -39,5 +39,5 @@ extern "js" fn tests_controller_remove_root_item_ffi(
 ///|
 extern "js" fn tests_controller_root_items_size_ffi(
   controller : TestController,
-) -> Int =
+) -> Int32 =
   #| (controller) => controller.items.size

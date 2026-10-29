@@ -252,7 +252,7 @@ pub async fn Controller::replace_prev_char(
   self : Controller,
   editor : @vscode.TextEditor,
   text : String,
-  replace_char_cnt : Int,
+  replace_char_cnt : Int32,
 ) -> Bool {
   if self.current_mode != Mode::Normal && self.current_mode != Mode::Replace {
     return false

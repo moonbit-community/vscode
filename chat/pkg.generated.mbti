@@ -62,13 +62,14 @@ pub(all) struct ChatParticipant {
   mut followup_provider : ChatFollowupProvider?
   on_did_receive_feedback : @vscode.Event[ChatResultFeedback]
 }
+pub fn ChatParticipant::as_disposable(Self) -> @vscode.Disposable
 pub fn ChatParticipant::dispose(Self) -> Unit
 pub fn ChatParticipant::set_request_handler_async(Self, async (ChatRequest, ChatContext, ChatResponseStream, @vscode.CancellationToken) -> ChatResult?) -> Unit
 pub impl @vscode.AsDisposable for ChatParticipant
 
 pub struct ChatPromptReference {
   id : String
-  range : (Int, Int)?
+  range : (Int32, Int32)?
   model_description : String?
   value : ChatPromptReferenceValue
 }
@@ -188,6 +189,8 @@ pub(all) enum ChatResultFeedbackKind {
   Unhelpful
   Helpful
 } derive(Eq)
+pub fn ChatResultFeedbackKind::equal(Self, Self) -> Bool
+pub fn ChatResultFeedbackKind::not_equal(Self, Self) -> Bool
 
 pub type ChatTurn
 pub fn ChatTurn::as_request_turn(Self) -> ChatRequestTurn?

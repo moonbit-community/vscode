@@ -31,8 +31,8 @@ fn editor_selection(editor : @vscode.TextEditor) -> @vscode.Selection {
 ///|
 fn set_position_reveal(
   editor : @vscode.TextEditor,
-  line : Int,
-  character : Int,
+  line : Int32,
+  character : Int32,
 ) -> Unit {
   let current = @vscode.Selection::from_numbers(
     line, character, line, character,
@@ -73,7 +73,7 @@ async fn delete_selection(
 }
 
 ///|
-fn repeat_string(value : String, repeat_count : Int) -> String {
+fn repeat_string(value : String, repeat_count : Int32) -> String {
   let mut result = ""
   for _ in 0..<repeat_count {
     result = result + value
@@ -85,7 +85,7 @@ fn repeat_string(value : String, repeat_count : Int) -> String {
 async fn run_delete_line(
   ctrl : Controller,
   editor : @vscode.TextEditor,
-  repeat_count : Int,
+  repeat_count : Int32,
 ) -> Bool {
   let current_pos = editor_position(editor)
   let doc = editor.document()
@@ -117,7 +117,7 @@ pub async fn run_operator_normal_mode(
   operator : OperatorKind,
   ctrl : Controller,
   editor : @vscode.TextEditor,
-  repeat_count : Int,
+  repeat_count : Int32,
   args : String,
 ) -> Bool {
   match operator {

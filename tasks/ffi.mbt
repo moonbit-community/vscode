@@ -26,7 +26,14 @@ extern "js" fn tasks_execute_task_ffi(
   #| (task) => require("vscode").tasks.executeTask(task)
 
 ///|
-extern "js" fn tasks_task_executions_ffi() -> Array[TaskExecution] =
+fn tasks_task_executions_ffi() -> Array[TaskExecution] {
+  Array::from_fixed_array(tasks_task_executions_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn tasks_task_executions_ffi_fixedarray_ffi() -> FixedArray[
+  TaskExecution,
+] =
   #| () => require("vscode").tasks.taskExecutions
 
 ///|

@@ -168,12 +168,28 @@ extern "js" fn languages_on_did_change_diagnostics_ffi() -> Event[
   #| () => require("vscode").languages.onDidChangeDiagnostics
 
 ///|
-extern "js" fn languages_get_diagnostics_ffi(uri : Uri) -> Array[Diagnostic] =
+fn languages_get_diagnostics_ffi(uri : Uri) -> Array[Diagnostic] {
+  Array::from_fixed_array(languages_get_diagnostics_ffi_fixedarray_ffi(uri))
+}
+
+///|
+extern "js" fn languages_get_diagnostics_ffi_fixedarray_ffi(
+  uri : Uri,
+) -> FixedArray[Diagnostic] =
   #| (uri) => require("vscode").languages.getDiagnostics(uri)
 
 ///|
-extern "js" fn languages_get_all_diagnostics_ffi() -> Array[
-  (Uri, Array[Diagnostic]),
+fn languages_get_all_diagnostics_ffi() -> Array[(Uri, Array[Diagnostic])] {
+  Array::from_fixed_array(
+    languages_get_all_diagnostics_ffi_fixedarray_ffi().map(fn(pair) {
+      (pair.0, Array::from_fixed_array(pair.1))
+    }),
+  )
+}
+
+///|
+extern "js" fn languages_get_all_diagnostics_ffi_fixedarray_ffi() -> FixedArray[
+  (Uri, FixedArray[Diagnostic]),
 ] =
   #| () => require("vscode").languages.getDiagnostics()
 
@@ -188,7 +204,7 @@ extern "js" fn languages_create_language_status_item_ffi(
 extern "js" fn languages_match_ffi(
   selector : @v.JsValue,
   document : TextDocument,
-) -> Int =
+) -> Int32 =
   #| (selector, document) => require("vscode").languages.match(selector, document)
 
 ///|

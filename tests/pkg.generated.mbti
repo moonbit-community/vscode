@@ -27,7 +27,7 @@ pub fn FileCoverageDetail::from_declaration(DeclarationCoverage) -> Self
 pub fn FileCoverageDetail::from_statement(StatementCoverage) -> Self
 
 pub(all) enum IntOrBool {
-  Numeric(Int)
+  Numeric(Int32)
   Boolean(Bool)
 }
 
@@ -41,6 +41,7 @@ pub fn StatementCoverage::new(IntOrBool, PositionOrRange, branches? : Array[Bran
 
 pub type TestController
 pub fn TestController::add_root_item(Self, TestItem) -> Unit
+pub fn TestController::as_disposable(Self) -> @vscode.Disposable
 pub fn TestController::clear_refresh_handler(Self) -> Unit
 pub fn TestController::clear_resolve_handler(Self) -> Unit
 pub fn TestController::create_run_profile(Self, String, TestRunProfileKind, (TestRunRequest, @vscode.CancellationToken) -> Unit, is_default? : Bool, tag? : TestTag, supports_continuous_run? : Bool) -> TestRunProfile
@@ -51,15 +52,15 @@ pub fn TestController::id(Self) -> String
 pub fn TestController::invalidate_test_results(Self, items? : TestItemOrMany) -> Unit
 pub fn TestController::label(Self) -> String
 pub fn TestController::remove_root_item(Self, String) -> Unit
-pub fn TestController::root_items_size(Self) -> Int
+pub fn TestController::root_items_size(Self) -> Int32
 pub fn TestController::set_refresh_handler(Self, (@vscode.CancellationToken) -> Unit) -> Unit
 pub fn TestController::set_resolve_handler(Self, (TestItem?) -> Unit) -> Unit
 pub impl @vscode.AsDisposable for TestController
 
 pub type TestCoverageCount
-pub fn TestCoverageCount::covered(Self) -> Int
-pub fn TestCoverageCount::new(Int, Int) -> Self
-pub fn TestCoverageCount::total(Self) -> Int
+pub fn TestCoverageCount::covered(Self) -> Int32
+pub fn TestCoverageCount::new(Int32, Int32) -> Self
+pub fn TestCoverageCount::total(Self) -> Int32
 
 pub type TestItem
 pub fn TestItem::busy(Self) -> Bool
@@ -92,7 +93,7 @@ pub fn TestItemCollection::add(Self, TestItem) -> Unit
 pub fn TestItemCollection::delete(Self, String) -> Unit
 pub fn TestItemCollection::get(Self, String) -> TestItem?
 pub fn TestItemCollection::replace(Self, Array[TestItem]) -> Unit
-pub fn TestItemCollection::size(Self) -> Int
+pub fn TestItemCollection::size(Self) -> Int32
 
 pub(all) enum TestItemOrMany {
   Single(TestItem)
@@ -119,17 +120,18 @@ pub fn TestRun::add_coverage(Self, FileCoverage) -> Unit
 pub fn TestRun::append_output(Self, String, location? : @vscode.Location, test_item? : TestItem) -> Unit
 pub fn TestRun::end(Self) -> Unit
 pub fn TestRun::enqueued(Self, TestItem) -> Unit
-pub fn TestRun::errored(Self, TestItem, TestMessageOrMany, duration? : Int) -> Unit
-pub fn TestRun::failed(Self, TestItem, TestMessageOrMany, duration? : Int) -> Unit
+pub fn TestRun::errored(Self, TestItem, TestMessageOrMany, duration? : Int32) -> Unit
+pub fn TestRun::failed(Self, TestItem, TestMessageOrMany, duration? : Int32) -> Unit
 pub fn TestRun::is_persisted(Self) -> Bool
 pub fn TestRun::name(Self) -> String?
 pub fn TestRun::on_did_dispose(Self) -> @vscode.Event[Unit]
-pub fn TestRun::passed(Self, TestItem, duration? : Int) -> Unit
+pub fn TestRun::passed(Self, TestItem, duration? : Int32) -> Unit
 pub fn TestRun::skipped(Self, TestItem) -> Unit
 pub fn TestRun::started(Self, TestItem) -> Unit
 pub fn TestRun::token(Self) -> @vscode.CancellationToken
 
 pub type TestRunProfile
+pub fn TestRunProfile::as_disposable(Self) -> @vscode.Disposable
 pub fn TestRunProfile::clear_configure_handler(Self) -> Unit
 pub fn TestRunProfile::dispose(Self) -> Unit
 pub fn TestRunProfile::kind(Self) -> TestRunProfileKind
@@ -143,6 +145,8 @@ pub(all) enum TestRunProfileKind {
   Debug
   Coverage
 } derive(Eq)
+pub fn TestRunProfileKind::equal(Self, Self) -> Bool
+pub fn TestRunProfileKind::not_equal(Self, Self) -> Bool
 
 pub type TestRunRequest
 pub fn TestRunRequest::continuous(Self) -> Bool?

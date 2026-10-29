@@ -1,7 +1,7 @@
 ///|
 pub struct MotionState {
   mut anchor : @vscode.Position?
-  mut cursor_desired_character : Int
+  mut cursor_desired_character : Int32
   mut word_character_class : WordCharacters
 }
 
@@ -28,8 +28,8 @@ pub(all) enum Motion {
   GoToLineUndefined
   GoToFirstLine
   GoToLastLine
-  GoToLineDefined(Int)
-  Repeating(Motion, Int)
+  GoToLineDefined(Int32)
+  Repeating(Motion, Int32)
 }
 
 ///|
@@ -46,16 +46,16 @@ pub(all) enum MotionCommandDescriptor {
 ///|
 pub struct MotionCommandRequest {
   is_visual : Bool
-  repeat : Int?
+  repeat : Int32?
 }
 
 ///|
-fn motion_line_length(doc : @vscode.TextDocument, line : Int) -> Int {
+fn motion_line_length(doc : @vscode.TextDocument, line : Int32) -> Int32 {
   doc.line_at_line(line).text.length()
 }
 
 ///|
-fn min_int(left : Int, right : Int) -> Int {
+fn min_int(left : Int32, right : Int32) -> Int32 {
   if left < right {
     left
   } else {
@@ -64,7 +64,7 @@ fn min_int(left : Int, right : Int) -> Int {
 }
 
 ///|
-fn first_non_whitespace_char(doc : @vscode.TextDocument, line : Int) -> Int {
+fn first_non_whitespace_char(doc : @vscode.TextDocument, line : Int32) -> Int32 {
   let line_content = doc.line_at_line(line).text
   let mut character = 0
   while character < line_content.length() {
@@ -81,7 +81,7 @@ fn first_non_whitespace_char(doc : @vscode.TextDocument, line : Int) -> Int {
 pub fn Motion::repeat(
   self : Motion,
   has_repeat_count : Bool,
-  count : Int,
+  count : Int32,
 ) -> Motion {
   if !has_repeat_count {
     self

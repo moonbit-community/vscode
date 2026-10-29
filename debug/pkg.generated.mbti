@@ -62,6 +62,7 @@ pub async fn stop_debugging(session? : @vscode.DebugSession) -> Unit
 pub struct DebugAdapter {
   on_did_send_message : @vscode.Event[DebugProtocolMessage]
 }
+pub fn DebugAdapter::as_disposable(Self) -> @vscode.Disposable
 pub fn DebugAdapter::dispose(Self) -> Unit
 pub fn DebugAdapter::handle_message(Self, DebugProtocolMessage) -> Unit
 pub fn DebugAdapter::new(@vscode.Event[DebugProtocolMessage], (DebugProtocolMessage) -> Unit, dispose? : () -> Unit) -> Self
@@ -97,11 +98,11 @@ pub fn DebugAdapterNamedPipeServer::path(Self) -> String
 
 pub type DebugAdapterServer
 pub fn DebugAdapterServer::host(Self) -> String?
-pub fn DebugAdapterServer::new(Int, host? : String) -> Self
-pub fn DebugAdapterServer::port(Self) -> Int
+pub fn DebugAdapterServer::new(Int32, host? : String) -> Self
+pub fn DebugAdapterServer::port(Self) -> Int32
 
 pub type DebugAdapterTracker
-pub fn DebugAdapterTracker::new(on_will_start_session? : () -> Unit, on_will_receive_message? : (String) -> Unit, on_did_send_message? : (String) -> Unit, on_will_stop_session? : () -> Unit, on_error? : (String) -> Unit, on_exit? : (Int?, String?) -> Unit) -> Self
+pub fn DebugAdapterTracker::new(on_will_start_session? : () -> Unit, on_will_receive_message? : (String) -> Unit, on_did_send_message? : (String) -> Unit, on_will_stop_session? : () -> Unit, on_error? : (String) -> Unit, on_exit? : (Int32?, String?) -> Unit) -> Self
 
 pub type DebugAdapterTrackerFactory
 pub fn DebugAdapterTrackerFactory::new(async (@vscode.DebugSession) -> DebugAdapterTracker?) -> Self
@@ -113,6 +114,8 @@ pub(all) enum DebugConfigurationProviderTriggerKind {
   Initial
   Dynamic
 } derive(Eq)
+pub fn DebugConfigurationProviderTriggerKind::equal(Self, Self) -> Bool
+pub fn DebugConfigurationProviderTriggerKind::not_equal(Self, Self) -> Bool
 
 pub type DebugProtocolMessage
 pub fn DebugProtocolMessage::as_json(Self) -> @vscode.Any

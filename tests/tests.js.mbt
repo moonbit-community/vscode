@@ -92,7 +92,7 @@ pub type FileCoverageDetail
 
 ///|
 pub(all) enum IntOrBool {
-  Numeric(Int)
+  Numeric(Int32)
   Boolean(Bool)
 }
 
@@ -463,7 +463,7 @@ pub fn TestController::remove_root_item(
 }
 
 ///|
-pub fn TestController::root_items_size(self : TestController) -> Int {
+pub fn TestController::root_items_size(self : TestController) -> Int32 {
   tests_controller_root_items_size_ffi(self)
 }
 
@@ -489,7 +489,7 @@ pub fn TestController::dispose(self : TestController) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for TestController with as_disposable(self) {
+pub impl @vscode.AsDisposable for TestController with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 
@@ -593,7 +593,7 @@ pub fn TestRunProfile::dispose(self : TestRunProfile) -> Unit {
 }
 
 ///|
-pub impl @vscode.AsDisposable for TestRunProfile with as_disposable(self) {
+pub impl @vscode.AsDisposable for TestRunProfile with fn as_disposable(self) {
   @v.JsValue::make(self).cast()
 }
 
@@ -704,7 +704,7 @@ pub fn TestRun::failed(
   self : TestRun,
   item : TestItem,
   message : TestMessageOrMany,
-  duration? : Int,
+  duration? : Int32,
 ) -> Unit {
   test_run_failed_ffi(self, item, message.to_js(), option_to_js(duration))
 }
@@ -721,7 +721,7 @@ pub fn TestRun::errored(
   self : TestRun,
   item : TestItem,
   message : TestMessageOrMany,
-  duration? : Int,
+  duration? : Int32,
 ) -> Unit {
   test_run_errored_ffi(self, item, message.to_js(), option_to_js(duration))
 }
@@ -733,7 +733,7 @@ pub fn TestRun::errored(
 pub fn TestRun::passed(
   self : TestRun,
   item : TestItem,
-  duration? : Int,
+  duration? : Int32,
 ) -> Unit {
   test_run_passed_ffi(self, item, option_to_js(duration))
 }
@@ -784,15 +784,26 @@ pub extern "js" fn TestRun::on_did_dispose(self : TestRun) -> Event[Unit] =
 
 ///|
 /// Gets the number of items in the collection.
-pub extern "js" fn TestItemCollection::size(self : TestItemCollection) -> Int =
+pub extern "js" fn TestItemCollection::size(self : TestItemCollection) -> Int32 =
   #| (collection) => collection.size
 
 ///|
 /// Replaces the items stored by the collection.
 /// @param items Items to store.
-pub extern "js" fn TestItemCollection::replace(
+pub fn TestItemCollection::replace(
   self : TestItemCollection,
   items : Array[TestItem],
+) -> Unit {
+  TestItemCollection::replace_fixedarray_ffi(
+    self,
+    FixedArray::from_array(items[:]),
+  )
+}
+
+///|
+extern "js" fn TestItemCollection::replace_fixedarray_ffi(
+  self : TestItemCollection,
+  items : FixedArray[TestItem],
 ) -> Unit =
   #| (collection, items) => collection.replace(items)
 
@@ -867,15 +878,27 @@ pub extern "js" fn TestItem::set_label(self : TestItem, value : String) -> Unit 
 ///|
 /// Tags associated with this test item. May be used in combination with
 /// {@link TestRunProfile.tag tags}, or simply as an organizational feature.
-pub extern "js" fn TestItem::tags(self : TestItem) -> Array[TestTag] =
+pub fn TestItem::tags(self : TestItem) -> Array[TestTag] {
+  Array::from_fixed_array(TestItem::tags_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn TestItem::tags_fixedarray_ffi(
+  self : TestItem,
+) -> FixedArray[TestTag] =
   #| (item) => item.tags
 
 ///|
 /// Tags associated with this test item. May be used in combination with
 /// {@link TestRunProfile.tag tags}, or simply as an organizational feature.
-pub extern "js" fn TestItem::set_tags(
+pub fn TestItem::set_tags(self : TestItem, value : Array[TestTag]) -> Unit {
+  TestItem::set_tags_fixedarray_ffi(self, FixedArray::from_array(value[:]))
+}
+
+///|
+extern "js" fn TestItem::set_tags_fixedarray_ffi(
   self : TestItem,
-  value : Array[TestTag],
+  value : FixedArray[TestTag],
 ) -> Unit =
   #| (item, value) => { item.tags = value; }
 
@@ -1225,16 +1248,16 @@ pub fn TestMessage::clear_stack_trace(self : Self) -> Unit {
 ///|
 /// @param covered Value for {@link TestCoverageCount.covered}
 /// @param total Value for {@link TestCoverageCount.total}
-pub fn TestCoverageCount::new(covered : Int, total : Int) -> Self {
+pub fn TestCoverageCount::new(covered : Int32, total : Int32) -> Self {
   test_coverage_count_ffi(covered, total)
 }
 
 ///|
-pub extern "js" fn TestCoverageCount::covered(self : Self) -> Int =
+pub extern "js" fn TestCoverageCount::covered(self : Self) -> Int32 =
   #| (value) => value.covered
 
 ///|
-pub extern "js" fn TestCoverageCount::total(self : Self) -> Int =
+pub extern "js" fn TestCoverageCount::total(self : Self) -> Int32 =
   #| (value) => value.total
 
 ///|
@@ -1776,8 +1799,8 @@ extern "js" fn test_message_set_stack_trace_raw(
 
 ///|
 extern "js" fn test_coverage_count_ffi(
-  covered : Int,
-  total : Int,
+  covered : Int32,
+  total : Int32,
 ) -> TestCoverageCount =
   #| (covered, total) => new (require("vscode").TestCoverageCount)(covered, total)
 
@@ -1810,9 +1833,20 @@ extern "js" fn file_coverage_ffi(
   #| }
 
 ///|
-extern "js" fn file_coverage_from_details_ffi(
+fn file_coverage_from_details_ffi(
   uri : Uri,
   details : Array[FileCoverageDetail],
+) -> FileCoverage {
+  file_coverage_from_details_ffi_fixedarray_ffi(
+    uri,
+    FixedArray::from_array(details[:]),
+  )
+}
+
+///|
+extern "js" fn file_coverage_from_details_ffi_fixedarray_ffi(
+  uri : Uri,
+  details : FixedArray[FileCoverageDetail],
 ) -> FileCoverage =
   #| (uri, details) => require("vscode").FileCoverage.fromDetails(uri, details)
 
@@ -1851,3 +1885,12 @@ extern "js" fn declaration_coverage_ffi(
 ) -> DeclarationCoverage =
   #| (name, executed, location) =>
   #|   new (require("vscode").DeclarationCoverage)(name, executed, location)
+
+///|
+pub extend TestRunProfileKind with Eq::{not_equal, equal}
+
+///|
+pub extend TestController with @vscode.AsDisposable::{as_disposable}
+
+///|
+pub extend TestRunProfile with @vscode.AsDisposable::{as_disposable}

@@ -156,7 +156,9 @@ async function waitForInlineCompletionState(predicate) {
 }
 
 async function waitForDocumentText(document, predicate) {
-  for (let attempt = 0; attempt < 20; attempt += 1) {
+  // Extension-host work can take several seconds on shared CI runners.
+  const deadline = Date.now() + 10000;
+  while (Date.now() < deadline) {
     const text = document.getText();
     if (predicate(text)) {
       return text;

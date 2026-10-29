@@ -22,9 +22,17 @@ extern "js" fn register_text_editor_command_ffi(
   #| )
 
 ///|
-extern "js" fn execute_command_ffi(
+fn execute_command_ffi(
   command : String,
   args : Array[@vscode.Any],
+) -> @js_async.Promise[@vscode.Any] {
+  execute_command_ffi_fixedarray_ffi(command, FixedArray::from_array(args[:]))
+}
+
+///|
+extern "js" fn execute_command_ffi_fixedarray_ffi(
+  command : String,
+  args : FixedArray[@vscode.Any],
 ) -> @js_async.Promise[@vscode.Any] =
   #| (command, args) => require("vscode").commands.executeCommand(command, ...args)
 

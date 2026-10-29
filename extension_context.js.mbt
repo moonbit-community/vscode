@@ -808,3 +808,9 @@ extern "js" fn global_environment_variable_collection_get_scoped_ffi(
   scope : JsValue,
 ) -> EnvironmentVariableCollection =
   #| (collection, scope) => collection.getScoped(scope)
+
+///|
+pub extend ExtensionMode with Eq::{not_equal, equal}
+
+///|
+pub extend EnvironmentVariableMutatorType with Eq::{not_equal, equal}

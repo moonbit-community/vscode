@@ -17,15 +17,15 @@ type WordCharacters = Array[CharacterClass]
 
 ///|
 pub struct Word {
-  start : Int
-  end_index : Int
+  start : Int32
+  end_index : Int32
   word_type : WordType
 }
 
 ///|
 fn character_class_at(
   word_character_class : WordCharacters,
-  ch_code : Int,
+  ch_code : Int32,
 ) -> CharacterClass {
   if ch_code >= 0 && ch_code < word_character_class.length() {
     word_character_class[ch_code]
@@ -50,8 +50,8 @@ fn find_start_of_word(
   line_content : String,
   word_character_class : WordCharacters,
   word_type : WordType,
-  start_index : Int,
-) -> Int {
+  start_index : Int32,
+) -> Int32 {
   let mut ch_index = start_index
   while ch_index >= 0 {
     let ch_class = character_class_at(
@@ -77,11 +77,11 @@ fn find_start_of_word(
 fn make_word(
   line_content : String,
   word_type : WordType,
-  start : Int,
-  end_index : Int,
+  start : Int32,
+  end_index : Int32,
 ) -> Word {
   let _ = line_content
-  Word::{ start, end_index, word_type }
+  Word::{ start, end_index, word_type, }
 }
 
 ///|
@@ -166,3 +166,9 @@ pub fn find_next_word(
     None
   }
 }
+
+///|
+pub extend CharacterClass with Eq::{not_equal, equal}
+
+///|
+pub extend WordType with Eq::{not_equal, equal}

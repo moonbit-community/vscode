@@ -8,7 +8,7 @@ pub fn TextDocumentShowOptions::new(
   preview? : Bool,
   selection? : Range,
 ) -> TextDocumentShowOptions {
-  TextDocumentShowOptions::{ view_column, preserve_focus, preview, selection }
+  TextDocumentShowOptions::{ view_column, preserve_focus, preview, selection, }
 }
 
 ///|
@@ -31,7 +31,7 @@ pub fn WorkspaceFolderPickOptions::new(
   place_holder? : String,
   ignore_focus_out? : Bool,
 ) -> WorkspaceFolderPickOptions {
-  WorkspaceFolderPickOptions::{ place_holder, ignore_focus_out }
+  WorkspaceFolderPickOptions::{ place_holder, ignore_focus_out, }
 }
 
 ///|
@@ -62,12 +62,12 @@ pub fn SaveDialogOptions::new(
   filters? : DialogFilters,
   title? : String,
 ) -> SaveDialogOptions {
-  SaveDialogOptions::{ default_uri, save_label, filters, title }
+  SaveDialogOptions::{ default_uri, save_label, filters, title, }
 }
 
 ///|
 pub fn MessageOptions::new(modal? : Bool, detail? : String) -> MessageOptions {
-  MessageOptions::{ modal, detail }
+  MessageOptions::{ modal, detail, }
 }
 
 ///|
@@ -128,7 +128,7 @@ pub fn QuickPickOptions::from_strings(
 pub fn InputBoxOptions::new(
   title? : String,
   value? : String,
-  value_selection? : Array[Int],
+  value_selection? : Array[Int32],
   prompt? : String,
   place_holder? : String,
   password? : Bool,
@@ -155,7 +155,7 @@ pub fn InputBoxOptions::new(
 pub fn InputBoxOptions::new_async(
   title? : String,
   value? : String,
-  value_selection? : Array[Int],
+  value_selection? : Array[Int32],
   prompt? : String,
   place_holder? : String,
   password? : Bool,
@@ -208,7 +208,7 @@ pub fn ProgressOptions::new(
   title? : String,
   cancellable? : Bool,
 ) -> ProgressOptions {
-  ProgressOptions::{ location, title, cancellable }
+  ProgressOptions::{ location, title, cancellable, }
 }
 
 ///|
@@ -272,7 +272,14 @@ extern "js" fn text_editor_options_ffi(
   #| }
 
 ///|
-extern "js" fn string_json_map_ffi(pairs : Array[(String, Any)]) -> JsValue =
+fn string_json_map_ffi(pairs : Array[(String, Any)]) -> JsValue {
+  string_json_map_ffi_fixedarray_ffi(FixedArray::from_array(pairs[:]))
+}
+
+///|
+extern "js" fn string_json_map_ffi_fixedarray_ffi(
+  pairs : FixedArray[(String, Any)],
+) -> JsValue =
   #| (pairs) => {
   #|   const result = {};
   #|   for (const pair of pairs) {

@@ -562,8 +562,19 @@ extern "js" fn window_progress_options_to_js_ffi(
   #| }
 
 ///|
-extern "js" fn window_dialog_filters_to_js_ffi(
+fn window_dialog_filters_to_js_ffi(
   entries : Array[(String, Array[String])],
+) -> @v.JsValue {
+  window_dialog_filters_to_js_ffi_fixedarray_ffi(
+    FixedArray::from_array(
+      entries.map(fn(pair) { (pair.0, FixedArray::from_array(pair.1[:])) })[:],
+    ),
+  )
+}
+
+///|
+extern "js" fn window_dialog_filters_to_js_ffi_fixedarray_ffi(
+  entries : FixedArray[(String, FixedArray[String])],
 ) -> @v.JsValue =
   #| (pairs) => {
   #|   const result = {};
@@ -1639,7 +1650,7 @@ pub fn set_status_bar_message(text : String) -> @vscode.Disposable {
 /// @returns A disposable which hides the status bar message.
 pub fn set_status_bar_message_timeout(
   text : String,
-  timeout_ms : Int,
+  timeout_ms : Int32,
 ) -> @vscode.Disposable {
   window_set_status_bar_message_ffi(text, @v.JsValue::make(timeout_ms))
 }
@@ -1661,7 +1672,7 @@ pub fn[X] set_status_bar_message_until(
 
 ///|
 fn window_with_scm_progress_promise(
-  task : (Progress[Int]) -> @js_async.Promise[@v.JsValue],
+  task : (Progress[Int32]) -> @js_async.Promise[@v.JsValue],
 ) -> @js_async.Promise[@v.JsValue] {
   window_with_scm_progress_ffi(task)
 }
@@ -1675,8 +1686,8 @@ fn window_with_scm_progress_promise(
 /// @param task A callback returning a promise. Progress increments can be reported with
 /// the provided {@link Progress}-object.
 /// @returns The thenable the task did return.
-pub async fn[T] with_scm_progress(task : async (Progress[Int]) -> T) -> T {
-  let wrapped = (progress : Progress[Int]) => {
+pub async fn[T] with_scm_progress(task : async (Progress[Int32]) -> T) -> T {
+  let wrapped = (progress : Progress[Int32]) => {
     @js_async.Promise::from_async(async fn() {
       let result = task(progress)
       @v.JsValue::make(result)
@@ -1766,7 +1777,7 @@ pub fn progress_options(
 pub fn[T] progress_report_message_increment(
   progress : Progress[T],
   message : String,
-  increment? : Int,
+  increment? : Int32,
 ) -> Unit {
   let raw : Progress[@v.JsValue] = @v.JsValue::make(progress).cast()
   progress_report_message_increment_ffi(
@@ -1785,7 +1796,7 @@ pub fn[T] progress_report_message_increment(
 /// @returns A new status bar item.
 pub fn create_status_bar_item(
   alignment? : StatusBarAlignment,
-  priority? : Int,
+  priority? : Int32,
 ) -> StatusBarItem {
   window_create_status_bar_item_ffi(
     @v.JsValue::make(()),
@@ -1804,7 +1815,7 @@ pub fn create_status_bar_item(
 pub fn create_status_bar_item_with_id(
   id : String,
   alignment? : StatusBarAlignment,
-  priority? : Int,
+  priority? : Int32,
 ) -> StatusBarItem {
   window_create_status_bar_item_ffi(
     @v.JsValue::make(id),
@@ -1935,9 +1946,7 @@ pub fn[T] create_tree_view(
 ///
 /// @param handler The uri handler to register for this extension.
 /// @returns A {@link Disposable disposable} that unregisters the handler.
-pub fn register_uri_handler(
-  handler : @vscode.UriHandler,
-) -> @vscode.Disposable {
+pub fn register_uri_handler(handler : @vscode.UriHandler) -> @vscode.Disposable {
   window_register_uri_handler_ffi(handler)
 }
 

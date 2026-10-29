@@ -16,7 +16,7 @@ pub fn get_diagnostics(@vscode.Uri) -> Array[@vscode.Diagnostic]
 
 pub async fn get_languages() -> Array[String]
 
-pub fn match_document(@vscode.DocumentSelector, @vscode.TextDocument) -> Int
+pub fn match_document(@vscode.DocumentSelector, @vscode.TextDocument) -> Int32
 
 pub fn on_did_change_diagnostics() -> @vscode.Event[@vscode.DiagnosticChangeEvent]
 
@@ -115,9 +115,9 @@ pub fn CommentRule::new(line_comment? : String, block_comment? : CharacterPair) 
 pub(all) struct EnterAction {
   mut indent_action : IndentAction
   mut append_text : String?
-  mut remove_text : Int?
+  mut remove_text : Int32?
 }
-pub fn EnterAction::new(IndentAction, append_text? : String, remove_text? : Int) -> Self
+pub fn EnterAction::new(IndentAction, append_text? : String, remove_text? : Int32) -> Self
 
 pub type EvaluatableExpression
 pub fn EvaluatableExpression::expression(Self) -> String?
@@ -133,6 +133,8 @@ pub(all) enum IndentAction {
   IndentOutdent
   Outdent
 } derive(Eq)
+pub fn IndentAction::equal(Self, Self) -> Bool
+pub fn IndentAction::not_equal(Self, Self) -> Bool
 
 pub(all) struct IndentationRule {
   mut decrease_indent_pattern : @vscode.RegExp
@@ -167,6 +169,8 @@ pub(all) enum SyntaxTokenType {
   String
   RegEx
 } derive(Eq)
+pub fn SyntaxTokenType::equal(Self, Self) -> Bool
+pub fn SyntaxTokenType::not_equal(Self, Self) -> Bool
 
 // Type aliases
 

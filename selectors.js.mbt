@@ -31,7 +31,7 @@ pub fn DocumentFilter::new(
   scheme? : String,
   pattern? : GlobPattern,
 ) -> DocumentFilter {
-  DocumentFilter::{ language, notebook_type, scheme, pattern }
+  DocumentFilter::{ language, notebook_type, scheme, pattern, }
 }
 
 ///|

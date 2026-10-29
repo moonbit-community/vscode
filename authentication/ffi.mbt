@@ -2,7 +2,14 @@
 /// JS FFI bindings for VS Code authentication namespace.
 
 ///|
-extern "js" fn authentication_providers_ffi() -> Array[@v.JsValue] =
+fn authentication_providers_ffi() -> Array[@v.JsValue] {
+  Array::from_fixed_array(authentication_providers_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn authentication_providers_ffi_fixedarray_ffi() -> FixedArray[
+  @v.JsValue,
+] =
   #| () => {
   #|   const providers = require("vscode").authentication.providers;
   #|   return Array.isArray(providers) ? providers : [];
@@ -21,9 +28,22 @@ extern "js" fn authentication_get_accounts_ffi(
   #| (providerId) => require("vscode").authentication.getAccounts(providerId)
 
 ///|
-extern "js" fn authentication_get_session_with_scopes_ffi(
+fn authentication_get_session_with_scopes_ffi(
   provider_id : String,
   scopes : Array[String],
+  options : @v.JsValue,
+) -> @js_async.Promise[@v.JsValue] {
+  authentication_get_session_with_scopes_ffi_fixedarray_ffi(
+    provider_id,
+    FixedArray::from_array(scopes[:]),
+    options,
+  )
+}
+
+///|
+extern "js" fn authentication_get_session_with_scopes_ffi_fixedarray_ffi(
+  provider_id : String,
+  scopes : FixedArray[String],
   options : @v.JsValue,
 ) -> @js_async.Promise[@v.JsValue] =
   #| (providerId, scopes, options) => {

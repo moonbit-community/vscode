@@ -14,12 +14,25 @@ extern "js" fn l10n_t_ffi(message : String) -> String =
   #| (message) => require("vscode").l10n.t(message)
 
 ///|
-extern "js" fn l10n_t_args_ffi(message : String, args : Array[Any]) -> String =
+fn l10n_t_args_ffi(message : String, args : Array[Any]) -> String {
+  l10n_t_args_ffi_fixedarray_ffi(message, FixedArray::from_array(args[:]))
+}
+
+///|
+extern "js" fn l10n_t_args_ffi_fixedarray_ffi(
+  message : String,
+  args : FixedArray[Any],
+) -> String =
   #| (message, args) => require("vscode").l10n.t(message, ...args)
 
 ///|
-extern "js" fn l10n_t_named_ffi(
+fn l10n_t_named_ffi(message : String, args : Array[(String, Any)]) -> String {
+  l10n_t_named_ffi_fixedarray_ffi(message, FixedArray::from_array(args[:]))
+}
+
+///|
+extern "js" fn l10n_t_named_ffi_fixedarray_ffi(
   message : String,
-  args : Array[(String, Any)],
+  args : FixedArray[(String, Any)],
 ) -> String =
   #| (message, args) => require("vscode").l10n.t(message, Object.fromEntries(args))

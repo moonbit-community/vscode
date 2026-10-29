@@ -14,12 +14,12 @@ pub struct ModifierKeys {
 
 ///|
 pub fn no_modifier_keys() -> ModifierKeys {
-  ModifierKeys::{ ctrl: false, alt: false, shift: false }
+  ModifierKeys::{ ctrl: false, alt: false, shift: false, }
 }
 
 ///|
 pub fn ctrl_modifier_keys() -> ModifierKeys {
-  ModifierKeys::{ ctrl: true, alt: false, shift: false }
+  ModifierKeys::{ ctrl: true, alt: false, shift: false, }
 }
 
 ///|
@@ -39,7 +39,7 @@ pub fn editor_command(
   command_id : String,
   args? : @commands.CommandArgs,
 ) -> EditorCommand {
-  EditorCommand::{ command_id, args }
+  EditorCommand::{ command_id, args, }
 }
 
 ///|
@@ -53,7 +53,7 @@ pub fn type_result(
   has_consumed_input : Bool,
   execute_editor_command? : EditorCommand,
 ) -> TypeResult {
-  TypeResult::{ has_consumed_input, execute_editor_command }
+  TypeResult::{ has_consumed_input, execute_editor_command, }
 }
 
 ///|
@@ -64,14 +64,14 @@ pub struct TypeCommandArgs {
 ///|
 pub struct ReplacePreviousCharCommandArgs {
   text : String
-  replaceCharCnt : Int
+  replaceCharCnt : Int32
 }
 
 ///|
 pub struct CursorMoveArgs {
   to : String
   by : String?
-  value : Int
+  value : Int32
   select : Bool
 }
 
@@ -79,24 +79,27 @@ pub struct CursorMoveArgs {
 pub struct EditorScrollArgs {
   to : String
   by : String?
-  value : Int
+  value : Int32
   revealCursor : Bool
 }
 
 ///|
 pub struct RevealLineArgs {
-  lineNumber : Int
+  lineNumber : Int32
   at : String
 }
 
 ///|
 pub struct MoveActiveEditorArgs {
   to : String
-  value : Int?
+  value : Int32?
 }
 
 ///|
 pub struct FoldCommandArgs {
-  levels : Int
+  levels : Int32
   direction : String
 }
+
+///|
+pub extend Mode with Eq::{not_equal, equal}

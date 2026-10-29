@@ -7,7 +7,7 @@
 ///
 /// @param start start index
 /// @param end end index.
-pub fn NotebookRange::new(start : Int, end : Int) -> NotebookRange {
+pub fn NotebookRange::new(start : Int32, end : Int32) -> NotebookRange {
   if start <= end {
     notebook_range_ffi(start, end)
   } else {
@@ -17,12 +17,12 @@ pub fn NotebookRange::new(start : Int, end : Int) -> NotebookRange {
 
 ///|
 /// The zero-based start index of this range.
-pub extern "js" fn NotebookRange::start(self : NotebookRange) -> Int =
+pub extern "js" fn NotebookRange::start(self : NotebookRange) -> Int32 =
   #| (range) => range.start
 
 ///|
 /// The exclusive end index of this range (zero-based).
-pub extern "js" fn NotebookRange::end(self : NotebookRange) -> Int =
+pub extern "js" fn NotebookRange::end(self : NotebookRange) -> Int32 =
   #| (range) => range.end
 
 ///|
@@ -39,8 +39,8 @@ pub fn NotebookRange::is_empty(self : NotebookRange) -> Bool {
 /// is not changing anything.
 pub fn NotebookRange::with_values(
   self : NotebookRange,
-  start? : Int,
-  end? : Int,
+  start? : Int32,
+  end? : Int32,
 ) -> NotebookRange {
   let new_start = match start {
     None => self.start()
@@ -58,7 +58,7 @@ pub fn NotebookRange::with_values(
 }
 
 ///|
-extern "js" fn notebook_range_ffi(start : Int, end : Int) -> NotebookRange =
+extern "js" fn notebook_range_ffi(start : Int32, end : Int32) -> NotebookRange =
   #| (start, end) => new (require("vscode").NotebookRange)(start, end)
 
 ///|
@@ -87,26 +87,51 @@ pub extern "js" fn NotebookEditor::set_selection(
 /// All selections in this notebook editor.
 ///
 /// The primary selection (or focused range) is `selections[0]`. When the document has no cells, the primary selection is empty `{ start: 0, end: 0 }`;
-pub extern "js" fn NotebookEditor::selections(
+pub fn NotebookEditor::selections(
   self : NotebookEditor,
-) -> Array[NotebookRange] =
+) -> Array[NotebookRange] {
+  Array::from_fixed_array(NotebookEditor::selections_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn NotebookEditor::selections_fixedarray_ffi(
+  self : NotebookEditor,
+) -> FixedArray[NotebookRange] =
   #| (editor) => editor.selections
 
 ///|
 /// All selections in this notebook editor.
 ///
 /// The primary selection (or focused range) is `selections[0]`. When the document has no cells, the primary selection is empty `{ start: 0, end: 0 }`;
-pub extern "js" fn NotebookEditor::set_selections(
+pub fn NotebookEditor::set_selections(
   self : NotebookEditor,
   value : Array[NotebookRange],
+) -> Unit {
+  NotebookEditor::set_selections_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn NotebookEditor::set_selections_fixedarray_ffi(
+  self : NotebookEditor,
+  value : FixedArray[NotebookRange],
 ) -> Unit =
   #| (editor, value) => { editor.selections = value; }
 
 ///|
 /// The current visible ranges in the editor (vertically).
-pub extern "js" fn NotebookEditor::visible_ranges(
+pub fn NotebookEditor::visible_ranges(
   self : NotebookEditor,
-) -> Array[NotebookRange] =
+) -> Array[NotebookRange] {
+  Array::from_fixed_array(NotebookEditor::visible_ranges_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn NotebookEditor::visible_ranges_fixedarray_ffi(
+  self : NotebookEditor,
+) -> FixedArray[NotebookRange] =
   #| (editor) => editor.visibleRanges
 
 ///|
@@ -128,7 +153,7 @@ pub fn NotebookEditor::view_column(self : NotebookEditor) -> ViewColumn? {
 pub extern "js" fn NotebookEditor::reveal_range(
   self : NotebookEditor,
   range : NotebookRange,
-  reveal_type? : NotebookEditorRevealType = JsValue::make(()).cast(),
+  reveal_type~ : NotebookEditorRevealType = JsValue::make(()).cast(),
 ) -> Unit =
   #| (editor, range, revealType) => editor.revealRange(range, revealType)
 
@@ -142,7 +167,7 @@ extern "js" fn NotebookEditor::notebook_editor_view_column_raw(
 /// The index of this cell in its {@link NotebookDocument.cellAt containing notebook}. The
 /// index is updated when a cell is moved within its notebook. The index is `-1`
 /// when the cell has been removed from its notebook.
-pub extern "js" fn NotebookCell::index(self : NotebookCell) -> Int =
+pub extern "js" fn NotebookCell::index(self : NotebookCell) -> Int32 =
   #| (cell) => cell.index
 
 ///|
@@ -168,9 +193,14 @@ pub extern "js" fn NotebookCell::metadata(self : NotebookCell) -> Any =
   #| (cell) => cell.metadata
 
 ///|
-pub extern "js" fn NotebookCell::outputs(
+pub fn NotebookCell::outputs(self : NotebookCell) -> Array[NotebookCellOutput] {
+  Array::from_fixed_array(NotebookCell::outputs_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn NotebookCell::outputs_fixedarray_ffi(
   self : NotebookCell,
-) -> Array[NotebookCellOutput] =
+) -> FixedArray[NotebookCellOutput] =
   #| (cell) => cell.outputs
 
 ///|
@@ -202,7 +232,7 @@ pub extern "js" fn NotebookDocument::notebook_type(
   #| (document) => document.notebookType
 
 ///|
-pub extern "js" fn NotebookDocument::version(self : NotebookDocument) -> Int =
+pub extern "js" fn NotebookDocument::version(self : NotebookDocument) -> Int32 =
   #| (document) => document.version
 
 ///|
@@ -224,7 +254,9 @@ pub extern "js" fn NotebookDocument::metadata(self : NotebookDocument) -> Any =
   #| (document) => document.metadata
 
 ///|
-pub extern "js" fn NotebookDocument::cell_count(self : NotebookDocument) -> Int =
+pub extern "js" fn NotebookDocument::cell_count(
+  self : NotebookDocument,
+) -> Int32 =
   #| (document) => document.cellCount
 /// The outputs of this cell.
 
@@ -234,21 +266,21 @@ pub extern "js" fn NotebookDocument::cell_count(self : NotebookDocument) -> Int 
 ///|
 /// The summary of a notebook cell execution.
 pub struct NotebookCellExecutionSummary {
-  executionOrder : Int?
+  executionOrder : Int32?
   success : Bool?
   timing : NotebookCellExecutionTiming?
 }
 
 ///|
 pub struct NotebookCellExecutionTiming {
-  startTime : Int
-  endTime : Int
+  startTime : Int32
+  endTime : Int32
 }
 
 ///|
 /// The order in which the execution happened.
 pub fn NotebookCellExecutionSummary::new(
-  execution_order? : Int,
+  execution_order? : Int32,
   success? : Bool,
   timing? : NotebookCellExecutionTiming,
 ) -> NotebookCellExecutionSummary {
@@ -270,10 +302,10 @@ pub fn NotebookCellExecutionSummary::new(
 
 ///|
 pub fn NotebookCellExecutionTiming::new(
-  start_time : Int,
-  end_time : Int,
+  start_time : Int32,
+  end_time : Int32,
 ) -> NotebookCellExecutionTiming {
-  NotebookCellExecutionTiming::{ startTime: start_time, endTime: end_time }
+  NotebookCellExecutionTiming::{ startTime: start_time, endTime: end_time, }
 }
 
 ///|
@@ -318,7 +350,7 @@ pub fn NotebookCellExecutionTiming::new(
 /// @returns A {@link NotebookCell cell}.
 pub extern "js" fn NotebookDocument::cell_at(
   self : NotebookDocument,
-  index : Int,
+  index : Int32,
 ) -> NotebookCell =
   #| (doc, index) => doc.cellAt(index)
 
@@ -328,10 +360,20 @@ pub extern "js" fn NotebookDocument::cell_at(
 ///
 /// @param range A notebook range.
 /// @returns The cells contained by the range or all cells.
-pub extern "js" fn NotebookDocument::get_cells(
+pub fn NotebookDocument::get_cells(
   self : NotebookDocument,
-  range? : NotebookRange = JsValue::make(()).cast(),
-) -> Array[NotebookCell] =
+  range~ : NotebookRange = JsValue::make(()).cast(),
+) -> Array[NotebookCell] {
+  Array::from_fixed_array(
+    NotebookDocument::get_cells_fixedarray_ffi(self, range~),
+  )
+}
+
+///|
+extern "js" fn NotebookDocument::get_cells_fixedarray_ffi(
+  self : NotebookDocument,
+  range~ : NotebookRange = JsValue::make(()).cast(),
+) -> FixedArray[NotebookCell] =
   #| (doc, range) => doc.getCells(range)
 
 ///|
@@ -419,8 +461,8 @@ pub fn NotebookDocumentCellChange::new(
 /// The affected notebook.
 pub fn NotebookDocumentChangeEvent::new(
   notebook : NotebookDocument,
-  content_changes? : Array[NotebookDocumentContentChange] = [],
-  cell_changes? : Array[NotebookDocumentCellChange] = [],
+  content_changes~ : Array[NotebookDocumentContentChange] = [],
+  cell_changes~ : Array[NotebookDocumentCellChange] = [],
   metadata? : Any,
 ) -> NotebookDocumentChangeEvent {
   NotebookDocumentChangeEvent::{
@@ -662,9 +704,16 @@ pub fn NotebookCellOutput::new(
 /// 	vscode.NotebookCellOutputItem.text('Hey', 'text/plain'), // INVALID: repeated type, editor will pick just one
 /// ])
 /// ```
-pub extern "js" fn NotebookCellOutput::items(
+pub fn NotebookCellOutput::items(
   self : NotebookCellOutput,
-) -> Array[NotebookCellOutputItem] =
+) -> Array[NotebookCellOutputItem] {
+  Array::from_fixed_array(NotebookCellOutput::items_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn NotebookCellOutput::items_fixedarray_ffi(
+  self : NotebookCellOutput,
+) -> FixedArray[NotebookCellOutputItem] =
   #| (value) => value.items
 
 ///|
@@ -679,9 +728,20 @@ pub extern "js" fn NotebookCellOutput::items(
 /// 	vscode.NotebookCellOutputItem.text('Hey', 'text/plain'), // INVALID: repeated type, editor will pick just one
 /// ])
 /// ```
-pub extern "js" fn NotebookCellOutput::set_items(
+pub fn NotebookCellOutput::set_items(
   self : NotebookCellOutput,
   value : Array[NotebookCellOutputItem],
+) -> Unit {
+  NotebookCellOutput::set_items_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn NotebookCellOutput::set_items_fixedarray_ffi(
+  self : NotebookCellOutput,
+  value : FixedArray[NotebookCellOutputItem],
 ) -> Unit =
   #| (item, value) => { item.items = value; }
 
@@ -786,9 +846,20 @@ pub fn NotebookCellData::outputs(
 
 ///|
 /// The outputs of this cell data.
-pub extern "js" fn NotebookCellData::set_outputs(
+pub fn NotebookCellData::set_outputs(
   self : NotebookCellData,
   value : Array[NotebookCellOutput],
+) -> Unit {
+  NotebookCellData::set_outputs_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn NotebookCellData::set_outputs_fixedarray_ffi(
+  self : NotebookCellData,
+  value : FixedArray[NotebookCellOutput],
 ) -> Unit =
   #| (cell, value) => { cell.outputs = value; }
 
@@ -863,16 +934,29 @@ pub fn NotebookData::new(cells : Array[NotebookCellData]) -> NotebookData {
 
 ///|
 /// The cell data of this notebook data.
-pub extern "js" fn NotebookData::cells(
+pub fn NotebookData::cells(self : NotebookData) -> Array[NotebookCellData] {
+  Array::from_fixed_array(NotebookData::cells_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn NotebookData::cells_fixedarray_ffi(
   self : NotebookData,
-) -> Array[NotebookCellData] =
+) -> FixedArray[NotebookCellData] =
   #| (value) => value.cells
 
 ///|
 /// The cell data of this notebook data.
-pub extern "js" fn NotebookData::set_cells(
+pub fn NotebookData::set_cells(
   self : NotebookData,
   value : Array[NotebookCellData],
+) -> Unit {
+  NotebookData::set_cells_fixedarray_ffi(self, FixedArray::from_array(value[:]))
+}
+
+///|
+extern "js" fn NotebookData::set_cells_fixedarray_ffi(
+  self : NotebookData,
+  value : FixedArray[NotebookCellData],
 ) -> Unit =
   #| (item, value) => { item.cells = value; }
 
@@ -939,8 +1023,19 @@ extern "js" fn NotebookCellOutputItem::set_data_raw(
   #| (item, value) => { item.data = value; }
 
 ///|
-extern "js" fn notebook_cell_output_ffi(
+fn notebook_cell_output_ffi(
   items : Array[NotebookCellOutputItem],
+  metadata : JsValue,
+) -> NotebookCellOutput {
+  notebook_cell_output_ffi_fixedarray_ffi(
+    FixedArray::from_array(items[:]),
+    metadata,
+  )
+}
+
+///|
+extern "js" fn notebook_cell_output_ffi_fixedarray_ffi(
+  items : FixedArray[NotebookCellOutputItem],
   metadata : JsValue,
 ) -> NotebookCellOutput =
   #| (items, metadata) =>
@@ -1009,8 +1104,13 @@ extern "js" fn NotebookCellData::set_execution_summary_raw(
   #| (cell, value) => { cell.executionSummary = value === undefined || value === null ? undefined : value; }
 
 ///|
-extern "js" fn notebook_data_ffi(
-  cells : Array[NotebookCellData],
+fn notebook_data_ffi(cells : Array[NotebookCellData]) -> NotebookData {
+  notebook_data_ffi_fixedarray_ffi(FixedArray::from_array(cells[:]))
+}
+
+///|
+extern "js" fn notebook_data_ffi_fixedarray_ffi(
+  cells : FixedArray[NotebookCellData],
 ) -> NotebookData =
   #| (cells) => new (require("vscode").NotebookData)(cells)
 
@@ -1076,16 +1176,38 @@ extern "js" fn notebook_serializer_ffi(
   #| })
 
 ///|
-extern "js" fn notebook_edit_replace_cells_ffi(
+fn notebook_edit_replace_cells_ffi(
   range : NotebookRange,
   new_cells : Array[NotebookCellData],
+) -> NotebookEdit {
+  notebook_edit_replace_cells_ffi_fixedarray_ffi(
+    range,
+    FixedArray::from_array(new_cells[:]),
+  )
+}
+
+///|
+extern "js" fn notebook_edit_replace_cells_ffi_fixedarray_ffi(
+  range : NotebookRange,
+  new_cells : FixedArray[NotebookCellData],
 ) -> NotebookEdit =
   #| (range, newCells) => require("vscode").NotebookEdit.replaceCells(range, newCells)
 
 ///|
-extern "js" fn notebook_edit_insert_cells_ffi(
-  index : Int,
+fn notebook_edit_insert_cells_ffi(
+  index : Int32,
   new_cells : Array[NotebookCellData],
+) -> NotebookEdit {
+  notebook_edit_insert_cells_ffi_fixedarray_ffi(
+    index,
+    FixedArray::from_array(new_cells[:]),
+  )
+}
+
+///|
+extern "js" fn notebook_edit_insert_cells_ffi_fixedarray_ffi(
+  index : Int32,
+  new_cells : FixedArray[NotebookCellData],
 ) -> NotebookEdit =
   #| (index, newCells) => require("vscode").NotebookEdit.insertCells(index, newCells)
 
@@ -1097,7 +1219,7 @@ extern "js" fn notebook_edit_delete_cells_ffi(
 
 ///|
 extern "js" fn notebook_edit_update_cell_metadata_ffi(
-  index : Int,
+  index : Int32,
   new_cell_metadata : JsValue,
 ) -> NotebookEdit =
   #| (index, newCellMetadata) =>
@@ -1111,9 +1233,17 @@ extern "js" fn notebook_edit_update_notebook_metadata_ffi(
   #|   require("vscode").NotebookEdit.updateNotebookMetadata(newNotebookMetadata)
 
 ///|
-extern "js" fn notebook_edit_ffi(
+fn notebook_edit_ffi(
   range : NotebookRange,
   new_cells : Array[NotebookCellData],
+) -> NotebookEdit {
+  notebook_edit_ffi_fixedarray_ffi(range, FixedArray::from_array(new_cells[:]))
+}
+
+///|
+extern "js" fn notebook_edit_ffi_fixedarray_ffi(
+  range : NotebookRange,
+  new_cells : FixedArray[NotebookCellData],
 ) -> NotebookEdit =
   #| (range, newCells) => new (require("vscode").NotebookEdit)(range, newCells)
 
@@ -1129,15 +1259,31 @@ pub extern "js" fn NotebookEdit::set_range(
   #| (item, value) => { item.range = value; }
 
 ///|
-pub extern "js" fn NotebookEdit::new_cells(
+pub fn NotebookEdit::new_cells(self : NotebookEdit) -> Array[NotebookCellData] {
+  Array::from_fixed_array(NotebookEdit::new_cells_fixedarray_ffi(self))
+}
+
+///|
+extern "js" fn NotebookEdit::new_cells_fixedarray_ffi(
   self : NotebookEdit,
-) -> Array[NotebookCellData] =
+) -> FixedArray[NotebookCellData] =
   #| (value) => value.newCells
 
 ///|
-pub extern "js" fn NotebookEdit::set_new_cells(
+pub fn NotebookEdit::set_new_cells(
   self : NotebookEdit,
   value : Array[NotebookCellData],
+) -> Unit {
+  NotebookEdit::set_new_cells_fixedarray_ffi(
+    self,
+    FixedArray::from_array(value[:]),
+  )
+}
+
+///|
+extern "js" fn NotebookEdit::set_new_cells_fixedarray_ffi(
+  self : NotebookEdit,
+  value : FixedArray[NotebookCellData],
 ) -> Unit =
   #| (item, value) => { item.newCells = value; }
 
@@ -1231,7 +1377,7 @@ pub fn NotebookEdit::replace_cells(
 /// @param index The index to insert cells at.
 /// @param newCells The new notebook cells.
 pub fn NotebookEdit::insert_cells(
-  index : Int,
+  index : Int32,
   new_cells : Array[NotebookCellData],
 ) -> NotebookEdit {
   notebook_edit_insert_cells_ffi(index, new_cells)
@@ -1251,7 +1397,7 @@ pub fn NotebookEdit::delete_cells(range : NotebookRange) -> NotebookEdit {
 /// @param index The index of the cell to update.
 /// @param newCellMetadata The new metadata for the cell.
 pub fn NotebookEdit::update_cell_metadata(
-  index : Int,
+  index : Int32,
   new_cell_metadata : Any,
 ) -> NotebookEdit {
   notebook_edit_update_cell_metadata_ffi(

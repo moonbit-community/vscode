@@ -60,10 +60,23 @@ extern "js" fn workspace_as_relative_path_uri_ffi(
   #| }
 
 ///|
-extern "js" fn workspace_update_workspace_folders_ffi(
-  start : Int,
+fn workspace_update_workspace_folders_ffi(
+  start : Int32,
   delete_count : @v.JsValue,
   folders_to_add : Array[@v.JsValue],
+) -> Bool {
+  workspace_update_workspace_folders_ffi_fixedarray_ffi(
+    start,
+    delete_count,
+    FixedArray::from_array(folders_to_add[:]),
+  )
+}
+
+///|
+extern "js" fn workspace_update_workspace_folders_ffi_fixedarray_ffi(
+  start : Int32,
+  delete_count : @v.JsValue,
+  folders_to_add : FixedArray[@v.JsValue],
 ) -> Bool =
   #| (start, deleteCount, foldersToAdd) =>
   #|   require("vscode").workspace.updateWorkspaceFolders(start, deleteCount, ...foldersToAdd)
@@ -119,7 +132,14 @@ extern "js" fn workspace_apply_edit_ffi(
   #| (edit, metadata) => require("vscode").workspace.applyEdit(edit, metadata)
 
 ///|
-extern "js" fn workspace_text_documents_ffi() -> Array[TextDocument] =
+fn workspace_text_documents_ffi() -> Array[TextDocument] {
+  Array::from_fixed_array(workspace_text_documents_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn workspace_text_documents_ffi_fixedarray_ffi() -> FixedArray[
+  TextDocument,
+] =
   #| () => require("vscode").workspace.textDocuments
 
 ///|
@@ -201,7 +221,14 @@ extern "js" fn workspace_on_did_save_text_document_ffi() -> Event[TextDocument] 
   #| () => require("vscode").workspace.onDidSaveTextDocument
 
 ///|
-extern "js" fn workspace_notebook_documents_ffi() -> Array[NotebookDocument] =
+fn workspace_notebook_documents_ffi() -> Array[NotebookDocument] {
+  Array::from_fixed_array(workspace_notebook_documents_ffi_fixedarray_ffi())
+}
+
+///|
+extern "js" fn workspace_notebook_documents_ffi_fixedarray_ffi() -> FixedArray[
+  NotebookDocument,
+] =
   #| () => require("vscode").workspace.notebookDocuments
 
 ///|

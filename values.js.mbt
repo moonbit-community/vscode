@@ -334,7 +334,7 @@ fn InlayHintLabelValue::from_js(value : JsValue) -> InlayHintLabelValue? {
 ///|
 pub(all) enum ParameterLabel {
   Text(String)
-  Range((Int, Int))
+  Range((Int32, Int32))
 }
 
 ///|
@@ -351,7 +351,7 @@ fn ParameterLabel::from_js(value : JsValue) -> ParameterLabel? {
     Some(text) => Some(Text(text))
     None =>
       if values_js_value_is_array_ffi(value) {
-        let raw : Array[Int] = value.cast()
+        let raw : Array[Int32] = value.cast()
         match raw {
           [start, end_] => Some(Range((start, end_)))
           _ => None
@@ -371,7 +371,7 @@ pub(all) enum HoverContent {
 ///|
 pub(all) enum StringOrInt {
   Text(String)
-  Numeric(Int)
+  Numeric(Int32)
 }
 
 ///|
@@ -391,7 +391,7 @@ extern "js" fn js_value_as_bool_ffi(value : JsValue) -> Bool? =
   #| (value) => typeof value === "boolean" ? value : undefined
 
 ///|
-extern "js" fn js_value_as_int_ffi(value : JsValue) -> Int? =
+extern "js" fn js_value_as_int_ffi(value : JsValue) -> Int32? =
   #| (value) => Number.isInteger(value) ? value : undefined
 
 ///|
@@ -537,7 +537,7 @@ pub fn TreeItemCheckbox::new(
   tooltip? : String,
   accessibility_information? : AccessibilityInformation,
 ) -> TreeItemCheckbox {
-  TreeItemCheckbox::{ state, tooltip, accessibility_information }
+  TreeItemCheckbox::{ state, tooltip, accessibility_information, }
 }
 
 ///|
@@ -642,12 +642,12 @@ fn option_hover_message_to_js(value : HoverMessage?) -> JsValue {
 
 ///|
 pub fn IconPath::light_dark(light : Uri, dark : Uri) -> IconPath {
-  IconPath::LightDarkValue(IconPathLightDark::{ light, dark })
+  IconPath::LightDarkValue(IconPathLightDark::{ light, dark, })
 }
 
 ///|
 pub fn IconPathLightDark::new(light : Uri, dark : Uri) -> IconPathLightDark {
-  IconPathLightDark::{ light, dark }
+  IconPathLightDark::{ light, dark, }
 }
 
 ///|

@@ -60,8 +60,13 @@ extern "js" fn env_telemetry_logger_options_to_js_ffi(
   #| }
 
 ///|
-extern "js" fn env_string_json_map_ffi(
-  entries : Array[(String, Any)],
+fn env_string_json_map_ffi(entries : Array[(String, Any)]) -> @v.JsValue {
+  env_string_json_map_ffi_fixedarray_ffi(FixedArray::from_array(entries[:]))
+}
+
+///|
+extern "js" fn env_string_json_map_ffi_fixedarray_ffi(
+  entries : FixedArray[(String, Any)],
 ) -> @v.JsValue =
   #| (pairs) => {
   #|   const result = {};

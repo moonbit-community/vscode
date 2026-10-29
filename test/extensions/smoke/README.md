@@ -13,6 +13,8 @@ npm run test:smoke
 
 ## Screenshot Baselines
 
+The test host is pinned by `config.vscodeTestVersion` in the root `package.json` (currently VS Code 1.144.0). Upgrade that version and review all screenshot changes together so editor chrome updates do not appear as binding regressions.
+
 UI screenshots are platform-specific because VS Code and Electron render text and workbench chrome differently by OS and CPU architecture. Baselines live under:
 
 ```text
@@ -57,4 +59,4 @@ When running screenshot tests on a new platform, `npm run test:ui` reports missi
 
 ## CI
 
-The manual `Smoke Tests` workflow runs on macOS arm64 because the committed UI baselines are currently `darwin-arm64`. Add another baseline directory before enabling screenshot comparison on another runner platform.
+The `Smoke Tests` workflow runs on pushes, pull requests, and manual dispatch. It runs on macOS arm64 because the committed UI baselines are currently `darwin-arm64`. Add another baseline directory before enabling screenshot comparison on another runner platform.
