@@ -1,21 +1,29 @@
 name: Smoke Tests
 
 on:
+  push:
+    branches: [main]
+  pull_request:
   workflow_dispatch:
 
 jobs:
   smoke-tests:
     # UI baselines are currently committed for darwin-arm64.
     runs-on: macos-15
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        toolchain: [latest, nightly]
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
 
       - name: Set up MoonBit
-        run: |
-          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
-          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+        uses: moonbit-community/setup-moonbit@main
+        with:
+          version: ${{ matrix.toolchain }}
 
       - name: Install Node dependencies
         run: npm install
@@ -25,8 +33,8 @@ jobs:
 
       - name: Validate MoonBit bindings
         run: |
-          moon check --target js
-          moon build --target js
+          moon check --target js --deny-warn
+          moon build --target js --deny-warn
           moon info --target js \
             . \
             authentication \

@@ -1,17 +1,26 @@
 const path = require('path');
 const fs = require('fs');
-const { runTests } = require('@vscode/test-electron');
+const os = require('os');
+const { runTests, downloadAndUnzipVSCode } = require('@vscode/test-electron');
 
 async function main() {
   const extensionDevelopmentPath = __dirname;
   const extensionTestsPath = path.join(__dirname, 'suite', 'index.js');
   const workspacePath = path.join(__dirname, 'fixture');
   const testHome = path.join(__dirname, '..', '..', '..', '.vscode-test', 'home');
+  const userDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'vscode-mbt-integration-'));
   const disposeMarker = path.join(__dirname, '..', '..', '..', '.vscode-test', 'smoke-dispose-marker.txt');
   fs.mkdirSync(testHome, { recursive: true });
   fs.rmSync(disposeMarker, { force: true });
 
+  let vscodeExecutablePath = await downloadAndUnzipVSCode();
+  if (process.platform === 'darwin' && !fs.existsSync(vscodeExecutablePath)) {
+    const codePath = path.join(path.dirname(vscodeExecutablePath), 'Code');
+    if (fs.existsSync(codePath)) vscodeExecutablePath = codePath;
+  }
+
   await runTests({
+    vscodeExecutablePath,
     extensionDevelopmentPath,
     extensionTestsPath,
     extensionTestsEnv: {
@@ -20,6 +29,7 @@ async function main() {
     },
     launchArgs: [
       workspacePath,
+      `--user-data-dir=${userDataDir}`,
       '--disable-extensions',
       '--sync',
       'off',
@@ -27,8 +37,9 @@ async function main() {
       '--use-inmemory-secretstorage'
     ]
   });
-  assertNoDisposeError();
+  assertNoDisposeError(userDataDir);
   assertDisposablesWereDisposed(disposeMarker);
+  fs.rmSync(userDataDir, { recursive: true, force: true });
 }
 
 function assertDisposablesWereDisposed(disposeMarker) {
@@ -52,8 +63,8 @@ function assertDisposablesWereDisposed(disposeMarker) {
   }
 }
 
-function assertNoDisposeError() {
-  const logsRoot = path.join(__dirname, '..', '..', '..', '.vscode-test', 'user-data', 'logs');
+function assertNoDisposeError(userDataDir) {
+  const logsRoot = path.join(userDataDir, 'logs');
   const latestLog = latestDirectory(logsRoot);
   if (!latestLog) {
     return;
